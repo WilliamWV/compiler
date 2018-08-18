@@ -1,5 +1,16 @@
 %{
+
+#include "tokens.h"
+#include "main.c"
+
+#define DEBUG 0
+
 int num_lines = 1;
+
+int get_line_number(void){
+	return num_lines;
+}
+
 %}
 
 DIGIT [0-9]
@@ -9,36 +20,85 @@ ALPHABETIC {CAPITALCHAR}|{SMALLCHAR}|_
 ALPHANUMERIC {ALPHABETIC}|{DIGIT}
 SPECIALCHAR ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"?"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"^"|"."|"$"
 INTLIT "+"({DIGIT})+|"-"({DIGIT})+|{DIGIT}+
+FLOATLIT {INTLIT}"."{DIGIT}+
 WHITESPACE " "|"\t"|"\n"
 OPENCOMMENT "\/\*"
 LINECOMMENT "\/\/"
 
 %%
 
-\n { printf("Fim da linha %d\n", num_lines); ++num_lines; } // contador de linhas
-int|float|bool|char|string|if|then|else|while|do|input|output|return|const|static|foreach|for|switch|case|break|continue|class|private|public|protected { printf("PALAVRAS RESERVADAS\n"); } //palavras reservadas
-"<="|">="|"=="|"!="|"&&"|"||"|">>"|"<<"|"%>%"|"%|%" { printf("OPERADORES COMPOSTOS\n"); } // BOOLLIT
-{SPECIALCHAR} { printf("CARACTERE ESPECIAL\n"); } //caracteres especiais
-{INTLIT} { printf("LITERAL INT\n"); } // INTLIT considera diversas coisas estranhas, como por exemplo -0 e +0, perguntar pro professor oq ele quer ja que n ta especificado
-{INTLIT}"."{DIGIT}+ { printf("LITERAL FLOAT\n"); } // FLOATLIT
-(E|e){INTLIT} { printf("LITERAL FLOAT notacao cientifica\n"); } // FLOATLIT (notacao cientifica)
-'({CAPITALCHAR}|{SMALLCHAR}|{SPECIALCHAR}|" ")' { printf("LITERAL CHAR\n"); } //CHARLIT
-false|true { printf("LITERAL BOOL\n"); } // BOOLLIT
-{ALPHABETIC}{ALPHANUMERIC}* { printf("IDENTIFICADOR\n"); } //identificadores
+\n { 
+	#if DEBUG
+		printf("Fim da linha %d\n", get_line_number());
+	#endif
+	++num_lines; // contador de linhas
+} 
+int { return TK_PR_INT; }
+float { return TK_PR_FLOAT; }
+bool { return TK_PR_BOOL; }
+char { return TK_PR_CHAR; }
+string { return TK_PR_STRING; }
+if { return TK_PR_IF; }
+then { return TK_PR_THEN; }
+else { return TK_PR_ELSE; }
+while { return TK_PR_WHILE; }
+do { return TK_PR_DO; }
+input { return TK_PR_INPUT; }
+output { return TK_PR_OUTPUT; }
+return { return TK_PR_RETURN; }
+const { return TK_PR_CONST; }
+static { return TK_PR_STATIC; }
+foreach { return TK_PR_FOREACH; }
+for { return TK_PR_FOR; }
+switch { return TK_PR_SWITCH; }
+case { return TK_PR_CASE; }
+break { return TK_PR_BREAK; }
+continue { return TK_PR_CONTINUE; }
+class { return TK_PR_CLASS; }
+private { return TK_PR_PRIVATE; }
+public { return TK_PR_PUBLIC; }
+protected { return TK_PR_PROTECTED; }
+"<=" { return TK_OC_LE; }
+">=" { return TK_OC_GE; }
+"==" { return TK_OC_EQ; }
+"!=" { return TK_OC_NE; }
+"&&" { return TK_OC_AND; }
+"||" { return TK_OC_OR; }
+">>" { return TK_OC_SR; }
+"<<" { return TK_OC_SL; }
+"%>%" { return TK_OC_FORWARD_PIPE; }
+"%|%" { return TK_OC_BASH_PIPE; }
+false { return TK_LIT_FALSE; }
+true { return TK_LIT_TRUE; }
+{SPECIALCHAR} { 
+	#if DEBUG
+		printf("CARACTERE ESPECIAL: %d %c\n", *yytext, *yytext);
+	#endif
+	return *yytext; 
+}
+{INTLIT} { return TK_LIT_INT; }
+{FLOATLIT} { return TK_LIT_FLOAT; }
+({FLOATLIT}|{INTLIT})(E|e){INTLIT} { return TK_LIT_FLOAT; } // notacao cientifica
+'({CAPITALCHAR}|{SMALLCHAR}|{SPECIALCHAR}|" ")' { return TK_LIT_CHAR; } //CHARLIT
+{ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; } //identificadores
 
-{LINECOMMENT}[^\n]*\n   { printf("A line comment: %s\n", yytext); ++num_lines; } 
-{OPENCOMMENT}[^\*\/]*\*\/ {printf("A multi-line comment: %s\n", yytext);}
-{WHITESPACE} {printf("An whitespace: \"%s\"\n", yytext);} // As três expressões regulares anteriores servem para ignorar trechos do código, logo as ações correspondentes devem ser substituídas por "{}" na versão final, ou seja, não retornam tokens
+{LINECOMMENT}[^\n]*\n   { 
+	#if DEBUG
+		printf("A line comment: %s\n", yytext);
+	#endif
+	++num_lines; 
+} 
+{OPENCOMMENT}[^\*\/]*\*\/ {
+	#if DEBUG
+		printf("A multi-line comment: %s\n", yytext);
+	#endif
+}
+{WHITESPACE} {
+	#if DEBUG
+		printf("An whitespace: \"%s\"\n", yytext);
+	#endif
+} // As três expressões regulares anteriores servem para ignorar trechos do código, logo as ações correspondentes devem ser substituídas por "{}" na versão final, ou seja, não retornam tokens
 
-. {printf("Caractere não reconhecido gerou erro léxico\n");}
+. { return TOKEN_ERRO; }
 
 %%
-
-int main (void)
-{
-  int token;
-  while ((token = yylex())){
-  	printf("%d linhas\n", num_lines);
-    // do something with token
-  }
-}
