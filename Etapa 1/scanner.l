@@ -19,6 +19,8 @@ SMALLCHAR [a-z]
 ALPHABETIC {CAPITALCHAR}|{SMALLCHAR}|_
 ALPHANUMERIC {ALPHABETIC}|{DIGIT}
 SPECIALCHAR ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"?"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"^"|"."|"$"
+ASCIIALPHABET " "|"!"|"#"|"$"|"%"|"&"|"*"|"+"|","|"-"|"."|"/"|":"|";"|"<"|"="|">"|"?"|"@"|"["|"]"|"^"|"_"|"`"|"{"|"|"|"}"|"~"|"\\"|\"|{DIGIT}|{CAPITALCHAR}|{SMALLCHAR}|"'"|"("|")"
+CONTROLCHAR "\\0"|"\\t"|"\\n"|"\\v"|"\\f"|"\\r"
 INTLIT "+"({DIGIT})+|"-"({DIGIT})+|{DIGIT}+
 FLOATLIT {INTLIT}"."{DIGIT}+
 WHITESPACE " "|"\t"|"\n"
@@ -79,7 +81,7 @@ true { return TK_LIT_TRUE; }
 {INTLIT} { return TK_LIT_INT; }
 {FLOATLIT} { return TK_LIT_FLOAT; }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { return TK_LIT_FLOAT; } // notacao cientifica
-'({CAPITALCHAR}|{SMALLCHAR}|{SPECIALCHAR}|" ")' { return TK_LIT_CHAR; } //CHARLIT
+'({ASCIIALPHABET}|{CONTROLCHAR})' { return TK_LIT_CHAR; } //CHARLIT
 {ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; } //identificadores
 \"[^\"]*\" {return TK_LIT_STRING;}
 {LINECOMMENT}[^\n]*\n   {
@@ -88,10 +90,29 @@ true { return TK_LIT_TRUE; }
 	#endif
 	++num_lines;
 }
-{OPENCOMMENT}[^\*\/]*\*\/ {
+{OPENCOMMENT}[^"*/"]*"*/" {
+
+	int chars_in_comment = strlen(yytext);
+	int i = 0;
+	
 	#if DEBUG
+
 		printf("A multi-line comment: %s\n", yytext);
+		printf("Number of characters in the comment: %d\n", chars_in_comment);
+
+	#endif	
+	for(i=0; i<chars_in_comment; i++){
+		#if DEBUG
+			printf("%c", yytext[i]);
+		#endif
+		if(yytext[i]=='\n'){
+			++num_lines;
+		}
+	}
+	#if DEBUG
+		printf("\n");
 	#endif
+
 }
 {WHITESPACE} {
 	#if DEBUG
