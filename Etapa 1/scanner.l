@@ -83,7 +83,7 @@ true { return TK_LIT_TRUE; }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { return TK_LIT_FLOAT; } // notacao cientifica
 '({ASCIIALPHABET}|{CONTROLCHAR})' { return TK_LIT_CHAR; } //CHARLIT
 {ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; } //identificadores
-\"[^\"]*\" {return TK_LIT_STRING;}
+\"[^\"\n]*\" {return TK_LIT_STRING;}
 {LINECOMMENT}[^\n]*\n   {
 	#if DEBUG
 		printf("A line comment: %s\n", yytext);
@@ -94,13 +94,13 @@ true { return TK_LIT_TRUE; }
 
 	int chars_in_comment = strlen(yytext);
 	int i = 0;
-	
+
 	#if DEBUG
 
 		printf("A multi-line comment: %s\n", yytext);
 		printf("Number of characters in the comment: %d\n", chars_in_comment);
 
-	#endif	
+	#endif
 	for(i=0; i<chars_in_comment; i++){
 		#if DEBUG
 			printf("%c", yytext[i]);
