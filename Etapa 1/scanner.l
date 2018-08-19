@@ -27,12 +27,12 @@ LINECOMMENT "\/\/"
 
 %%
 
-\n { 
+\n {
 	#if DEBUG
 		printf("Fim da linha %d\n", get_line_number());
 	#endif
 	++num_lines; // contador de linhas
-} 
+}
 int { return TK_PR_INT; }
 float { return TK_PR_FLOAT; }
 bool { return TK_PR_BOOL; }
@@ -70,24 +70,24 @@ protected { return TK_PR_PROTECTED; }
 "%|%" { return TK_OC_BASH_PIPE; }
 false { return TK_LIT_FALSE; }
 true { return TK_LIT_TRUE; }
-{SPECIALCHAR} { 
+{SPECIALCHAR} {
 	#if DEBUG
 		printf("CARACTERE ESPECIAL: %d %c\n", *yytext, *yytext);
 	#endif
-	return *yytext; 
+	return *yytext;
 }
 {INTLIT} { return TK_LIT_INT; }
 {FLOATLIT} { return TK_LIT_FLOAT; }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { return TK_LIT_FLOAT; } // notacao cientifica
 '({CAPITALCHAR}|{SMALLCHAR}|{SPECIALCHAR}|" ")' { return TK_LIT_CHAR; } //CHARLIT
 {ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; } //identificadores
-
-{LINECOMMENT}[^\n]*\n   { 
+\".*\" {return TK_LIT_STRING;}
+{LINECOMMENT}[^\n]*\n   {
 	#if DEBUG
 		printf("A line comment: %s\n", yytext);
 	#endif
-	++num_lines; 
-} 
+	++num_lines;
+}
 {OPENCOMMENT}[^\*\/]*\*\/ {
 	#if DEBUG
 		printf("A multi-line comment: %s\n", yytext);
