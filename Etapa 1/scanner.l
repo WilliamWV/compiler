@@ -81,7 +81,7 @@ true { return TK_LIT_TRUE; }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { return TK_LIT_FLOAT; } // notacao cientifica
 '({CAPITALCHAR}|{SMALLCHAR}|{SPECIALCHAR}|" ")' { return TK_LIT_CHAR; } //CHARLIT
 {ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; } //identificadores
-\".*\" {return TK_LIT_STRING;}
+\"[^\"]*\" {return TK_LIT_STRING;}
 {LINECOMMENT}[^\n]*\n   {
 	#if DEBUG
 		printf("A line comment: %s\n", yytext);
