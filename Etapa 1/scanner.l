@@ -24,7 +24,7 @@ CONTROLCHAR "\\0"|"\\t"|"\\n"|"\\v"|"\\f"|"\\r"
 INTLIT "+"({DIGIT})+|"-"({DIGIT})+|{DIGIT}+
 FLOATLIT {INTLIT}"."{DIGIT}+
 WHITESPACE " "|"\t"|"\n"
-OPENCOMMENT "\/\*"
+OPENCOMMENT "/*"
 LINECOMMENT "\/\/"
 
 %%
@@ -90,7 +90,7 @@ true { return TK_LIT_TRUE; }
 	#endif
 	++num_lines;
 }
-{OPENCOMMENT}[^"*/"]*"*/" {
+{OPENCOMMENT}([^*]|(\*+[^"*/"]))*\*+\/  {
 
 	int chars_in_comment = strlen(yytext);
 	int i = 0;

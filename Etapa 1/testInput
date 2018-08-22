@@ -84,3 +84,4 @@ testes e em seguida o resultado esperado no arquivo expectedOutput, isso e
 importante para nao ter que trocar o valor esperado para a linha dos testes
 anteriores */
 while (true) {int two = 1 + 1; /*comentario*/ int three = two + 1;}
+/*****comment with *various '*' ****/*/
