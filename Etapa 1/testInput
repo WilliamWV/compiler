@@ -85,3 +85,6 @@ importante para nao ter que trocar o valor esperado para a linha dos testes
 anteriores */
 while (true) {int two = 1 + 1; /*comentario*/ int three = two + 1;}
 /*****comment with *various '*' ****/*/
+int 3test;
+string test3;
+3 == 2 >= 9 = 12 + x
