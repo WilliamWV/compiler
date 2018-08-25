@@ -1,0 +1,9 @@
+--2018-08-24 23:10:43--  ftp://wwvargas@html.inf.ufrgs.br/public_html/etapa1.tgz
+           => ‘etapa1.tgz.1’
+Resolving html.inf.ufrgs.br (html.inf.ufrgs.br)... 143.54.11.25
+Connecting to html.inf.ufrgs.br (html.inf.ufrgs.br)|143.54.11.25|:21... failed: Connection timed out.
+Retrying.
+
+--2018-08-24 23:56:17--  ftp://wwvargas@html.inf.ufrgs.br/public_html/etapa1.tgz
+  (try: 2) => ‘etapa1.tgz.1’
+Connecting to html.inf.ufrgs.br (html.inf.ufrgs.br)|143.54.11.25|:21... 

@@ -30,10 +30,7 @@ LINECOMMENT "\/\/"
 %%
 
 \n {
-	#if DEBUG
-		printf("Fim da linha %d\n", get_line_number());
-	#endif
-	++num_lines; // contador de linhas
+	++num_lines;
 }
 int { return TK_PR_INT; }
 float { return TK_PR_FLOAT; }
@@ -72,53 +69,24 @@ protected { return TK_PR_PROTECTED; }
 "%|%" { return TK_OC_BASH_PIPE; }
 false { return TK_LIT_FALSE; }
 true { return TK_LIT_TRUE; }
-{SPECIALCHAR} {
-	#if DEBUG
-		printf("CARACTERE ESPECIAL: %d %c\n", *yytext, *yytext);
-	#endif
-	return *yytext;
-}
+{SPECIALCHAR} {	return *yytext; }
 {INTLIT} { return TK_LIT_INT; }
 {FLOATLIT} { return TK_LIT_FLOAT; }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { return TK_LIT_FLOAT; } // notacao cientifica
-'({ASCIIALPHABET}|{CONTROLCHAR})' { return TK_LIT_CHAR; } //CHARLIT
-{ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; } //identificadores
+'({ASCIIALPHABET}|{CONTROLCHAR})' { return TK_LIT_CHAR; }
+{ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; }
 \"[^\"\n]*\" {return TK_LIT_STRING;}
-{LINECOMMENT}[^\n]*\n   {
-	#if DEBUG
-		printf("A line comment: %s\n", yytext);
-	#endif
-	++num_lines;
-}
+{LINECOMMENT}[^\n]*\n   { ++num_lines; }
 {OPENCOMMENT}([^*]|(\*+[^"*/"]))*\*+\/  {
+	int chars_in_comment = strlen(yytext), i = 0;
 
-	int chars_in_comment = strlen(yytext);
-	int i = 0;
-
-	#if DEBUG
-
-		printf("A multi-line comment: %s\n", yytext);
-		printf("Number of characters in the comment: %d\n", chars_in_comment);
-
-	#endif
 	for(i=0; i<chars_in_comment; i++){
-		#if DEBUG
-			printf("%c", yytext[i]);
-		#endif
 		if(yytext[i]=='\n'){
 			++num_lines;
 		}
 	}
-	#if DEBUG
-		printf("\n");
-	#endif
-
 }
-{WHITESPACE} {
-	#if DEBUG
-		printf("An whitespace: \"%s\"\n", yytext);
-	#endif
-} // As três expressões regulares anteriores servem para ignorar trechos do código, logo as ações correspondentes devem ser substituídas por "{}" na versão final, ou seja, não retornam tokens
+{WHITESPACE} {} // As três expressões regulares anteriores servem para ignorar trechos do código, logo as ações correspondentes devem ser substituídas por "{}" na versão final, ou seja, não retornam tokens
 
 . { return TOKEN_ERRO; }
 

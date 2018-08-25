@@ -1,7 +1,7 @@
 
 #Definição das variáveis do make
 CC=gcc #C compiler
-EXEC=analisador #Nome do executável
+EXEC=etapa1 #Nome do executável
 FLEXOUT=lex.yy.c
 SRC=scanner.l tokens.h
 TEST_IN_FILE=testInput
