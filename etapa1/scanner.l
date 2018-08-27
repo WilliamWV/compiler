@@ -1,7 +1,6 @@
 %{
 
 #include "tokens.h"
-#include "main.c"
 
 #define DEBUG 0
 
@@ -27,7 +26,10 @@ WHITESPACE " "|"\t"|"\n"
 OPENCOMMENT "/*"
 LINECOMMENT "\/\/"
 
+%x COMMENT
 %%
+
+{OPENCOMMENT} 	BEGIN(COMMENT);
 
 \n {
 	++num_lines;
@@ -77,15 +79,10 @@ true { return TK_LIT_TRUE; }
 {ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; }
 \"[^\"\n]*\" {return TK_LIT_STRING;}
 {LINECOMMENT}[^\n]*\n   { ++num_lines; }
-{OPENCOMMENT}([^*]|(\*+[^"*/"]))*\*+\/  {
-	int chars_in_comment = strlen(yytext), i = 0;
-
-	for(i=0; i<chars_in_comment; i++){
-		if(yytext[i]=='\n'){
-			++num_lines;
-		}
-	}
-}
+<COMMENT>[^*\n]*	{/*eat chars that is not a '*' */}
+<COMMENT>\*+[^*/\n]*	{/*eat chars '*' not followed by '/' */}
+<COMMENT>\n 		{++num_lines;}
+<COMMENT>"*"+"/"	{BEGIN(INITIAL);}
 {WHITESPACE} {} // As três expressões regulares anteriores servem para ignorar trechos do código, logo as ações correspondentes devem ser substituídas por "{}" na versão final, ou seja, não retornam tokens
 
 . { return TOKEN_ERRO; }

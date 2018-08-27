@@ -9,7 +9,7 @@ TEST_OUT_FILE=output
 EXPECTED_RESULTS=expectedOutput
 all: $(SRC)
 	flex scanner.l
-	$(CC) $(FLEXOUT) -o $(EXEC) -lfl
+	$(CC) $(FLEXOUT) main.c -o $(EXEC) -lfl
 
 clean:
 	rm -rf $(EXEC)
