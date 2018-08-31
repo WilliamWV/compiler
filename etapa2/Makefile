@@ -9,6 +9,8 @@ BISON_SRC=parser.y
 BISON_C=parser.tab.c
 BISON_O=parser.tab.o
 BISON_H=parser.tab.h
+MAIN_C=main.c
+MAIN_O=main.o
 TEST_IN_FILE=testInput
 TEST_OUT_FILE=output
 EXPECTED_RESULTS=expectedOutput
@@ -16,8 +18,8 @@ EXPECTED_RESULTS=expectedOutput
 all: $(FLEX_SRC) $(BISON_SRC)
 	bison -d $(BISON_SRC)
 	flex $(FLEX_SRC)
-	$(CC) -c $(FLEX_C) $(BISON_C) main.c
-	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) main.o -lfl
+	$(CC) -c $(FLEX_C) $(BISON_C) $(MAIN_C)
+	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) $(MAIN_O) -lfl
 
 clean:
 	rm -rf $(BISON_C)
@@ -26,6 +28,7 @@ clean:
 	rm -rf $(FLEX_C)
 	rm -rf $(FLEX_O)
 	rm -rf $(TEST_OUT_FILE)
+	rm -rf $(MAIN_O)
 
 test:
 	cat $(TEST_IN_FILE) | ./$(EXEC) > $(TEST_OUT_FILE)
