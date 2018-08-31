@@ -583,7 +583,7 @@ char *yytext;
 #line 1 "scanner.l"
 #line 2 "scanner.l"
 
-#include "tokens.h"
+#include "parser.tab.h"
 
 #define DEBUG 0
 
