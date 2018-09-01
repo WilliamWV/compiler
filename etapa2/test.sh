@@ -38,7 +38,7 @@ diff output errorFile
 echo sizeUndef [] static int\;| ./etapa2 > output
 diff output errorFile
 
-echo stringOnSize [\"12\"] float\;| ./etapa2 > output
+#echo stringOnSize [\"12\"] float\;| ./etapa2 > output
 diff output errorFile
 
 echo noType \; | ./etapa2 > output
@@ -47,8 +47,29 @@ diff output errorFile
 echo int\;| ./etapa2 > output
 diff output errorFile
 
+#Testes que possuem erro sintático para definição de funções
+
+echo static onlyStatic\(int a\)\{\} | ./etapa2 > output
+diff output errorFile
+
+echo int noComma \(const string j float a\)\{\}| ./etapa2 > output
+diff output errorFile
+
+echo int noBody \(\)| ./etapa2 > output
+diff output errorFile
+
+echo float unexpStatic\(int a, static int b\)\{\}| ./etapa2 > output
+diff output errorFile
+
+echo const float unexpConst\(int i\)\{\}| ./etapa2 > output
+diff output errorFile
+
+echo int semicolonOnEnt\(int a, float b\)\{\}\;| ./etapa2 > output
+diff output errorFile
+
+
 make clean > dump
 rm -rf dump 
 rm -rf output
 
-#No final, se todos os testes foram corretos a saída no terminal deve ser vazia
+#No final, se todos os testes sairem como esperado a saída no terminal deve ser vazia

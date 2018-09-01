@@ -5,7 +5,7 @@ void yyerror (char const *s){
 	printf("%s\n", s);
 }
 %}
-
+%verbose
 %token TK_PR_INT
 %token TK_PR_FLOAT
 %token TK_PR_BOOL
@@ -51,15 +51,36 @@ void yyerror (char const *s){
 %token TOKEN_ERRO
 %start programa
 
+
 %%
 
 programa: %empty | componente programa;
-componente: novoTipo | global;
+componente: 
+	  novoTipo 
+	| TK_IDENTIFICADOR depoisDeIdent 
+	//Funções
+	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands
+	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands
+
+;
+
+depoisDeIdent: 
+	  tamanhoVetor static tipo ';'
+	| TK_PR_STATIC tipo ';'
+	| tiposPrimitivos ';'
+	| TK_IDENTIFICADOR fechaVarOuFunc
+;
+fechaVarOuFunc:
+	  ';'
+	| argsAndCommands
+;
 
 //Regras gerais
 encapsulamento: %empty | TK_PR_PRIVATE | TK_PR_PUBLIC | TK_PR_PROTECTED;
 tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRING;
-tipo : tiposPrimitivos | TK_IDENTIFICADOR // TK_IDENTIFICADOR para tipo do usuário
+tipo : tiposPrimitivos | TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
+static: TK_PR_STATIC | %empty;
+tipoConst: TK_PR_CONST tipo | tipo;
 
 //Novos tipos
 novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
@@ -68,14 +89,14 @@ list: campo | campo ':' list;
 campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
 
 //Variáveis globais
-global: TK_IDENTIFICADOR tamanhoVetor tipoGlobal ';' ;
-tipoGlobal: TK_PR_STATIC tipo | tipo;
-tamanhoVetor: %empty | '[' TK_LIT_INT ']';
+tamanhoVetor: '[' TK_LIT_INT ']';
 
-
-
-
-
-
+//Funções 
+args: %empty | parameters;
+parameters : parameter ',' parameters| parameter;
+parameter: tipoConst TK_IDENTIFICADOR;
+argsAndCommands : '(' args ')' blocoComandos;
+//Bloco de comandos
+blocoComandos: '{''}';
 %%
 

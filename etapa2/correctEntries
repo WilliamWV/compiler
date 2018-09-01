@@ -3,6 +3,7 @@ class pessoa [int idade : string nome]
 class animal [protected string name : private int eyes]
 class fake [public string fals: private string tru]
 class oneArg [int o]
+
 //Variáveis globais
 g1 int;
 g2 static string;
@@ -11,3 +12,8 @@ g3 float;
 v4 [20] char;
 v5 [21] static pessoa;
 
+//Funções
+int main(){}
+static pessoa someone(int idade, const string name, float alura){}
+float Double (float a){}
+static int foo(int a, int b){}

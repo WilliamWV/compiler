@@ -11,6 +11,7 @@ BISON_O=parser.tab.o
 BISON_H=parser.tab.h
 MAIN_C=main.c
 MAIN_O=main.o
+REPORT_FILE = report
 
 all: $(FLEX_SRC) $(BISON_SRC)
 	bison -d $(BISON_SRC)
@@ -23,4 +24,8 @@ clean:
 	rm -rf $(FLEX_C)
 	rm -rf $(BISON_H)
 	rm -rf *.o
+	rm -rf $(REPORT_FILE)
 	
+#Regra para gerar arquivo com descrição da gramática
+verb: $(BISON_SRC)
+	bison -d $(BISON_SRC) --report-file=report
