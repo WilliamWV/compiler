@@ -1,5 +1,13 @@
+//Tipos de usuário
 class pessoa [int idade : string nome]
 class animal [protected string name : private int eyes]
 class fake [public string fals: private string tru]
 class oneArg [int o]
+//Variáveis globais
+g1 int;
+g2 static string;
+v1[34] static float;
+g3 float;
+v4 [20] char;
+v5 [21] static pessoa;
 

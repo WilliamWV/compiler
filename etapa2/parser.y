@@ -53,14 +53,28 @@ void yyerror (char const *s){
 
 %%
 
-programa: novosTipos;
-novosTipos: %empty | novoTipo novosTipos;
+programa: %empty | componente programa;
+componente: novoTipo | global;
+
+//Regras gerais
+encapsulamento: %empty | TK_PR_PRIVATE | TK_PR_PUBLIC | TK_PR_PROTECTED;
+tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRING;
+tipo : tiposPrimitivos | TK_IDENTIFICADOR // TK_IDENTIFICADOR para tipo do usuário
+
+//Novos tipos
 novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
 listaCampos: '[' list ']';
 list: campo | campo ':' list;
 campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
-encapsulamento: %empty | TK_PR_PRIVATE | TK_PR_PUBLIC | TK_PR_PROTECTED;
-tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRING;
+
+//Variáveis globais
+global: TK_IDENTIFICADOR tamanhoVetor tipoGlobal ';' ;
+tipoGlobal: TK_PR_STATIC tipo | tipo;
+tamanhoVetor: %empty | '[' TK_LIT_INT ']';
+
+
+
+
 
 
 %%

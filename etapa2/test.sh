@@ -8,7 +8,7 @@ diff output emptyFile
 #	> echo <testEntry> | ./etapa2 > output
 #	> diff output errorFile
 
-
+# Testes que possuem erro sintático para tipos definidos pelo usuário
 echo class | ./etapa2 > output
 diff output errorFile
 
@@ -27,6 +27,25 @@ diff output errorFile
 echo class d[private int a, private int b]| ./etapa2 > output
 diff output errorFile
 
+#Testes que possuem erro sintático para variáveis globais
+
+echo nosemicolon int | ./etapa2 > output
+diff output errorFile
+
+echo int typeFirst\;| ./etapa2 > output
+diff output errorFile
+
+echo sizeUndef [] static int\;| ./etapa2 > output
+diff output errorFile
+
+echo stringOnSize [\"12\"] float\;| ./etapa2 > output
+diff output errorFile
+
+echo noType \; | ./etapa2 > output
+diff output errorFile
+
+echo int\;| ./etapa2 > output
+diff output errorFile
 
 make clean > dump
 rm -rf dump 
