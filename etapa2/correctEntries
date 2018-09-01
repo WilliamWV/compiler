@@ -1,0 +1,5 @@
+class pessoa [int idade : string nome]
+class animal [protected string name : private int eyes]
+class fake [public string fals: private string tru]
+class oneArg [int o]
+

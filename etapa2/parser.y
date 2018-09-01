@@ -49,10 +49,19 @@ void yyerror (char const *s){
 %token TK_LIT_STRING
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
+%start programa
 
 %%
 
-programa:
+programa: novosTipos;
+novosTipos: %empty | novoTipo novosTipos;
+novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
+listaCampos: '[' list ']';
+list: campo | campo ':' list;
+campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
+encapsulamento: %empty | TK_PR_PRIVATE | TK_PR_PUBLIC | TK_PR_PROTECTED;
+tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRING;
+
 
 %%
 

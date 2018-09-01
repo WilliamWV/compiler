@@ -1,0 +1,35 @@
+#!/bin/bash
+make > dump
+#Testes que devem ser corretos sintaticamente devem ser postos no arquivo correctEntries
+cat correctEntries | ./etapa2 > output
+diff output emptyFile
+
+#Testes que devem ser sintaticamente errados devem ser postos abaixo seguindo o esquema:
+#	> echo <testEntry> | ./etapa2 > output
+#	> diff output errorFile
+
+
+echo class | ./etapa2 > output
+diff output errorFile
+
+echo class [private int a]| ./etapa2 > output
+diff output errorFile
+
+echo class c [private protected string j]| ./etapa2 > output
+diff output errorFile
+
+echo class d[abc]| ./etapa2 > output
+diff output errorFile
+
+echo class d[private a: private b]| ./etapa2 > output
+diff output errorFile
+
+echo class d[private int a, private int b]| ./etapa2 > output
+diff output errorFile
+
+
+make clean > dump
+rm -rf dump 
+rm -rf output
+
+#No final, se todos os testes foram corretos a saída no terminal deve ser vazia

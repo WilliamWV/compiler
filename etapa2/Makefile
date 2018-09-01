@@ -11,9 +11,6 @@ BISON_O=parser.tab.o
 BISON_H=parser.tab.h
 MAIN_C=main.c
 MAIN_O=main.o
-TEST_IN_FILE=testInput
-TEST_OUT_FILE=output
-EXPECTED_RESULTS=expectedOutput
 
 all: $(FLEX_SRC) $(BISON_SRC)
 	bison -d $(BISON_SRC)
@@ -23,13 +20,7 @@ all: $(FLEX_SRC) $(BISON_SRC)
 
 clean:
 	rm -rf $(BISON_C)
-	rm -rf $(BISON_O)
-	rm -rf $(BISON_H)
 	rm -rf $(FLEX_C)
-	rm -rf $(FLEX_O)
-	rm -rf $(TEST_OUT_FILE)
-	rm -rf $(MAIN_O)
-
-test:
-	cat $(TEST_IN_FILE) | ./$(EXEC) > $(TEST_OUT_FILE)
-	diff $(TEST_OUT_FILE) $(EXPECTED_RESULTS)
+	rm -rf $(BISON_H)
+	rm -rf *.o
+	
