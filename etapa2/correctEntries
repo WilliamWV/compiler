@@ -17,3 +17,10 @@ int main(){}
 static pessoa someone(int idade, const string name, float alura){}
 float Double (float a){}
 static int foo(int a, int b){}
+
+//Blocos de comandos - Precisam de mais testes quando comandos simples estiverem disponíveis
+int main(){
+	{
+		//Bloco de comandos como comando simples
+	}
+}

@@ -67,6 +67,11 @@ diff output errorFile
 echo int semicolonOnEnt\(int a, float b\)\{\}\;| ./etapa2 > output
 diff output errorFile
 
+#Blocos de comandos - Precisam de mais testes quando comandos simples estiverem disponíveis
+
+echo int foo\(\)\{"/*"Unbalanced brackets"*/"\}\}| ./etapa2 > output
+diff output errorFile
+
 
 make clean > dump
 rm -rf dump 

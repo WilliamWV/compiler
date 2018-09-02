@@ -57,8 +57,8 @@ void yyerror (char const *s){
 programa: %empty | componente programa;
 componente: 
 	  novoTipo 
-	| TK_IDENTIFICADOR depoisDeIdent 
-	//Funções
+	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos 
+	// Funções
 	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands
 	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands
 
@@ -97,6 +97,10 @@ parameters : parameter ',' parameters| parameter;
 parameter: tipoConst TK_IDENTIFICADOR;
 argsAndCommands : '(' args ')' blocoComandos;
 //Bloco de comandos
-blocoComandos: '{''}';
+blocoComandos: '{' comandos '}';
+comando: blocoComandos | comandoSimples;
+comandos : %empty | comando comandos;
+comandoSimples: TK_PR_IF ;//COMANDOS SIMPLES // COLOQUEI TK_PR_IF PARA TESTAR BLOCOS DE COMANDOS
+
 %%
 
