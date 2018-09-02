@@ -98,7 +98,7 @@ parameter: tipoConst TK_IDENTIFICADOR;
 argsAndCommands : '(' args ')' blocoComandos;
 //Bloco de comandos
 blocoComandos: '{' comandos '}';
-comando: blocoComandos | comandoSimples;
+comando: blocoComandos | comandoSimples ';';
 comandos : %empty | comando comandos;
 comandoSimples: TK_PR_IF ;//COMANDOS SIMPLES // COLOQUEI TK_PR_IF PARA TESTAR BLOCOS DE COMANDOS
 
