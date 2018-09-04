@@ -1,8 +1,10 @@
 %{
 #include <stdio.h>
 int yylex(void);
-void yyerror (char const *s){
-	printf("%s\n", s);
+extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
+int yyerror (char const *s){
+	printf("Erro: \n\tLinha %d: erro sintático\n", get_line_number());
+	return -1;
 }
 %}
 %verbose

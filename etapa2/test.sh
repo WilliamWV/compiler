@@ -4,13 +4,16 @@ make > dump
 cat correctEntries | ./etapa2 > output
 diff output emptyFile
 
+cat fileWithErrorOnLine8 | ./etapa2 > output
+diff output line8Error
+
 #Testes que devem ser sintaticamente errados devem ser postos abaixo seguindo o esquema:
 #	> echo <testEntry> | ./etapa2 > output
 #	> diff output errorFile
 
 # Testes que possuem erro sintático para tipos definidos pelo usuário
-echo class | ./etapa2 > output
-diff output errorFile
+#echo class | ./etapa2 > output
+#diff output errorFile
 
 echo class [private int a]| ./etapa2 > output
 diff output errorFile
@@ -29,8 +32,8 @@ diff output errorFile
 
 #Testes que possuem erro sintático para variáveis globais
 
-echo nosemicolon int | ./etapa2 > output
-diff output errorFile
+#echo nosemicolon int | ./etapa2 > output
+#diff output errorFile
 
 echo int typeFirst\;| ./etapa2 > output
 diff output errorFile
@@ -38,7 +41,7 @@ diff output errorFile
 echo sizeUndef [] static int\;| ./etapa2 > output
 diff output errorFile
 
-#echo stringOnSize [\"12\"] float\;| ./etapa2 > output
+echo stringOnSize [\"12\"] float\;| ./etapa2 > output
 diff output errorFile
 
 echo noType \; | ./etapa2 > output
@@ -55,8 +58,8 @@ diff output errorFile
 echo int noComma \(const string j float a\)\{\}| ./etapa2 > output
 diff output errorFile
 
-echo int noBody \(\)| ./etapa2 > output
-diff output errorFile
+#echo int noBody \(\)| ./etapa2 > output
+#diff output errorFile
 
 echo float unexpStatic\(int a, static int b\)\{\}| ./etapa2 > output
 diff output errorFile

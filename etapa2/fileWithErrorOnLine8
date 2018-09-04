@@ -1,0 +1,8 @@
+v0[12] int;
+a float;
+str string;
+class pessoa[private int a: public float b]
+class will[int w]
+b bool;
+static int main(){}
+class noTypeOnArg[arg]
