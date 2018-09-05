@@ -71,7 +71,7 @@ int main(){
 int main(){
 	{
 		int zorzo <= 12;
-		int zorzo <= -12;
+		int zorzo <= 22;
 		int zorzo <= 12.2;
 		int zorzo <= 'w';
 		int zorzo <= false;
@@ -97,27 +97,169 @@ int main(){
 //atribuicao a um tipo primitivo não-vetor
 int main(){
 	{
-		zorzo = ;
+		zorzo = -1;
+	}
+}
+int main(){
+	{
+		zorzo = +1;
+	}
+}
+int main(){
+	{
+		zorzo = 1;
 	}
 }
 
-//atribuicao a um tipo primitivo vetor
+//atribuicao a um tipo primitivo vetor (NOTAR QUE A EXPRESSAO QUE DETERMINA O INDICE DO VETOR É NEGATIVA)
 int main(){
 	{
-		zorzo[] = ;
+		zorzo[-1] = -1;
 	}
 }
 
 //atribuicao a um tipo novo não-vetor
 int main(){
 	{
-		zorzo$campo = ;
+		zorzo$campo = -1;
 	}
 }
 
 //atribuicao a um tipo novo vetor
 int main(){
 	{
-		zorzo[]$campo = ;
+		zorzo[-1]$campo = -1;
+	}
+}
+
+//expressao unaria negativa com literal int
+int main(){
+	{
+		zorzo = -1;
+	}
+}
+
+//expressao unaria negativa com literal float
+int main(){
+	{
+		zorzo = -1.1;
+	}
+}
+
+//expressao unaria negativa com identificador
+int main(){
+	{
+		zorzo = -felipe;
+	}
+}
+
+//expressao unaria negativa com vetor
+int main(){
+	{
+		zorzo = -felipe[-1];
+	}
+}
+
+//expressao unaria positiva com vetor
+int main(){
+	{
+		zorzo = +felipe[+1];
+	}
+}
+
+//expressao unaria positiva com vetor com expressao positiva
+int main(){
+	{
+		zorzo = -felipe[+1];
+	}
+}
+
+//expressao unaria positiva com vetor com expressao negativa
+int main(){
+	{
+		zorzo = +felipe[-1];
+	}
+}
+
+//expressoes formadas por apenas um operando simples, sem nenhum operador
+int main(){
+	{
+		zorzo = 1;
+	}
+}
+int main(){
+	{
+		zorzo = 1.2;
+	}
+}
+int main(){
+	{
+		zorzo = felipe;
+	}
+}
+int main(){
+	{
+		zorzo = 1;
+	}
+}
+int main(){
+	{
+		zorzo = pereira[felipe];
+	}
+}
+
+//expressoes aritmeticas binarias
+int main(){
+	{
+		zorzo = 1/-2;
+	}
+}
+int main(){
+	{
+		zorzo = 1.5*-2;
+	}
+}
+
+//expressoes recursivas com parenteses
+int main(){
+	{
+		resultado = (1*2+3-4/5^6);
+	}
+}
+int main(){
+	{
+		resultado = 1*2+3-4/(5^6);
+	}
+}
+int main(){
+	{
+		resultado = (1*2+3-4)/5^6;
+	}
+}
+int main(){
+	{
+		resultado = -(1*2+3-4)/5^6;
+	}
+}
+int main(){
+	{
+		resultado = +(1*2+3-4/5^6);
+	}
+}
+int main(){
+	{
+		resultado = -(1);
+	}
+}
+int main(){
+	{
+		resultado = +(7.2);
+	}
+}
+
+//expressoes recursivas sem parenteses
+int main(){
+	{
+		resultado = 1*2+3-4/5^6;
 	}
 }

@@ -132,6 +132,37 @@ assignment:
 
 
 expression:
-								%empty;
+					parenthesisOrOperand arithmeticOperator expression
+					| parenthesisOrOperand;
+
+parenthesisOrOperand: /* necessário usar acima em vez de simples 'expression' para evitar conflitos */
+						'(' expression ')'
+						| arithmeticOperand
+						| '-' '(' expression ')'
+						| '+' '(' expression ')';
+
+arithmeticOperand: /* TODO: falta chamada de função */
+								TK_IDENTIFICADOR
+								| TK_IDENTIFICADOR '[' expression ']'
+								| TK_LIT_INT
+								| TK_LIT_FLOAT
+								| '+' unaryArithmeticOperand
+								| '-' unaryArithmeticOperand;
+
+unaryArithmeticOperand: /* necessário para não permitir expressões do tipo zorzo = 1.5*--2; */
+											TK_IDENTIFICADOR
+											| TK_IDENTIFICADOR '[' expression ']'
+											| TK_LIT_INT
+											| TK_LIT_FLOAT;
+
+arithmeticOperator:
+								'+'
+								| '-'
+								| '*'
+								| '/'
+								| '%'
+								| '^';
+
+
 
 %%
