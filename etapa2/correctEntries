@@ -24,3 +24,100 @@ int main(){
 		//Bloco de comandos como comando simples
 	}
 }
+
+//Definicao de tipo primitivo sem inicializar
+int main(){
+	{
+		int zorzo;
+	}
+}
+
+//Definicao de tipo primitivo com static
+int main(){
+	{
+		static int zorzo;
+	}
+}
+
+//Definicao de tipo primitivo com const
+int main(){
+	{
+		const int zorzo;
+	}
+}
+
+//Definicao de tipo primitivo com static e const na ordem correta
+int main(){
+	{
+		static const int zorzo;
+	}
+}
+
+//Definicao de tipo primitivo com static e const na ordem errada
+int main(){
+	{
+		// const static int zorzo; // se descomentar esse dá erro, garantindo a ordem correta
+	}
+}
+
+//Definicao de tipo primitivo inicializando com identificador
+int main(){
+	{
+		int zorzo <= will;
+	}
+}
+
+//Definicao de tipo primitivo inicializando com literal
+int main(){
+	{
+		int zorzo <= 12;
+		int zorzo <= -12;
+		int zorzo <= 12.2;
+		int zorzo <= 'w';
+		int zorzo <= false;
+		int zorzo <= true;
+		int zorzo <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
+	}
+}
+
+//Definicao de variavel com tipo definido pelo usuario
+int main(){
+	{
+		tipo_usuario zorzo;
+	}
+}
+
+//Definicao de tipo primitivo inicializando com literal
+int main(){
+	{
+		//tipo_usuario zorzo <= 12; // caso descomentado gera erro, pois não podemos inicializar uma variável de tipo definido pelo usuário
+	}
+}
+
+//atribuicao a um tipo primitivo não-vetor
+int main(){
+	{
+		zorzo = ;
+	}
+}
+
+//atribuicao a um tipo primitivo vetor
+int main(){
+	{
+		zorzo[] = ;
+	}
+}
+
+//atribuicao a um tipo novo não-vetor
+int main(){
+	{
+		zorzo$campo = ;
+	}
+}
+
+//atribuicao a um tipo novo vetor
+int main(){
+	{
+		zorzo[]$campo = ;
+	}
+}

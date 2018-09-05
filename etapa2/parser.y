@@ -57,16 +57,16 @@ int yyerror (char const *s){
 %%
 
 programa: %empty | componente programa;
-componente: 
-	  novoTipo 
-	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos 
+componente:
+	  novoTipo
+	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos
 	// Funções
 	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands
 	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands
 
 ;
 
-depoisDeIdent: 
+depoisDeIdent:
 	  tamanhoVetor static tipo ';'
 	| TK_PR_STATIC tipo ';'
 	| tiposPrimitivos ';'
@@ -83,6 +83,7 @@ tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRIN
 tipo : tiposPrimitivos | TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
 static: TK_PR_STATIC | %empty;
 tipoConst: TK_PR_CONST tipo | tipo;
+literais: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE | TK_LIT_CHAR | TK_LIT_STRING;
 
 //Novos tipos
 novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
@@ -93,7 +94,7 @@ campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
 //Variáveis globais
 tamanhoVetor: '[' TK_LIT_INT ']';
 
-//Funções 
+//Funções
 args: %empty | parameters;
 parameters : parameter ',' parameters| parameter;
 parameter: tipoConst TK_IDENTIFICADOR;
@@ -102,7 +103,35 @@ argsAndCommands : '(' args ')' blocoComandos;
 blocoComandos: '{' comandos '}';
 comando: blocoComandos | comandoSimples ';';
 comandos : %empty | comando comandos;
-comandoSimples: TK_PR_IF ;//COMANDOS SIMPLES // COLOQUEI TK_PR_IF PARA TESTAR BLOCOS DE COMANDOS
+comandoSimples: localVarDefinition | assignment;//COMANDOS SIMPLES // COLOQUEI TK_PR_IF PARA TESTAR BLOCOS DE COMANDOS
+
+//Definição de Variáveis
+localVarDefinition:
+							TK_PR_STATIC TK_IDENTIFICADOR TK_IDENTIFICADOR
+							| TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR
+							| TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR
+							| TK_IDENTIFICADOR TK_IDENTIFICADOR
+							| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR
+							| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR
+							| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR
+							| tiposPrimitivos TK_IDENTIFICADOR
+							| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+							| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+							| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+							| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+							| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+							| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+							| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+							| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais;
+
+assignment:
+					TK_IDENTIFICADOR '=' expression
+					| TK_IDENTIFICADOR '[' expression ']' '=' expression
+					| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression
+					| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression;
+
+
+expression:
+								%empty;
 
 %%
-
