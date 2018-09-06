@@ -20,7 +20,7 @@ ALPHANUMERIC {ALPHABETIC}|{DIGIT}
 SPECIALCHAR ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"?"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"^"|"."|"$"
 ASCIIALPHABET " "|"!"|"#"|"$"|"%"|"&"|"*"|"+"|","|"-"|"."|"/"|":"|";"|"<"|"="|">"|"?"|"@"|"["|"]"|"^"|"_"|"`"|"{"|"|"|"}"|"~"|"\\"|\"|{DIGIT}|{CAPITALCHAR}|{SMALLCHAR}|"'"|"("|")"
 CONTROLCHAR "\\0"|"\\t"|"\\n"|"\\v"|"\\f"|"\\r"
-INTLIT "+"({DIGIT})+|"-"({DIGIT})+|{DIGIT}+
+INTLIT ({DIGIT})+|({DIGIT})+|{DIGIT}+
 FLOATLIT {INTLIT}"."{DIGIT}+
 WHITESPACE " "|"\t"|"\n"
 OPENCOMMENT "/*"
