@@ -288,3 +288,44 @@ int main(){
 		resultado = 1 * -1;
 	}
 }
+
+//input
+int main(){
+	{
+		input 1 * -1;
+	}
+}
+
+//output
+int main(){
+	{
+		output 1 * -1, 1 * -1;
+	}
+}
+int main(){
+	{
+		//output 1 * -1,, 1 * -1; //deve dar errado pq tem expressao vazia
+	}
+}
+int main(){
+	{
+		output 1 * -1, 2, 3;
+	}
+}
+int main(){
+	{
+		output 1 * -1;
+	}
+}
+
+//chamada de função
+int main(){
+	{
+		zorzo(arg1, arg2, (2*3*(7-4)/2));
+	}
+}
+int main(){
+	{
+		zorzo(arg1, arg2, ., (2*3*(7-4)/2));
+	}
+}

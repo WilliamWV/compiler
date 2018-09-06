@@ -103,7 +103,7 @@ argsAndCommands : '(' args ')' blocoComandos;
 blocoComandos: '{' comandos '}';
 comando: blocoComandos | comandoSimples ';';
 comandos : %empty | comando comandos;
-comandoSimples: localVarDefinition | assignment;//COMANDOS SIMPLES // COLOQUEI TK_PR_IF PARA TESTAR BLOCOS DE COMANDOS
+comandoSimples: localVarDefinition | assignment | input | output | funcCall;//COMANDOS SIMPLES // COLOQUEI TK_PR_IF PARA TESTAR BLOCOS DE COMANDOS
 
 //Definição de Variáveis
 localVarDefinition:
@@ -130,6 +130,26 @@ assignment:
 					| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression
 					| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression;
 
+input:
+			TK_PR_INPUT expression;
+
+output:
+			TK_PR_OUTPUT expression continueOutput
+			| TK_PR_OUTPUT expression;
+
+continueOutput: ',' expression | ',' expression continueOutput
+
+funcCall:
+						TK_IDENTIFICADOR '(' argsCall ')';
+
+argsCall:
+							argCall
+							| argsCall ',' argCall;
+
+argCall:
+						expression
+						| '.';
+
 
 expression:
 					parenthesisOrOperand arithmeticOperator expression
@@ -141,7 +161,7 @@ parenthesisOrOperand: /* necessário usar acima em vez de simples 'expression' p
 						| '-' '(' expression ')'
 						| '+' '(' expression ')';
 
-arithmeticOperand: /* TODO: falta chamada de função */
+arithmeticOperand: /* TODO falta chamada de função */
 								TK_IDENTIFICADOR
 								| TK_IDENTIFICADOR '[' expression ']'
 								| TK_LIT_INT
