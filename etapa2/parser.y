@@ -56,7 +56,9 @@ int yyerror (char const *s){
 
 %%
 
-programa: %empty | componente programa;
+programa: 
+	%empty 
+	| componente programa;
 componente:
 	  novoTipo
 	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos
@@ -78,33 +80,125 @@ fechaVarOuFunc:
 ;
 
 //Regras gerais
-encapsulamento: %empty | TK_PR_PRIVATE | TK_PR_PUBLIC | TK_PR_PROTECTED;
-tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRING;
-tipo : tiposPrimitivos | TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
-static: TK_PR_STATIC | %empty;
-tipoConst: TK_PR_CONST tipo | tipo;
-literais: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE | TK_LIT_CHAR | TK_LIT_STRING;
+encapsulamento: 
+	%empty 
+	| TK_PR_PRIVATE 
+	| TK_PR_PUBLIC 
+	| TK_PR_PROTECTED;
+tiposPrimitivos: 
+	TK_PR_INT 
+	| TK_PR_FLOAT 
+	| TK_PR_BOOL 
+	| TK_PR_CHAR 
+	| TK_PR_STRING;
+tipo : 
+	tiposPrimitivos 
+	| TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
+static: 
+	TK_PR_STATIC 
+	| %empty;
+tipoConst: 
+	TK_PR_CONST tipo 
+	| tipo;
+literais: 
+	TK_LIT_INT 
+	| TK_LIT_FLOAT 
+	| TK_LIT_FALSE 
+	| TK_LIT_TRUE 
+	| TK_LIT_CHAR 
+	| TK_LIT_STRING;
 
 //Novos tipos
-novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
-listaCampos: '[' list ']';
-list: campo | campo ':' list;
-campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
+novoTipo: 
+	TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
+listaCampos: 
+	'[' list ']';
+list: 
+	campo 
+	| campo ':' list;
+campo: 
+	encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
 
 //Variáveis globais
-tamanhoVetor: '[' TK_LIT_INT ']';
+tamanhoVetor: 
+	'[' TK_LIT_INT ']';
 
 //Funções
-args: %empty | parameters;
-parameters : parameter ',' parameters| parameter;
-parameter: tipoConst TK_IDENTIFICADOR;
-argsAndCommands : '(' args ')' blocoComandos;
+args: 
+	%empty 
+	| parameters;
+parameters : 
+	parameter ',' parameters
+	| parameter;
+parameter: 
+	tipoConst TK_IDENTIFICADOR;
+argsAndCommands : 
+	'(' args ')' blocoComandos;
 //Bloco de comandos
-blocoComandos: '{' comandos '}';
-comando: blocoComandos | comandoSimples ';';
-comandos : %empty | comando comandos;
-comandoSimples: localVarDefinition | assignment | input | output | funcCall | shift
-								| TK_PR_BREAK | TK_PR_CONTINUE | return;//COMANDOS SIMPLES // COLOQUEI TK_PR_IF PARA TESTAR BLOCOS DE COMANDOS
+/**
+	Observações gerais sobre comandos:
+		* Precisei alterar as regras para comandos pois na especificação existem várias excessões de comandos que podem ou não podem ser aplicados em determinado lugar, separei o case dos comandos simples por não ter ';' e separei os que tem vírgula dos que não tem, pois somente os que não tem vírgula podem aparecer nas listas de comando do for
+*/
+blocoComandos: 
+	'{' comandos '}';
+comando: 
+	blocoComandos 
+	| comandoSimples ';'
+	| case; //Coloquei a regra do case aqui pois na especificação ele não está atrelado ao switch, mas apenas como marcador de lugar além disso não possui ';' no final e não pode ser usado no for
+comandos : 
+	%empty 
+	| comando comandos;
+
+
+comandoSimples: 
+	comandosSemVirgula
+	| output 
+	| funcCall 
+	| foreach 
+	| for; 
+
+
+comandosSemVirgula:
+	localVarDefinition
+	| assignment
+	| input
+	| shift
+	| TK_PR_BREAK
+	| TK_PR_CONTINUE
+	| return
+	| ifThenElse
+	| while_do
+	| do_while
+	| switch;
+
+ifThenElse:
+	TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse;
+optElse:
+	%empty
+	| TK_PR_ELSE blocoComandos;
+foreach:
+	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos;
+
+for: 
+	TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos;
+
+while_do:
+	TK_PR_WHILE '(' expression ')' TK_PR_DO blocoComandos;
+do_while:
+	TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')';
+
+
+foreachList: 
+	expression 
+	| foreachList ',' expression ;
+forList:
+	comandosSemVirgula
+	| forList ',' comandosSemVirgula ;
+
+switch:
+	TK_PR_SWITCH '(' expression ')' blocoComandos;
+case:
+	TK_PR_CASE TK_LIT_INT ':';
 
 //Definição de Variáveis
 localVarDefinition: /*TODO: devem também aceitar - ou + antes do valor que irá inicializar uma variável numérica, conforme issue 56*/

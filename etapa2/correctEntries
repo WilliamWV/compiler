@@ -375,3 +375,48 @@ int main(){
 		break;
 	}
 }
+
+int main(){
+	//Esta função é uma função que vai tester comandos de controle de fluxo bem como comentários desnecessariamente extensos como esse só para garantir que estão sendo ignorados
+	/**
+		Comentário 
+		Multilinha 
+		Sem 
+		Propósito
+	*/
+	x int <= 12;
+	y float <= 3.14;
+	z const string <= "zorzo";
+	w const string <= "will";
+	//expressão relacional no if then sem else
+	if (x > y) then {
+		x = y;
+		//if com else usando expressão aritmética
+		if (2 + 3 * 4 ^ 9 - 91) then {
+			//lista do foreach é uma lista de expressões separadas por vírgula
+			foreach (i : 1, 2, 3, 5, a<b, true && false) {
+				output 1, 2, 3, 4^(5-5)+3;
+			};
+			
+			//listas de comando do for não permite case, nem comandos que contenham vígula
+			for (i int <= 12, j float <= 900, x = 3 : true && false || true : i = j ^ (1/2), j = i + 94*x, x = i*13){
+				var int;
+				input var;
+				continue;
+			};
+		} else {
+			while (true) do{
+				v = sleep(987);
+				switch (v){
+					case 2: 
+					case 3:
+					output 12;
+					break;
+				};
+			};
+			do {
+				goto string <= "Pq não tem goto?";
+			}while (x == y);
+		};
+	};
+}
