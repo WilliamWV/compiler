@@ -28,69 +28,69 @@ int main(){
 //Definicao de tipo primitivo sem inicializar
 int main(){
 	{
-		int zorzo;
+		zorzo int;
 	}
 }
 
 //Definicao de tipo primitivo com static
 int main(){
 	{
-		static int zorzo;
+		zorzo static int;
 	}
 }
 
 //Definicao de tipo primitivo com const
 int main(){
 	{
-		const int zorzo;
+		zorzo const int;
 	}
 }
 
 //Definicao de tipo primitivo com static e const na ordem correta
 int main(){
 	{
-		static const int zorzo;
+		zorzo static const int;
 	}
 }
 
 //Definicao de tipo primitivo com static e const na ordem errada
 int main(){
 	{
-		// const static int zorzo; // se descomentar esse dá erro, garantindo a ordem correta
+		// zorzo const static int; // se descomentar esse dá erro, garantindo a ordem correta
 	}
 }
 
 //Definicao de tipo primitivo inicializando com identificador
 int main(){
 	{
-		int zorzo <= will;
+		zorzo int <= will;
 	}
 }
 
 //Definicao de tipo primitivo inicializando com literal
 int main(){
 	{
-		int zorzo <= 12;
-		int zorzo <= 22;
-		int zorzo <= 12.2;
-		int zorzo <= 'w';
-		int zorzo <= false;
-		int zorzo <= true;
-		int zorzo <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
+		zorzo int <= 12;
+		zorzo int <= 22;
+		zorzo int <= 12.2;
+		zorzo int <= 'w';
+		zorzo int <= false;
+		zorzo int <= true;
+		zorzo int <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
 	}
 }
 
 //Definicao de variavel com tipo definido pelo usuario
 int main(){
 	{
-		tipo_usuario zorzo;
+		zorzo tipo_usuario;
 	}
 }
 
 //Definicao de tipo primitivo inicializando com literal
 int main(){
 	{
-		//tipo_usuario zorzo <= 12; // caso descomentado gera erro, pois não podemos inicializar uma variável de tipo definido pelo usuário
+		//zorzo tipo_usuario <= 12; // caso descomentado gera erro, pois não podemos inicializar uma variável de tipo definido pelo usuário
 	}
 }
 
@@ -327,5 +327,51 @@ int main(){
 int main(){
 	{
 		zorzo(arg1, arg2, ., (2*3*(7-4)/2));
+	}
+}
+
+//shifts
+int main(){
+	{
+		zorzo << will;
+		zorzo << 12;
+		zorzo << 17.07;
+		zorzo << -17.07;
+		zorzo << +17.07;
+		zorzo << vetor[+7];
+		zorzo << (2*3*(7-4)/2);
+		zorzo$algumcampo << (2*3*(7-4)/2);
+		zorzo [17-will/-(-5)] << (2*3*(7-4)/2);
+		zorzo[17-will/-(-5)]$algumcampo << (2*3*(7-4)/2);
+
+		zorzo >> will;
+		zorzo >> 12;
+		zorzo >> 17.07;
+		zorzo >> -17.07;
+		zorzo >> +17.07;
+		zorzo >> vetor[+7];
+		zorzo >> (2*3*(7-4)/2);
+		zorzo$algumcampo >> (2*3*(7-4)/2);
+		zorzo [17-will/-(-5)] >> (2*3*(7-4)/2);
+		zorzo[17-will/-(-5)]$algumcampo >> (2*3*(7-4)/2);
+	}
+}
+
+//return, continue e break
+int main(){
+	{
+		return zorzo(arg1, arg2, ., (2*3*(7-4)/2));
+		return will;
+		return 12;
+	 	return 17.07;
+		return -17.07;
+		return +17.07;
+		return vetor[+7];
+		return (2*3*(7-4)/2);
+		return -(-zorzo);
+		return +(+zorzo);
+		return -zorzo;
+		continue;
+		break;
 	}
 }
