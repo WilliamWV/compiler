@@ -1,0 +1,2 @@
+class d[private int a: private b] // vai dizer que b é inexperado pois esperava tipo primitivo
+//sem tipo no segundo membro

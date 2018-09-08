@@ -1,0 +1,2 @@
+int typeFirst;
+//tipo antes do identificador de var global, parser vai achar que se trata de uma declaração de função e esperar '(' ao invés de ';'

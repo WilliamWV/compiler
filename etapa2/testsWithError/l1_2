@@ -1,0 +1,2 @@
+class d[abc] // vai dizer que abc é um TK_IDENTIFICADOR inexperado pois classes somente podem ter atributos de tipo primitivo, portanto esperava modificador de encapsulamento ou tipo primitivo
+//membro sem tipo

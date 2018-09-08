@@ -1,0 +1,1 @@
+nosemicolon int //esse gera erro na linha 2 pois procura ';' mas acha $end

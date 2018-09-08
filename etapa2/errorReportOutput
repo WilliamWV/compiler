@@ -1,0 +1,20 @@
+syntax error, unexpected '[', expecting TK_IDENTIFICADOR, on line 1
+syntax error, unexpected TK_PR_PROTECTED, on line 1
+syntax error, unexpected '(', expecting TK_IDENTIFICADOR, on line 1
+syntax error, unexpected TK_PR_FLOAT, expecting ')', on line 1
+syntax error, unexpected TK_PR_STATIC, on line 1
+syntax error, unexpected TK_PR_CONST, expecting $end, on line 1
+syntax error, unexpected ';', expecting $end, on line 1
+syntax error, unexpected '}', expecting $end, on line 1
+syntax error, unexpected TK_IDENTIFICADOR, on line 1
+syntax error, unexpected TK_IDENTIFICADOR, on line 1
+syntax error, unexpected ',', expecting ']', on line 1
+syntax error, unexpected ';', expecting '(', on line 1
+syntax error, unexpected ']', expecting TK_LIT_INT, on line 1
+syntax error, unexpected TK_LIT_STRING, expecting TK_LIT_INT, on line 1
+syntax error, unexpected ';', on line 1
+syntax error, unexpected ';', expecting TK_IDENTIFICADOR, on line 1
+syntax error, unexpected $end, expecting TK_IDENTIFICADOR, on line 2
+syntax error, unexpected $end, expecting ';', on line 2
+syntax error, unexpected $end, expecting '{', on line 2
+syntax error, unexpected TK_IDENTIFICADOR, on line 8

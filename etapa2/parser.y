@@ -3,10 +3,12 @@
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
-	printf("Erro: \n\tLinha %d: erro sintático\n", get_line_number());
+	printf("%s, on line %d\n", s, get_line_number());
 	return -1;
 }
 %}
+%define parse.lac none
+%define parse.error verbose
 %verbose
 %token TK_PR_INT
 %token TK_PR_FLOAT
