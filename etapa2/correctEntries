@@ -28,195 +28,200 @@ int main(){
 //Definicao de tipo primitivo sem inicializar
 int main(){
 	{
-		zorzo int;
+		var int;
 	}
 }
 
 //Definicao de tipo primitivo com static
 int main(){
 	{
-		zorzo static int;
+		var static int;
 	}
 }
 
 //Definicao de tipo primitivo com const
 int main(){
 	{
-		zorzo const int;
+		var const int;
 	}
 }
 
 //Definicao de tipo primitivo com static e const na ordem correta
 int main(){
 	{
-		zorzo static const int;
+		var static const int;
 	}
 }
 
 //Definicao de tipo primitivo com static e const na ordem errada
 int main(){
 	{
-		// zorzo const static int; // se descomentar esse dá erro, garantindo a ordem correta
+		// var const static int; // se descomentar esse dá erro, garantindo a ordem correta
 	}
 }
 
 //Definicao de tipo primitivo inicializando com identificador
 int main(){
 	{
-		zorzo int <= will;
+		var int <= var2;
 	}
 }
 
 //Definicao de tipo primitivo inicializando com literal
 int main(){
 	{
-		zorzo int <= 12;
-		zorzo int <= 22;
-		zorzo int <= 12.2;
-		zorzo int <= 'w';
-		zorzo int <= false;
-		zorzo int <= true;
-		zorzo int <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
+		var int <= 12;
+		var int <= 22;
+		var int <= 12.2;
+		var static const int <= ----++++-12;
+		var static const int <= -+-+-+-+-+-+++++---+zorzo;
+		var static const int <= 12;
+		var static const int <= 12;
+		var static const int <= 12;
+		var int <= 'w';
+		var int <= false;
+		var int <= true;
+		var int <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
 	}
 }
 
 //Definicao de variavel com tipo definido pelo usuario
 int main(){
 	{
-		zorzo tipo_usuario;
+		var tipo_usuario;
 	}
 }
 
 //Definicao de tipo primitivo inicializando com literal
 int main(){
 	{
-		//zorzo tipo_usuario <= 12; // caso descomentado gera erro, pois não podemos inicializar uma variável de tipo definido pelo usuário
+		//var tipo_usuario <= 12; // caso descomentado gera erro, pois não podemos inicializar uma variável de tipo definido pelo usuário
 	}
 }
 
 //atribuicao a um tipo primitivo não-vetor
 int main(){
 	{
-		zorzo = -1;
+		var = -1;
 	}
 }
 int main(){
 	{
-		zorzo = +1;
+		var = +1;
 	}
 }
 int main(){
 	{
-		zorzo = 1;
+		var = 1;
 	}
 }
 
 //atribuicao a um tipo primitivo vetor (NOTAR QUE A EXPRESSAO QUE DETERMINA O INDICE DO VETOR É NEGATIVA)
 int main(){
 	{
-		zorzo[-1] = -1;
+		var[-1] = -1;
 	}
 }
 
 //atribuicao a um tipo novo não-vetor
 int main(){
 	{
-		zorzo$campo = -1;
+		var$campo = -1;
 	}
 }
 
 //atribuicao a um tipo novo vetor
 int main(){
 	{
-		zorzo[-1]$campo = -1;
+		var[-1]$campo = -1;
 	}
 }
 
 //expressao unaria negativa com literal int
 int main(){
 	{
-		zorzo = -1;
+		var = -1;
 	}
 }
 
 //expressao unaria negativa com literal float
 int main(){
 	{
-		zorzo = -1.1;
+		var = -1.1;
 	}
 }
 
 //expressao unaria negativa com identificador
 int main(){
 	{
-		zorzo = -felipe;
+		var = -felipe;
 	}
 }
 
 //expressao unaria negativa com vetor
 int main(){
 	{
-		zorzo = -felipe[-1];
+		var = -felipe[-1];
 	}
 }
 
 //expressao unaria positiva com vetor
 int main(){
 	{
-		zorzo = +felipe[+1];
+		var = +felipe[+1];
 	}
 }
 
 //expressao unaria positiva com vetor com expressao positiva
 int main(){
 	{
-		zorzo = -felipe[+1];
+		var = -felipe[+1];
 	}
 }
 
 //expressao unaria positiva com vetor com expressao negativa
 int main(){
 	{
-		zorzo = +felipe[-1];
+		var = +felipe[-1];
 	}
 }
 
 //expressoes formadas por apenas um operando simples, sem nenhum operador
 int main(){
 	{
-		zorzo = 1;
+		var = 1;
 	}
 }
 int main(){
 	{
-		zorzo = 1.2;
+		var = 1.2;
 	}
 }
 int main(){
 	{
-		zorzo = felipe;
+		var = felipe;
 	}
 }
 int main(){
 	{
-		zorzo = 1;
+		var = 1;
 	}
 }
 int main(){
 	{
-		zorzo = pereira[felipe];
+		var = pereira[felipe];
 	}
 }
 
 //expressoes aritmeticas binarias
 int main(){
 	{
-		zorzo = 1/-2;
+		var = 1/-2;
 	}
 }
 int main(){
 	{
-		zorzo = 1.5*-2;
+		var = 1.5*-2;
 	}
 }
 
@@ -321,67 +326,100 @@ int main(){
 //chamada de função
 int main(){
 	{
-		zorzo(arg1, arg2, (2*3*(7-4)/2));
+		var(arg1, arg2, (2*3*(7-4)/2));
 	}
 }
 int main(){
 	{
-		zorzo(arg1, arg2, ., (2*3*(7-4)/2));
+		var(arg1, arg2, ., (2*3*(7-4)/2));
 	}
 }
 
 //shifts
 int main(){
 	{
-		zorzo << will;
-		zorzo << 12;
-		zorzo << 17.07;
-		zorzo << -17.07;
-		zorzo << +17.07;
-		zorzo << vetor[+7];
-		zorzo << (2*3*(7-4)/2);
-		zorzo$algumcampo << (2*3*(7-4)/2);
-		zorzo [17-will/-(-5)] << (2*3*(7-4)/2);
-		zorzo[17-will/-(-5)]$algumcampo << (2*3*(7-4)/2);
+		var << var2;
+		var << 12;
+		var << 17.07;
+		var << -17.07;
+		var << +17.07;
+		var << vetor[+7];
+		var << (2*3*(7-4)/2);
+		var$algumcampo << (2*3*(7-4)/2);
+		var [17-var2/-(-5)] << (2*3*(7-4)/2);
+		var[17-var2/-(-5)]$algumcampo << (2*3*(7-4)/2);
 
-		zorzo >> will;
-		zorzo >> 12;
-		zorzo >> 17.07;
-		zorzo >> -17.07;
-		zorzo >> +17.07;
-		zorzo >> vetor[+7];
-		zorzo >> (2*3*(7-4)/2);
-		zorzo$algumcampo >> (2*3*(7-4)/2);
-		zorzo [17-will/-(-5)] >> (2*3*(7-4)/2);
-		zorzo[17-will/-(-5)]$algumcampo >> (2*3*(7-4)/2);
+		var >> var2;
+		var >> 12;
+		var >> 17.07;
+		var >> -17.07;
+		var >> +17.07;
+		var >> vetor[+7];
+		var >> (2*3*(7-4)/2);
+		var$algumcampo >> (2*3*(7-4)/2);
+		var [17-var2/-(-5)] >> (2*3*(7-4)/2);
+		var[17-var2/-(-5)]$algumcampo >> (2*3*(7-4)/2);
 	}
 }
 
 //return, continue e break
 int main(){
 	{
-		return zorzo(arg1, arg2, ., (2*3*(7-4)/2));
-		return will;
+		return var(arg1, arg2, ., (2*3*(7-4)/2));
+		return -var(arg1, arg2, ., (2*3*(7-4)/2));
+		return +var(arg1, arg2, ., (2*3*(7-4)/2));
+		return -(-var(arg1, arg2, ., (2*3*(7-4)/2)));
+		return +(var(arg1, arg2, ., (2*3*(7-4)/2)));
+		return var2;
 		return 12;
 	 	return 17.07;
 		return -17.07;
 		return +17.07;
 		return vetor[+7];
 		return (2*3*(7-4)/2);
-		return -(-zorzo);
-		return +(+zorzo);
-		return -zorzo;
+		return -(-var);
+		return +(+var);
+		return -var;
 		continue;
 		break;
 	}
 }
 
+//testes booleanos
+int main(){
+	{
+		var = !!!!!!!!!!!!!!!!!var;
+		var = var && var;
+		var = var || var;
+		var = var & var;
+		var = var | var;
+		var = 1 == 2 == 3 == 4 + 7 && true - false == 12 | var2 & john;
+		var = 1 && true;
+		// var = 1 ! 2; //essa linha dá errado, já que ! é o único operador unicamente unario
+		var = *******ptr;
+		var = *ptr;
+		var = 12 * val;
+		var = #hashtable;
+		var = 1?+2&&true; // nesse caso ? avalia 1 para true ou false, e depois a expressao é continuada
+		var = (1+2&&true)?;
+	}
+}
+
+// pipes
+int main(){
+	{
+		var = z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+		z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+	}
+}
+
+//controle de fluxo
 int main(){
 	//Esta função é uma função que vai tester comandos de controle de fluxo bem como comentários desnecessariamente extensos como esse só para garantir que estão sendo ignorados
 	/**
-		Comentário 
-		Multilinha 
-		Sem 
+		Comentário
+		Multilinha
+		Sem
 		Propósito
 	*/
 	x int <= 12;
@@ -397,7 +435,7 @@ int main(){
 			foreach (i : 1, 2, 3, 5, a<b, true && false) {
 				output 1, 2, 3, 4^(5-5)+3;
 			};
-			
+
 			//listas de comando do for não permite case, nem comandos que contenham vígula
 			for (i int <= 12, j float <= 900, x = 3 : true && false || true : i = j ^ (1/2), j = i + 94*x, x = i*13){
 				var int;
@@ -408,7 +446,7 @@ int main(){
 			while (true) do{
 				v = sleep(987);
 				switch (v){
-					case 2: 
+					case 2:
 					case 3:
 					output 12;
 					break;

@@ -56,9 +56,7 @@ int yyerror (char const *s){
 
 %%
 
-programa: 
-	%empty 
-	| componente programa;
+programa: %empty | componente programa;
 componente:
 	  novoTipo
 	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos
@@ -80,82 +78,50 @@ fechaVarOuFunc:
 ;
 
 //Regras gerais
-encapsulamento: 
-	%empty 
-	| TK_PR_PRIVATE 
-	| TK_PR_PUBLIC 
-	| TK_PR_PROTECTED;
-tiposPrimitivos: 
-	TK_PR_INT 
-	| TK_PR_FLOAT 
-	| TK_PR_BOOL 
-	| TK_PR_CHAR 
-	| TK_PR_STRING;
-tipo : 
-	tiposPrimitivos 
-	| TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
-static: 
-	TK_PR_STATIC 
-	| %empty;
-tipoConst: 
-	TK_PR_CONST tipo 
-	| tipo;
-literais: 
-	TK_LIT_INT 
-	| TK_LIT_FLOAT 
-	| TK_LIT_FALSE 
-	| TK_LIT_TRUE 
-	| TK_LIT_CHAR 
-	| TK_LIT_STRING;
+encapsulamento: %empty | TK_PR_PRIVATE | TK_PR_PUBLIC | TK_PR_PROTECTED;
+tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRING;
+tipo : tiposPrimitivos | TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
+static: TK_PR_STATIC | %empty;
+tipoConst: TK_PR_CONST tipo | tipo;
+literais: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE | TK_LIT_CHAR | TK_LIT_STRING;
 
 //Novos tipos
-novoTipo: 
-	TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
-listaCampos: 
-	'[' list ']';
-list: 
-	campo 
-	| campo ':' list;
-campo: 
-	encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
+novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
+listaCampos: '[' list ']';
+list: campo | campo ':' list;
+campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
 
 //Variáveis globais
-tamanhoVetor: 
-	'[' TK_LIT_INT ']';
+tamanhoVetor: '[' TK_LIT_INT ']';
 
 //Funções
-args: 
-	%empty 
-	| parameters;
-parameters : 
-	parameter ',' parameters
-	| parameter;
-parameter: 
-	tipoConst TK_IDENTIFICADOR;
-argsAndCommands : 
-	'(' args ')' blocoComandos;
+args: %empty | parameters;
+parameters : parameter ',' parameters| parameter;
+parameter: tipoConst TK_IDENTIFICADOR;
+argsAndCommands : '(' args ')' blocoComandos;
 //Bloco de comandos
 /**
 	Observações gerais sobre comandos:
 		* Precisei alterar as regras para comandos pois na especificação existem várias excessões de comandos que podem ou não podem ser aplicados em determinado lugar, separei o case dos comandos simples por não ter ';' e separei os que tem vírgula dos que não tem, pois somente os que não tem vírgula podem aparecer nas listas de comando do for
 */
-blocoComandos: 
+blocoComandos:
 	'{' comandos '}';
-comando: 
-	blocoComandos 
+comando:
+	blocoComandos
 	| comandoSimples ';'
 	| case; //Coloquei a regra do case aqui pois na especificação ele não está atrelado ao switch, mas apenas como marcador de lugar além disso não possui ';' no final e não pode ser usado no for
-comandos : 
-	%empty 
+comandos :
+	%empty
 	| comando comandos;
 
 
-comandoSimples: 
+comandoSimples:
 	comandosSemVirgula
-	| output 
-	| funcCall 
-	| foreach 
-	| for; 
+	| pipe
+	| output
+	| funcCall
+	| foreach
+	| for;
 
 
 comandosSemVirgula:
@@ -179,7 +145,7 @@ optElse:
 foreach:
 	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos;
 
-for: 
+for:
 	TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos;
 
 while_do:
@@ -188,8 +154,8 @@ do_while:
 	TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')';
 
 
-foreachList: 
-	expression 
+foreachList:
+	expression
 	| foreachList ',' expression ;
 forList:
 	comandosSemVirgula
@@ -200,8 +166,9 @@ switch:
 case:
 	TK_PR_CASE TK_LIT_INT ':';
 
-//Definição de Variáveis
-localVarDefinition: /*TODO: devem também aceitar - ou + antes do valor que irá inicializar uma variável numérica, conforme issue 56*/
+
+/*Definição de Variáveis*/
+localVarDefinition:
 							TK_IDENTIFICADOR TK_PR_STATIC TK_IDENTIFICADOR
 							| TK_IDENTIFICADOR TK_PR_CONST TK_IDENTIFICADOR
 							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR
@@ -210,115 +177,122 @@ localVarDefinition: /*TODO: devem também aceitar - ou + antes do valor que irá
 							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos
 							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos
 							| TK_IDENTIFICADOR tiposPrimitivos
+
 							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
 							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
 							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
 							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
+
 							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE literais
+							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
 							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE literais
+							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
 							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE literais
-							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE literais;
+							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
+							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE literais
+							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral;
+
+negativeOrPositiveIdentifier:
+	'-' negativeOrPositiveIdentifier
+	| '-' TK_IDENTIFICADOR
+	| '+' negativeOrPositiveIdentifier
+	| '+' TK_IDENTIFICADOR;
+
+negativeOrPositiveLiteral:
+'-' negativeOrPositiveLiteral
+| '-' TK_LIT_INT
+| '-' TK_LIT_FLOAT
+| '+' negativeOrPositiveLiteral
+| '+' TK_LIT_INT
+| '+' TK_LIT_FLOAT;
+
 
 assignment:
-					TK_IDENTIFICADOR '=' expression
-					| TK_IDENTIFICADOR '[' expression ']' '=' expression
-					| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression
-					| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression;
+					TK_IDENTIFICADOR '=' pipeOrExpression
+					| TK_IDENTIFICADOR '[' pipeOrExpression ']' '=' pipeOrExpression
+					| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' pipeOrExpression
+					| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR '=' pipeOrExpression;
 
 input:
-			TK_PR_INPUT expression;
+			TK_PR_INPUT pipeOrExpression;
 
 output:
-			TK_PR_OUTPUT expression continueOutput
-			| TK_PR_OUTPUT expression;
-continueOutput: ',' expression | ',' expression continueOutput
+			TK_PR_OUTPUT pipeOrExpression continueOutput
+			| TK_PR_OUTPUT pipeOrExpression;
+continueOutput: ',' pipeOrExpression | ',' pipeOrExpression continueOutput
 
 funcCall:
-						TK_IDENTIFICADOR '(' argsCall ')';
+						TK_IDENTIFICADOR '(' argsCall ')'
+						| TK_IDENTIFICADOR '(' ')';
 argsCall:
 							argCall
 							| argsCall ',' argCall;
 argCall:
-						expression
+						pipeOrExpression
 						| '.';
 
 shiftOp: TK_OC_SL | TK_OC_SR;
-shift: TK_IDENTIFICADOR shiftOp expression
-	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression
-	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression
-	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression;
+shift: TK_IDENTIFICADOR shiftOp pipeOrExpression
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp pipeOrExpression
+	| TK_IDENTIFICADOR '[' pipeOrExpression ']' shiftOp pipeOrExpression
+	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR shiftOp pipeOrExpression;
 
 return:
-	TK_PR_RETURN expression;
+	TK_PR_RETURN pipeOrExpression;
 
-expression: arithmeticExpression | logicExpression;
+pipeOrExpression:
+	pipe
+	|expression;
 
-logicExpression:
-	relationalExpression | booleanExpression;
+expression:
+					parenthesisOrOperand operators expression
+					| parenthesisOrOperand;
+pipe:
+				funcCall TK_OC_FORWARD_PIPE funcCall;
+ 				|pipe TK_OC_FORWARD_PIPE funcCall
+				|funcCall TK_OC_BASH_PIPE funcCall
+				|pipe TK_OC_BASH_PIPE funcCall;
 
-relationalExpression:
-	arithmeticExpression TK_OC_EQ arithmeticExpression
-	| arithmeticExpression TK_OC_NE arithmeticExpression
-	| arithmeticExpression TK_OC_GE arithmeticExpression
-	| arithmeticExpression TK_OC_LE arithmeticExpression
-	| arithmeticExpression '<' arithmeticExpression
-	| arithmeticExpression '>' arithmeticExpression;
-
-booleanExpression:
-	booleanParenthesisOrOperand booleanOperator booleanExpression
-	| booleanParenthesisOrOperand;
-booleanParenthesisOrOperand:
-							'(' booleanExpression ')'
-							| booleanOperand
-							| '!' '(' booleanExpression ')';
-booleanOperand:
-	/*TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR '[' arithmeticExpression ']'*/
-	 TK_LIT_TRUE
-	| TK_LIT_FALSE
-	| '!' booleanOperand;
-	/*| funcCall*/;
-booleanOperator:
-	TK_OC_EQ
-	|TK_OC_NE
-	|TK_OC_GE
-	|TK_OC_LE
-	|TK_OC_AND
-	|TK_OC_OR
-	| '!'
-	| '|'
-	|'&';
-
-
-arithmeticExpression:
-					arithmeticParenthesisOrOperand arithmeticOperator arithmeticExpression
-					| arithmeticParenthesisOrOperand;
-arithmeticParenthesisOrOperand: /* necessário usar acima em vez de simples 'expression' para evitar conflitos */
-						'(' arithmeticExpression ')'
-						| arithmeticOperand
-						| '-' '(' arithmeticExpression ')'
-						| '+' '(' arithmeticExpression ')';
-arithmeticOperand:
-								TK_IDENTIFICADOR
-								| TK_IDENTIFICADOR '[' arithmeticExpression ']'
+parenthesisOrOperand:
+						'(' expression ')'
+						|'(' expression ')' '?'
+						| operands
+						| operands '?'
+						| '-' parenthesisOrOperand
+						| '+' parenthesisOrOperand
+						| '!' parenthesisOrOperand
+						| '*' parenthesisOrOperand;
+operands:
+								TK_IDENTIFICADOR '[' expression ']'
+								|TK_IDENTIFICADOR
+								| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
+								| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR
 								| TK_LIT_INT
 								| TK_LIT_FLOAT
-								| '+' unaryArithmeticOperand
-								| '-' unaryArithmeticOperand
-								| funcCall;
-unaryArithmeticOperand: /* necessário para não permitir expressões do tipo zorzo = 1.5*--2; */
-											TK_IDENTIFICADOR
-											| TK_IDENTIFICADOR '[' arithmeticExpression ']'
-											| TK_LIT_INT
-											| TK_LIT_FLOAT;
-arithmeticOperator:
+								| TK_LIT_TRUE
+								| TK_LIT_FALSE
+								| funcCall
+								| '#' TK_IDENTIFICADOR;
+operators:
 								'+'
 								| '-'
 								| '*'
 								| '/'
 								| '%'
-								| '^';
-
-
+								| '^'
+								| TK_OC_AND
+								| TK_OC_OR
+								| '|'
+								| '&'
+								| TK_OC_EQ
+								| TK_OC_NE
+								|	TK_OC_GE
+								| TK_OC_LE
+								| '<'
+								| '>';
 
 %%
