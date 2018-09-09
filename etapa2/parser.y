@@ -269,10 +269,10 @@ parenthesisOrOperand:
 						| '!' parenthesisOrOperand
 						| '*' parenthesisOrOperand;
 operands:
-								TK_IDENTIFICADOR '[' expression ']'
+								TK_IDENTIFICADOR '[' pipeOrExpression ']'
 								|TK_IDENTIFICADOR
 								| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
-								| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR
+								| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR
 								| TK_LIT_INT
 								| TK_LIT_FLOAT
 								| TK_LIT_TRUE
