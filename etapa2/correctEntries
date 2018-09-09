@@ -154,35 +154,35 @@ int main(){
 //expressao unaria negativa com identificador
 int main(){
 	{
-		var = -felipe;
+		var = -algumidentificador;
 	}
 }
 
 //expressao unaria negativa com vetor
 int main(){
 	{
-		var = -felipe[-1];
+		var = -vetor[-1];
 	}
 }
 
 //expressao unaria positiva com vetor
 int main(){
 	{
-		var = +felipe[+1];
+		var = +vetor[+1];
 	}
 }
 
 //expressao unaria positiva com vetor com expressao positiva
 int main(){
 	{
-		var = -felipe[+1];
+		var = -vetor[+1];
 	}
 }
 
 //expressao unaria positiva com vetor com expressao negativa
 int main(){
 	{
-		var = +felipe[-1];
+		var = +vetor[-1];
 	}
 }
 
@@ -190,26 +190,10 @@ int main(){
 int main(){
 	{
 		var = 1;
-	}
-}
-int main(){
-	{
 		var = 1.2;
-	}
-}
-int main(){
-	{
-		var = felipe;
-	}
-}
-int main(){
-	{
+		var = algumidentificador;
 		var = 1;
-	}
-}
-int main(){
-	{
-		var = pereira[felipe];
+		var = vetor[identificadorqualquer];
 	}
 }
 
@@ -217,10 +201,6 @@ int main(){
 int main(){
 	{
 		var = 1/-2;
-	}
-}
-int main(){
-	{
 		var = 1.5*-2;
 	}
 }
@@ -229,35 +209,11 @@ int main(){
 int main(){
 	{
 		resultado = (1*2+3-4/5^6);
-	}
-}
-int main(){
-	{
 		resultado = 1*2+3-4/(5^6);
-	}
-}
-int main(){
-	{
 		resultado = (1*2+3-4)/5^6;
-	}
-}
-int main(){
-	{
 		resultado = -(1*2+3-4)/5^6;
-	}
-}
-int main(){
-	{
 		resultado = +(1*2+3-4/5^6);
-	}
-}
-int main(){
-	{
 		resultado = -(1);
-	}
-}
-int main(){
-	{
 		resultado = +(7.2);
 	}
 }
@@ -266,30 +222,10 @@ int main(){
 int main(){
 	{
 		resultado = 1*2+3-4/5^6;
-	}
-}
-int main(){
-	{
 		/*resultado = 2*--1; //dá errado, como deveria */
-	}
-}
-int main(){
-	{
 		resultado = 1 - -1;
-	}
-}
-int main(){
-	{
 		//resultado = 1 - --1; //deve dar errado
-	}
-}
-int main(){
-	{
 		//resultado = 1**1; //deve dar errado
-	}
-}
-int main(){
-	{
 		resultado = 1 * -1;
 	}
 }
@@ -326,12 +262,12 @@ int main(){
 //chamada de função
 int main(){
 	{
-		var(arg1, arg2, (2*3*(7-4)/2));
+		func(arg1, arg2, (2*3*(7-4)/2));
 	}
 }
 int main(){
 	{
-		var(arg1, arg2, ., (2*3*(7-4)/2));
+		func(arg1, arg2, ., (2*3*(7-4)/2));
 	}
 }
 
@@ -410,6 +346,16 @@ int main(){
 	{
 		var = z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
 		z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+		func(arg1, arg2, z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func));
+		output 1 * -1, z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func), 1 * -1;
+		input z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+		resultado = z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+		var = -vetor[z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func)];
+		var = 2 + -----3 / ----+++---vetor[z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func)];
+		var = z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+		var [z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func)] >> z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+		var[z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func)]$algumcampo >> z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
+
 	}
 }
 
