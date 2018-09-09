@@ -1,9 +1,28 @@
 %{
 #include <stdio.h>
+int isLexicalError(const char *s){
+	// O erro será léxico se e somente se, o scanner retornar um token
+	// TOKEN_ERRO. Para diferenciá-lo dos erros sintáticos vamos apenas
+	// verificar se esse é o token inexperado da string s, o token inexperado
+	// está a partir do char 25
+
+	if(
+		s[25] == 'T' && s[26] == 'O' && s[27] == 'K' && s[28] == 'E' && s[29] == 'N' &&
+		s[30] == '_' && s[31] == 'E' && s[32] == 'R' && s[33] == 'R' && s[34] == 'O'
+	)
+		return 1;
+	return 0;
+	
+}
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
-	printf("%s, on line %d\n", s, get_line_number());
+	if (isLexicalError(s)){
+		printf("Lexical error on line %d\n", get_line_number());	
+	}
+	else{
+		printf("%s, on line %d\n", s, get_line_number());
+	}
 	return -1;
 }
 %}
@@ -123,7 +142,11 @@ comandoSimples:
 	| output
 	| funcCall
 	| foreach
-	| for;
+	| for
+	| ifThenElse
+	| while_do
+	| do_while
+	| switch;
 
 
 comandosSemVirgula:
@@ -133,14 +156,10 @@ comandosSemVirgula:
 	| shift
 	| TK_PR_BREAK
 	| TK_PR_CONTINUE
-	| return
-	| ifThenElse
-	| while_do
-	| do_while
-	| switch;
+	| return;
 
 ifThenElse:
-	TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse;
+	TK_PR_IF '(' pipeOrExpression ')' TK_PR_THEN blocoComandos optElse;
 optElse:
 	%empty
 	| TK_PR_ELSE blocoComandos;
@@ -148,23 +167,23 @@ foreach:
 	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos;
 
 for:
-	TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos;
+	TK_PR_FOR '(' forList ':' pipeOrExpression ':' forList ')' blocoComandos;
 
 while_do:
-	TK_PR_WHILE '(' expression ')' TK_PR_DO blocoComandos;
+	TK_PR_WHILE '(' pipeOrExpression ')' TK_PR_DO blocoComandos;
 do_while:
-	TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')';
+	TK_PR_DO blocoComandos TK_PR_WHILE '(' pipeOrExpression ')';
 
 
 foreachList:
-	expression
-	| foreachList ',' expression ;
+	pipeOrExpression
+	| foreachList ',' pipeOrExpression ;
 forList:
 	comandosSemVirgula
 	| forList ',' comandosSemVirgula ;
 
 switch:
-	TK_PR_SWITCH '(' expression ')' blocoComandos;
+	TK_PR_SWITCH '(' pipeOrExpression ')' blocoComandos;
 case:
 	TK_PR_CASE TK_LIT_INT ':';
 
