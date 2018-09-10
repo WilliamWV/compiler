@@ -283,7 +283,9 @@ parenthesisOrOperand:
 	| '-' parenthesisOrOperand
 	| '+' parenthesisOrOperand
 	| '!' parenthesisOrOperand
-	| '*' parenthesisOrOperand;
+	| '*' parenthesisOrOperand
+	| '&' parenthesisOrOperand
+	| '#' parenthesisOrOperand;
 operands:
 	TK_IDENTIFICADOR '[' expression ']'
 	|TK_IDENTIFICADOR
@@ -296,8 +298,6 @@ operands:
 	| TK_LIT_CHAR
 	| TK_LIT_STRING
 	| funcCall
-	| '#' TK_IDENTIFICADOR
-	| '&' TK_IDENTIFICADOR
 	| pipe;
 operators:
 	'+'
