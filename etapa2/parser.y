@@ -268,7 +268,12 @@ return:
 
 expression:
 	parenthesisOrOperand operators expression
-	| parenthesisOrOperand;
+	| infiniteQuestionMarks operators expression
+	| parenthesisOrOperand
+	| infiniteQuestionMarks;
+infiniteQuestionMarks:
+	parenthesisOrOperand '?'
+	| infiniteQuestionMarks '?';
 pipe:
 	funcCall TK_OC_FORWARD_PIPE funcCall;
  	|pipe TK_OC_FORWARD_PIPE funcCall
@@ -277,9 +282,7 @@ pipe:
 
 parenthesisOrOperand:
 	'(' expression ')'
-	|'(' expression ')' '?'
 	| operands
-	| operands '?'
 	| '-' parenthesisOrOperand
 	| '+' parenthesisOrOperand
 	| '!' parenthesisOrOperand
