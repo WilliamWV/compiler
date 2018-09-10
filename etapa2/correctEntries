@@ -416,3 +416,11 @@ int main(){
 	endereco = &var;
 	// endereco = &(var); //deve dar erro, queremos acessar diretamente uma variavel, nao tem pq usar parenteses ou permitir qualquer coisa alem de um identificador
 }
+
+//testes com campos
+int main(){
+	identificador[1 + "expressao"]$campo = identificador[1 + "expressao"]$campo;
+	identificador$campo = identificador[1 + "expressao"]$campo;
+	resultado = identificador[1 + "expressao"]$campo - identificador[1 + "expressao"]$campo;
+	resultado = identificador$campo && identificador[1 + "expressao"]$campo;
+}
