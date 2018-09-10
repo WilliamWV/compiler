@@ -190,32 +190,32 @@ case:
 
 /*Definição de Variáveis*/
 localVarDefinition:
-							TK_IDENTIFICADOR TK_PR_STATIC TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR TK_PR_CONST TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos
-							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos
-							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos
-							| TK_IDENTIFICADOR tiposPrimitivos
+	TK_IDENTIFICADOR TK_PR_STATIC TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR TK_PR_CONST TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos
+	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos
+	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos
+	| TK_IDENTIFICADOR tiposPrimitivos
 
-							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
-							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
-							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
-							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
+	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
+	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
+	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
+	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
 
-							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE literais
-							| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
-							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE literais
-							| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
-							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE literais
-							| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
-							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE literais
-							| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral;
+	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE literais
+	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
+	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE literais
+	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
+	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE literais
+	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
+	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE literais
+	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral;
 
 negativeOrPositiveIdentifier:
 	'-' negativeOrPositiveIdentifier
@@ -224,37 +224,37 @@ negativeOrPositiveIdentifier:
 	| '+' TK_IDENTIFICADOR;
 
 negativeOrPositiveLiteral:
-'-' negativeOrPositiveLiteral
-| '-' TK_LIT_INT
-| '-' TK_LIT_FLOAT
-| '+' negativeOrPositiveLiteral
-| '+' TK_LIT_INT
-| '+' TK_LIT_FLOAT;
+	'-' negativeOrPositiveLiteral
+	| '-' TK_LIT_INT
+	| '-' TK_LIT_FLOAT
+	| '+' negativeOrPositiveLiteral
+	| '+' TK_LIT_INT
+	| '+' TK_LIT_FLOAT;
 
 
 assignment:
-					TK_IDENTIFICADOR '=' pipeOrExpression
-					| TK_IDENTIFICADOR '[' pipeOrExpression ']' '=' pipeOrExpression
-					| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' pipeOrExpression
-					| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR '=' pipeOrExpression;
+	TK_IDENTIFICADOR '=' pipeOrExpression
+	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '=' pipeOrExpression
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' pipeOrExpression
+	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR '=' pipeOrExpression;
 
 input:
-			TK_PR_INPUT pipeOrExpression;
+	TK_PR_INPUT pipeOrExpression;
 
 output:
-			TK_PR_OUTPUT pipeOrExpression continueOutput
-			| TK_PR_OUTPUT pipeOrExpression;
+	TK_PR_OUTPUT pipeOrExpression continueOutput
+	| TK_PR_OUTPUT pipeOrExpression;
 continueOutput: ',' pipeOrExpression | ',' pipeOrExpression continueOutput
 
 funcCall:
-						TK_IDENTIFICADOR '(' argsCall ')'
-						| TK_IDENTIFICADOR '(' ')';
+	TK_IDENTIFICADOR '(' argsCall ')'
+	| TK_IDENTIFICADOR '(' ')';
 argsCall:
-							argCall
-							| argsCall ',' argCall;
+	argCall
+	| argsCall ',' argCall;
 argCall:
-						pipeOrExpression
-						| '.';
+	pipeOrExpression
+	| '.';
 
 shiftOp: TK_OC_SL | TK_OC_SR;
 shift: TK_IDENTIFICADOR shiftOp pipeOrExpression
@@ -270,50 +270,50 @@ pipeOrExpression:
 	|expression;
 
 expression:
-					parenthesisOrOperand operators expression
-					| parenthesisOrOperand;
+	parenthesisOrOperand operators expression
+	| parenthesisOrOperand;
 pipe:
-				funcCall TK_OC_FORWARD_PIPE funcCall;
- 				|pipe TK_OC_FORWARD_PIPE funcCall
-				|funcCall TK_OC_BASH_PIPE funcCall
-				|pipe TK_OC_BASH_PIPE funcCall;
+	funcCall TK_OC_FORWARD_PIPE funcCall;
+ 	|pipe TK_OC_FORWARD_PIPE funcCall
+	|funcCall TK_OC_BASH_PIPE funcCall
+	|pipe TK_OC_BASH_PIPE funcCall;
 
 parenthesisOrOperand:
-						'(' expression ')'
-						|'(' expression ')' '?'
-						| operands
-						| operands '?'
-						| '-' parenthesisOrOperand
-						| '+' parenthesisOrOperand
-						| '!' parenthesisOrOperand
-						| '*' parenthesisOrOperand;
+	'(' expression ')'
+	|'(' expression ')' '?'
+	| operands
+	| operands '?'
+	| '-' parenthesisOrOperand
+	| '+' parenthesisOrOperand
+	| '!' parenthesisOrOperand
+	| '*' parenthesisOrOperand;
 operands:
-								TK_IDENTIFICADOR '[' pipeOrExpression ']'
-								|TK_IDENTIFICADOR
-								| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
-								| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR
-								| TK_LIT_INT
-								| TK_LIT_FLOAT
-								| TK_LIT_TRUE
-								| TK_LIT_FALSE
-								| funcCall
-								| '#' TK_IDENTIFICADOR;
+	TK_IDENTIFICADOR '[' pipeOrExpression ']'
+	|TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR
+	| TK_LIT_INT
+	| TK_LIT_FLOAT
+	| TK_LIT_TRUE
+	| TK_LIT_FALSE
+	| funcCall
+	| '#' TK_IDENTIFICADOR;
 operators:
-								'+'
-								| '-'
-								| '*'
-								| '/'
-								| '%'
-								| '^'
-								| TK_OC_AND
-								| TK_OC_OR
-								| '|'
-								| '&'
-								| TK_OC_EQ
-								| TK_OC_NE
-								|	TK_OC_GE
-								| TK_OC_LE
-								| '<'
-								| '>';
+	'+'
+	| '-'
+	| '*'
+	| '/'
+	| '%'
+	| '^'
+	| TK_OC_AND
+	| TK_OC_OR
+	| '|'
+	| '&'
+	| TK_OC_EQ
+	| TK_OC_NE
+	|	TK_OC_GE
+	| TK_OC_LE
+	| '<'
+	| '>';
 
 %%
