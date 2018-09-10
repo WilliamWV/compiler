@@ -107,7 +107,7 @@ tipoConst: TK_PR_CONST tipo | tipo;
 literais: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE | TK_LIT_CHAR | TK_LIT_STRING;
 
 //Novos tipos
-novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos;
+novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos ';' ;
 listaCampos: '[' list ']';
 list: campo | campo ':' list;
 campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
@@ -128,8 +128,7 @@ argsAndCommands : '(' args ')' blocoComandos;
 blocoComandos:
 	'{' comandos '}';
 comando:
-	blocoComandos
-	| comandoSimples ';'
+	comandoSimples ';'
 	| case; //Coloquei a regra do case aqui pois na especificação ele não está atrelado ao switch, mas apenas como marcador de lugar além disso não possui ';' no final e não pode ser usado no for
 comandos :
 	%empty
@@ -138,25 +137,26 @@ comandos :
 
 comandoSimples:
 	comandosSemVirgula
-	| pipe
 	| output
 	| funcCall
 	| foreach
-	| for
-	| ifThenElse
-	| while_do
-	| do_while
-	| switch;
+	| for;
 
 
-comandosSemVirgula:
+comandosSemVirgula: //comandos que são permitidos dentro das listas do for
 	localVarDefinition
 	| assignment
 	| input
 	| shift
 	| TK_PR_BREAK
 	| TK_PR_CONTINUE
-	| return;
+	| return
+	| ifThenElse
+	| while_do
+	| do_while
+	| switch
+	| pipe
+	| blocoComandos;
 
 ifThenElse:
 	TK_PR_IF '(' pipeOrExpression ')' TK_PR_THEN blocoComandos optElse;

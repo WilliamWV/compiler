@@ -1,8 +1,8 @@
 //Tipos de usuário
-class pessoa [int idade : string nome]
-class animal [protected string name : private int eyes]
-class fake [public string fals: private string tru]
-class oneArg [int o]
+class pessoa [int idade : string nome];
+class animal [protected string name : private int eyes];
+class fake [public string fals: private string tru];
+class oneArg [int o];
 
 //Variáveis globais
 g1 int;
@@ -22,49 +22,49 @@ static int foo(int a, int b){}
 int main(){
 	{
 		//Bloco de comandos como comando simples
-	}
+	};
 }
 
 //Definicao de tipo primitivo sem inicializar
 int main(){
 	{
 		var int;
-	}
+	};
 }
 
 //Definicao de tipo primitivo com static
 int main(){
 	{
 		var static int;
-	}
+	};
 }
 
 //Definicao de tipo primitivo com const
 int main(){
 	{
 		var const int;
-	}
+	};
 }
 
 //Definicao de tipo primitivo com static e const na ordem correta
 int main(){
 	{
 		var static const int;
-	}
+	};
 }
 
 //Definicao de tipo primitivo com static e const na ordem errada
 int main(){
 	{
 		// var const static int; // se descomentar esse dá erro, garantindo a ordem correta
-	}
+	};
 }
 
 //Definicao de tipo primitivo inicializando com identificador
 int main(){
 	{
 		var int <= var2;
-	}
+	};
 }
 
 //Definicao de tipo primitivo inicializando com literal
@@ -82,108 +82,108 @@ int main(){
 		var int <= false;
 		var int <= true;
 		var int <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
-	}
+	};
 }
 
 //Definicao de variavel com tipo definido pelo usuario
 int main(){
 	{
 		var tipo_usuario;
-	}
+	};
 }
 
 //Definicao de tipo primitivo inicializando com literal
 int main(){
 	{
 		//var tipo_usuario <= 12; // caso descomentado gera erro, pois não podemos inicializar uma variável de tipo definido pelo usuário
-	}
+	};
 }
 
 //atribuicao a um tipo primitivo não-vetor
 int main(){
 	{
 		var = -1;
-	}
+	};
 }
 int main(){
 	{
 		var = +1;
-	}
+	};
 }
 int main(){
 	{
 		var = 1;
-	}
+	};
 }
 
 //atribuicao a um tipo primitivo vetor (NOTAR QUE A EXPRESSAO QUE DETERMINA O INDICE DO VETOR É NEGATIVA)
 int main(){
 	{
 		var[-1] = -1;
-	}
+	};
 }
 
 //atribuicao a um tipo novo não-vetor
 int main(){
 	{
 		var$campo = -1;
-	}
+	};
 }
 
 //atribuicao a um tipo novo vetor
 int main(){
 	{
 		var[-1]$campo = -1;
-	}
+	};
 }
 
 //expressao unaria negativa com literal int
 int main(){
 	{
 		var = -1;
-	}
+	};
 }
 
 //expressao unaria negativa com literal float
 int main(){
 	{
 		var = -1.1;
-	}
+	};
 }
 
 //expressao unaria negativa com identificador
 int main(){
 	{
 		var = -algumidentificador;
-	}
+	};
 }
 
 //expressao unaria negativa com vetor
 int main(){
 	{
 		var = -vetor[-1];
-	}
+	};
 }
 
 //expressao unaria positiva com vetor
 int main(){
 	{
 		var = +vetor[+1];
-	}
+	};
 }
 
 //expressao unaria positiva com vetor com expressao positiva
 int main(){
 	{
 		var = -vetor[+1];
-	}
+	};
 }
 
 //expressao unaria positiva com vetor com expressao negativa
 int main(){
 	{
 		var = +vetor[-1];
-	}
+	};
 }
 
 //expressoes formadas por apenas um operando simples, sem nenhum operador
@@ -194,7 +194,7 @@ int main(){
 		var = algumidentificador;
 		var = 1;
 		var = vetor[identificadorqualquer];
-	}
+	};
 }
 
 //expressoes aritmeticas binarias
@@ -202,7 +202,7 @@ int main(){
 	{
 		var = 1/-2;
 		var = 1.5*-2;
-	}
+	};
 }
 
 //expressoes recursivas com parenteses
@@ -215,7 +215,7 @@ int main(){
 		resultado = +(1*2+3-4/5^6);
 		resultado = -(1);
 		resultado = +(7.2);
-	}
+	};
 }
 
 //expressoes recursivas sem parenteses
@@ -227,48 +227,48 @@ int main(){
 		//resultado = 1 - --1; //deve dar errado
 		//resultado = 1**1; //deve dar errado
 		resultado = 1 * -1;
-	}
+	};
 }
 
 //input
 int main(){
 	{
 		input 1 * -1;
-	}
+	};
 }
 
 //output
 int main(){
 	{
 		output 1 * -1, 1 * -1;
-	}
+	};
 }
 int main(){
 	{
 		//output 1 * -1,, 1 * -1; //deve dar errado pq tem expressao vazia
-	}
+	};
 }
 int main(){
 	{
 		output 1 * -1, 2, 3;
-	}
+	};
 }
 int main(){
 	{
 		output 1 * -1;
-	}
+	};
 }
 
 //chamada de função
 int main(){
 	{
 		func(arg1, arg2, (2*3*(7-4)/2));
-	}
+	};
 }
 int main(){
 	{
 		func(arg1, arg2, ., (2*3*(7-4)/2));
-	}
+	};
 }
 
 //shifts
@@ -296,7 +296,7 @@ int main(){
 		var$algumcampo >> (2*3*(7-4)/2);
 		var [17-var2/-(-5)] >> (2*3*(7-4)/2);
 		var[17-var2/-(-5)]$algumcampo >> (2*3*(7-4)/2);
-	}
+	};
 }
 
 //return, continue e break
@@ -319,7 +319,7 @@ int main(){
 		return -var;
 		continue;
 		break;
-	}
+	};
 }
 
 //testes booleanos
@@ -339,7 +339,7 @@ int main(){
 		var = #hashtable;
 		var = 1?+2&&true; // nesse caso ? avalia 1 para true ou false, e depois a expressao é continuada
 		var = (1+2&&true)?;
-	}
+	};
 }
 
 // pipes
@@ -357,7 +357,7 @@ int main(){
 		var [z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func)] >> z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
 		var[z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func)]$algumcampo >> z(.) %>% w(arg1, arg2, ., atg4) %|% w() %>% last(func);
 
-	}
+	};
 }
 
 //controle de fluxo
@@ -423,4 +423,12 @@ int main(){
 	identificador$campo = identificador[1 + "expressao"]$campo;
 	resultado = identificador[1 + "expressao"]$campo - identificador[1 + "expressao"]$campo;
 	resultado = identificador$campo && identificador[1 + "expressao"]$campo;
+}
+int main(){
+	//teste segundo a issue 50	
+	for(i = 0, j = 9, k = 20, if (true) then {output "will", 3;} : 2 * 3 + true ^ 4 / false : {for(s = 9, t = s + 3: true: s = s + t){};}){
+		input a;
+		output a, a*a, a*a*a;
+	};
+	return 0;
 }
