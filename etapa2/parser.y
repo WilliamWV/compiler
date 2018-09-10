@@ -12,13 +12,13 @@ int isLexicalError(const char *s){
 	)
 		return 1;
 	return 0;
-	
+
 }
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
 	if (isLexicalError(s)){
-		printf("Lexical error on line %d\n", get_line_number());	
+		printf("Lexical error on line %d\n", get_line_number());
 	}
 	else{
 		printf("%s, on line %d\n", s, get_line_number());
@@ -296,8 +296,11 @@ operands:
 	| TK_LIT_FLOAT
 	| TK_LIT_TRUE
 	| TK_LIT_FALSE
+	| TK_LIT_CHAR
+	| TK_LIT_STRING
 	| funcCall
-	| '#' TK_IDENTIFICADOR;
+	| '#' TK_IDENTIFICADOR
+	| '&' TK_IDENTIFICADOR;
 operators:
 	'+'
 	| '-'

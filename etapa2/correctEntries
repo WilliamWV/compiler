@@ -284,6 +284,7 @@ int main(){
 		var$algumcampo << (2*3*(7-4)/2);
 		var [17-var2/-(-5)] << (2*3*(7-4)/2);
 		var[17-var2/-(-5)]$algumcampo << (2*3*(7-4)/2);
+		var << -1;
 
 		var >> var2;
 		var >> 12;
@@ -403,4 +404,15 @@ int main(){
 			}while (x == y);
 		};
 	};
+}
+
+// EXPRESSOES COM STRINGS E CHARS
+int main(){
+	x static int <= "abc";
+	var4[4] = 'a';
+	var['c' && 1 + "will e zorzo estiveram aqui"] = "stringzinha bem nice pro pai";
+	var = "tropecei no teclado";
+	var = 1/"stringdivisora"&&true||'c'+'b';
+	endereco = &var;
+	// endereco = &(var); //deve dar erro, queremos acessar diretamente uma variavel, nao tem pq usar parenteses ou permitir qualquer coisa alem de um identificador
 }
