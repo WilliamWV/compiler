@@ -429,6 +429,9 @@ int main(){
 	for(i = 0, j = 9, k = 20, if (true) then {output "will", 3;} : 2 * 3 + true ^ 4 / false : {for(s = 9, t = s + 3: true: s = s + t){};}){
 		input a;
 		output a, a*a, a*a*a;
+		//testes segundo issue 52
+		id = f() %>% g(.) + 2;
+		id = f() %>% g(.) || h(z);
 	};
 	return 0;
 }

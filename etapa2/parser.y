@@ -159,7 +159,7 @@ comandosSemVirgula: //comandos que são permitidos dentro das listas do for
 	| blocoComandos;
 
 ifThenElse:
-	TK_PR_IF '(' pipeOrExpression ')' TK_PR_THEN blocoComandos optElse;
+	TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse;
 optElse:
 	%empty
 	| TK_PR_ELSE blocoComandos;
@@ -167,23 +167,23 @@ foreach:
 	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos;
 
 for:
-	TK_PR_FOR '(' forList ':' pipeOrExpression ':' forList ')' blocoComandos;
+	TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos;
 
 while_do:
-	TK_PR_WHILE '(' pipeOrExpression ')' TK_PR_DO blocoComandos;
+	TK_PR_WHILE '(' expression ')' TK_PR_DO blocoComandos;
 do_while:
-	TK_PR_DO blocoComandos TK_PR_WHILE '(' pipeOrExpression ')';
+	TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')';
 
 
 foreachList:
-	pipeOrExpression
-	| foreachList ',' pipeOrExpression ;
+	expression
+	| foreachList ',' expression ;
 forList:
 	comandosSemVirgula
 	| forList ',' comandosSemVirgula ;
 
 switch:
-	TK_PR_SWITCH '(' pipeOrExpression ')' blocoComandos;
+	TK_PR_SWITCH '(' expression ')' blocoComandos;
 case:
 	TK_PR_CASE TK_LIT_INT ':';
 
@@ -233,18 +233,18 @@ negativeOrPositiveLiteral:
 
 
 assignment:
-	TK_IDENTIFICADOR '=' pipeOrExpression
-	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '=' pipeOrExpression
-	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' pipeOrExpression
-	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR '=' pipeOrExpression;
+	TK_IDENTIFICADOR '=' expression
+	| TK_IDENTIFICADOR '[' expression ']' '=' expression
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression
+	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression;
 
 input:
-	TK_PR_INPUT pipeOrExpression;
+	TK_PR_INPUT expression;
 
 output:
-	TK_PR_OUTPUT pipeOrExpression continueOutput
-	| TK_PR_OUTPUT pipeOrExpression;
-continueOutput: ',' pipeOrExpression | ',' pipeOrExpression continueOutput
+	TK_PR_OUTPUT expression continueOutput
+	| TK_PR_OUTPUT expression;
+continueOutput: ',' expression | ',' expression continueOutput
 
 funcCall:
 	TK_IDENTIFICADOR '(' argsCall ')'
@@ -253,21 +253,18 @@ argsCall:
 	argCall
 	| argsCall ',' argCall;
 argCall:
-	pipeOrExpression
+	expression
 	| '.';
 
 shiftOp: TK_OC_SL | TK_OC_SR;
-shift: TK_IDENTIFICADOR shiftOp pipeOrExpression
-	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp pipeOrExpression
-	| TK_IDENTIFICADOR '[' pipeOrExpression ']' shiftOp pipeOrExpression
-	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR shiftOp pipeOrExpression;
+shift: TK_IDENTIFICADOR shiftOp expression
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression
+	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression
+	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression;
 
 return:
-	TK_PR_RETURN pipeOrExpression;
+	TK_PR_RETURN expression;
 
-pipeOrExpression:
-	pipe
-	|expression;
 
 expression:
 	parenthesisOrOperand operators expression
@@ -288,10 +285,10 @@ parenthesisOrOperand:
 	| '!' parenthesisOrOperand
 	| '*' parenthesisOrOperand;
 operands:
-	TK_IDENTIFICADOR '[' pipeOrExpression ']'
+	TK_IDENTIFICADOR '[' expression ']'
 	|TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR '[' pipeOrExpression ']' '$' TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR
 	| TK_LIT_INT
 	| TK_LIT_FLOAT
 	| TK_LIT_TRUE
@@ -300,7 +297,8 @@ operands:
 	| TK_LIT_STRING
 	| funcCall
 	| '#' TK_IDENTIFICADOR
-	| '&' TK_IDENTIFICADOR;
+	| '&' TK_IDENTIFICADOR
+	| pipe;
 operators:
 	'+'
 	| '-'
