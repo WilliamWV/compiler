@@ -1,32 +1,13 @@
 %{
 #include <stdio.h>
-int isLexicalError(const char *s){
-	// O erro será léxico se e somente se, o scanner retornar um token
-	// TOKEN_ERRO. Para diferenciá-lo dos erros sintáticos vamos apenas
-	// verificar se esse é o token inexperado da string s, o token inexperado
-	// está a partir do char 25
 
-	if(
-		s[25] == 'T' && s[26] == 'O' && s[27] == 'K' && s[28] == 'E' && s[29] == 'N' &&
-		s[30] == '_' && s[31] == 'E' && s[32] == 'R' && s[33] == 'R' && s[34] == 'O'
-	)
-		return 1;
-	return 0;
-
-}
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
-	if (isLexicalError(s)){
-		printf("Lexical error on line %d\n", get_line_number());
-	}
-	else{
-		printf("%s, on line %d\n", s, get_line_number());
-	}
+	printf("%s, on line %d\n", s, get_line_number());
 	return -1;
 }
 %}
-%define parse.lac none
 %define parse.error verbose
 %verbose
 %token TK_PR_INT
@@ -190,32 +171,32 @@ case:
 
 /*Definição de Variáveis*/
 localVarDefinition:
-	TK_IDENTIFICADOR TK_PR_STATIC TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR TK_PR_CONST TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR
+	TK_PR_STATIC TK_IDENTIFICADOR TK_IDENTIFICADOR
+	| TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR
+	| TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos
-	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos
-	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos
-	| TK_IDENTIFICADOR tiposPrimitivos
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR
+	| tiposPrimitivos TK_IDENTIFICADOR
 
-	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
-	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
-	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
-	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE TK_IDENTIFICADOR
-	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveIdentifier
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
 
-	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE literais
-	| TK_IDENTIFICADOR TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
-	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE literais
-	| TK_IDENTIFICADOR TK_PR_STATIC tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
-	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE literais
-	| TK_IDENTIFICADOR TK_PR_CONST tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral
-	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE literais
-	| TK_IDENTIFICADOR tiposPrimitivos TK_OC_LE negativeOrPositiveLiteral;
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral;
 
 negativeOrPositiveIdentifier:
 	'-' negativeOrPositiveIdentifier

@@ -28,28 +28,28 @@ int main(){
 //Definicao de tipo primitivo sem inicializar
 int main(){
 	{
-		var int;
+		int var;
 	};
 }
 
 //Definicao de tipo primitivo com static
 int main(){
 	{
-		var static int;
+		static int var;
 	};
 }
 
 //Definicao de tipo primitivo com const
 int main(){
 	{
-		var const int;
+		const int var;
 	};
 }
 
 //Definicao de tipo primitivo com static e const na ordem correta
 int main(){
 	{
-		var static const int;
+		static const int var;
 	};
 }
 
@@ -63,32 +63,32 @@ int main(){
 //Definicao de tipo primitivo inicializando com identificador
 int main(){
 	{
-		var int <= var2;
+		int var <= var2;
 	};
 }
 
 //Definicao de tipo primitivo inicializando com literal
 int main(){
 	{
-		var int <= 12;
-		var int <= 22;
-		var int <= 12.2;
-		var static const int <= ----++++-12;
-		var static const int <= -+-+-+-+-+-+++++---+zorzo;
-		var static const int <= 12;
-		var static const int <= 12;
-		var static const int <= 12;
-		var int <= 'w';
-		var int <= false;
-		var int <= true;
-		var int <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
+		int var <= 12;
+		int var <= 22;
+		int var <= 12.2;
+		static const int var <= ----++++-12;
+		static const int var <= -+-+-+-+-+-+++++---+zorzo;
+		static const int var <= 12;
+		static const int var <= 12;
+		static const int var <= 12;
+		int var <= 'w';
+		int var <= false;
+		int var <= true;
+		int var <= "stringzinha bem nice"; // um comentario só pra ver se n vai dar nada
 	};
 }
 
 //Definicao de variavel com tipo definido pelo usuario
 int main(){
 	{
-		var tipo_usuario;
+		tipo_usuario var;
 	};
 }
 
@@ -380,10 +380,10 @@ int main(){
 		Sem
 		Propósito
 	*/
-	x int <= 12;
-	y float <= 3.14;
-	z const string <= "zorzo";
-	w const string <= "will";
+	int x <= 12;
+	float y <= 3.14;
+	const string z <= "zorzo";
+	const string w <= "will";
 	//expressão relacional no if then sem else
 	if (x > y) then {
 		x = y;
@@ -395,8 +395,8 @@ int main(){
 			};
 
 			//listas de comando do for não permite case, nem comandos que contenham vígula
-			for (i int <= 12, j float <= 900, x = 3 : true && false || true : i = j ^ (1/2), j = i + 94*x, x = i*13){
-				var int;
+			for (int i <= 12, float j <= 900, x = 3 : true && false || true : i = j ^ (1/2), j = i + 94*x, x = i*13){
+				int var;
 				input var;
 				continue;
 			};
@@ -411,7 +411,7 @@ int main(){
 				};
 			};
 			do {
-				goto string <= "Pq não tem goto?";
+				string goto <= "Pq não tem goto?";
 			}while (x == y);
 		};
 	};
@@ -419,7 +419,7 @@ int main(){
 
 // EXPRESSOES COM STRINGS E CHARS
 int main(){
-	x static int <= "abc";
+	static int x <= "abc";
 	var4[4] = 'a';
 	var['c' && 1 + "will e zorzo estiveram aqui"] = "stringzinha bem nice pro pai";
 	var = "tropecei no teclado";

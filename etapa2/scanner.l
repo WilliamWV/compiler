@@ -78,13 +78,13 @@ true { return TK_LIT_TRUE; }
 '({ASCIIALPHABET}|{CONTROLCHAR})' { return TK_LIT_CHAR; }
 {ALPHABETIC}{ALPHANUMERIC}* { return TK_IDENTIFICADOR; }
 \"[^\"\n]*\" {return TK_LIT_STRING;}
-{LINECOMMENT}[^\n]*\n   { ++num_lines; }
+{LINECOMMENT}[^\n]*   { }
 <COMMENT>[^*\n]*	{/*eat chars that is not a '*' */}
 <COMMENT>\*+[^*/\n]*	{/*eat chars '*' not followed by '/' */}
 <COMMENT>\n 		{++num_lines;}
 <COMMENT>"*"+"/"	{BEGIN(INITIAL);}
 {WHITESPACE} {} // As três expressões regulares anteriores servem para ignorar trechos do código, logo as ações correspondentes devem ser substituídas por "{}" na versão final, ou seja, não retornam tokens
 
-. { return TOKEN_ERRO; }
+. { printf("Lexical error: "); return TOKEN_ERRO; }
 
 %%
