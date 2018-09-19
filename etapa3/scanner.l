@@ -3,6 +3,7 @@
 #include "parser.tab.h"
 #include <string.h> //para strdup
 #include <stdlib.h> //atoi, atof
+#include "lexVal.h"
 #define DEBUG 0
 
 int num_lines = 1;

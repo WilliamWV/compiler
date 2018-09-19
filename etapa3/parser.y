@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include "lexVal.h"
 
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
@@ -7,24 +8,6 @@ int yyerror (char const *s){
 	printf("%s, on line %d\n", s, get_line_number());
 	return -1;
 }
-
-//Definição de bool baseado em int para funcionar em versões mais antigas do C
-typedef int bool;
-
-
-union Value{
-	int i;
-	float f;
-	char c;
-	bool b;
-	char* str; 
-};
-struct lexval{
-	int lineNumber; 
-	int tokenType; 
-	int literType;
-	union Value value; //um dos campos da union acima
-};
 
 
 %}
