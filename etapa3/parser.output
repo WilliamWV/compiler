@@ -1,0 +1,3923 @@
+Terminals unused in grammar
+
+   TOKEN_ERRO
+
+
+Grammar
+
+    0 $accept: programa $end
+
+    1 programa: %empty
+    2         | componente programa
+
+    3 componente: novoTipo
+    4           | TK_IDENTIFICADOR depoisDeIdent
+    5           | tiposPrimitivos TK_IDENTIFICADOR argsAndCommands
+    6           | TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands
+
+    7 depoisDeIdent: tamanhoVetor static tipo ';'
+    8              | TK_PR_STATIC tipo ';'
+    9              | tiposPrimitivos ';'
+   10              | TK_IDENTIFICADOR fechaVarOuFunc
+
+   11 fechaVarOuFunc: ';'
+   12               | argsAndCommands
+
+   13 encapsulamento: %empty
+   14               | TK_PR_PRIVATE
+   15               | TK_PR_PUBLIC
+   16               | TK_PR_PROTECTED
+
+   17 tiposPrimitivos: TK_PR_INT
+   18                | TK_PR_FLOAT
+   19                | TK_PR_BOOL
+   20                | TK_PR_CHAR
+   21                | TK_PR_STRING
+
+   22 tipo: tiposPrimitivos
+   23     | TK_IDENTIFICADOR
+
+   24 static: TK_PR_STATIC
+   25       | %empty
+
+   26 tipoConst: TK_PR_CONST tipo
+   27          | tipo
+
+   28 literais: TK_LIT_INT
+   29         | TK_LIT_FLOAT
+   30         | TK_LIT_FALSE
+   31         | TK_LIT_TRUE
+   32         | TK_LIT_CHAR
+   33         | TK_LIT_STRING
+
+   34 novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos ';'
+
+   35 listaCampos: '[' list ']'
+
+   36 list: campo
+   37     | campo ':' list
+
+   38 campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR
+
+   39 tamanhoVetor: '[' TK_LIT_INT ']'
+
+   40 args: %empty
+   41     | parameters
+
+   42 parameters: parameter ',' parameters
+   43           | parameter
+
+   44 parameter: tipoConst TK_IDENTIFICADOR
+
+   45 argsAndCommands: '(' args ')' blocoComandos
+
+   46 blocoComandos: '{' comandos '}'
+
+   47 comando: comandoSimples ';'
+   48        | case
+
+   49 comandos: %empty
+   50         | comando comandos
+
+   51 comandoSimples: comandosSemVirgula
+   52               | output
+   53               | funcCall
+   54               | foreach
+   55               | for
+
+   56 comandosSemVirgula: localVarDefinition
+   57                   | assignment
+   58                   | input
+   59                   | shift
+   60                   | TK_PR_BREAK
+   61                   | TK_PR_CONTINUE
+   62                   | return
+   63                   | ifThenElse
+   64                   | while_do
+   65                   | do_while
+   66                   | switch
+   67                   | pipe
+   68                   | blocoComandos
+
+   69 ifThenElse: TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse
+
+   70 optElse: %empty
+   71        | TK_PR_ELSE blocoComandos
+
+   72 foreach: TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos
+
+   73 for: TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos
+
+   74 while_do: TK_PR_WHILE '(' expression ')' TK_PR_DO blocoComandos
+
+   75 do_while: TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')'
+
+   76 foreachList: expression
+   77            | foreachList ',' expression
+
+   78 forList: comandosSemVirgula
+   79        | forList ',' comandosSemVirgula
+
+   80 switch: TK_PR_SWITCH '(' expression ')' blocoComandos
+
+   81 case: TK_PR_CASE TK_LIT_INT ':'
+
+   82 localVarDefinition: TK_PR_STATIC TK_IDENTIFICADOR TK_IDENTIFICADOR
+   83                   | TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR
+   84                   | TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR
+   85                   | TK_IDENTIFICADOR TK_IDENTIFICADOR
+   86                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR
+   87                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR
+   88                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR
+   89                   | tiposPrimitivos TK_IDENTIFICADOR
+   90                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   91                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   92                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   93                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   94                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   95                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   96                   | tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   97                   | tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   98                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+   99                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+  100                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+  101                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+  102                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+  103                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+  104                   | tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+  105                   | tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+  106 negativeOrPositiveIdentifier: '-' negativeOrPositiveIdentifier
+  107                             | '-' TK_IDENTIFICADOR
+  108                             | '+' negativeOrPositiveIdentifier
+  109                             | '+' TK_IDENTIFICADOR
+
+  110 negativeOrPositiveLiteral: '-' negativeOrPositiveLiteral
+  111                          | '-' TK_LIT_INT
+  112                          | '-' TK_LIT_FLOAT
+  113                          | '+' negativeOrPositiveLiteral
+  114                          | '+' TK_LIT_INT
+  115                          | '+' TK_LIT_FLOAT
+
+  116 assignment: TK_IDENTIFICADOR '=' expression
+  117           | TK_IDENTIFICADOR '[' expression ']' '=' expression
+  118           | TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression
+  119           | TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression
+
+  120 input: TK_PR_INPUT expression
+
+  121 output: TK_PR_OUTPUT expression continueOutput
+  122       | TK_PR_OUTPUT expression
+
+  123 continueOutput: ',' expression
+  124               | ',' expression continueOutput
+
+  125 funcCall: TK_IDENTIFICADOR '(' argsCall ')'
+  126         | TK_IDENTIFICADOR '(' ')'
+
+  127 argsCall: argCall
+  128         | argsCall ',' argCall
+
+  129 argCall: expression
+  130        | '.'
+
+  131 shiftOp: TK_OC_SL
+  132        | TK_OC_SR
+
+  133 shift: TK_IDENTIFICADOR shiftOp expression
+  134      | TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression
+  135      | TK_IDENTIFICADOR '[' expression ']' shiftOp expression
+  136      | TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression
+
+  137 return: TK_PR_RETURN expression
+
+  138 expression: parenthesisOrOperand operators expression
+  139           | infiniteQuestionMarks operators expression
+  140           | parenthesisOrOperand
+  141           | infiniteQuestionMarks
+
+  142 infiniteQuestionMarks: parenthesisOrOperand '?'
+  143                      | infiniteQuestionMarks '?'
+
+  144 pipe: funcCall TK_OC_FORWARD_PIPE funcCall
+  145     | pipe TK_OC_FORWARD_PIPE funcCall
+  146     | funcCall TK_OC_BASH_PIPE funcCall
+  147     | pipe TK_OC_BASH_PIPE funcCall
+
+  148 parenthesisOrOperand: '(' expression ')'
+  149                     | operands
+  150                     | '-' parenthesisOrOperand
+  151                     | '+' parenthesisOrOperand
+  152                     | '!' parenthesisOrOperand
+  153                     | '*' parenthesisOrOperand
+  154                     | '&' parenthesisOrOperand
+  155                     | '#' parenthesisOrOperand
+
+  156 operands: TK_IDENTIFICADOR '[' expression ']'
+  157         | TK_IDENTIFICADOR
+  158         | TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
+  159         | TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR
+  160         | TK_LIT_INT
+  161         | TK_LIT_FLOAT
+  162         | TK_LIT_TRUE
+  163         | TK_LIT_FALSE
+  164         | TK_LIT_CHAR
+  165         | TK_LIT_STRING
+  166         | funcCall
+  167         | pipe
+
+  168 operators: '+'
+  169          | '-'
+  170          | '*'
+  171          | '/'
+  172          | '%'
+  173          | '^'
+  174          | TK_OC_AND
+  175          | TK_OC_OR
+  176          | '|'
+  177          | '&'
+  178          | TK_OC_EQ
+  179          | TK_OC_NE
+  180          | TK_OC_GE
+  181          | TK_OC_LE
+  182          | '<'
+  183          | '>'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 152
+'#' (35) 155
+'$' (36) 118 119 134 136 158 159
+'%' (37) 172
+'&' (38) 154 177
+'(' (40) 45 69 72 73 74 75 80 125 126 148
+')' (41) 45 69 72 73 74 75 80 125 126 148
+'*' (42) 153 170
+'+' (43) 108 109 113 114 115 151 168
+',' (44) 42 77 79 123 124 128
+'-' (45) 106 107 110 111 112 150 169
+'.' (46) 130
+'/' (47) 171
+':' (58) 37 72 73 81
+';' (59) 7 8 9 11 34 47
+'<' (60) 182
+'=' (61) 116 117 118 119
+'>' (62) 183
+'?' (63) 142 143
+'[' (91) 35 39 117 119 135 136 156 159
+']' (93) 35 39 117 119 135 136 156 159
+'^' (94) 173
+'{' (123) 46
+'|' (124) 176
+'}' (125) 46
+error (256)
+TK_PR_INT (258) 17
+TK_PR_FLOAT (259) 18
+TK_PR_BOOL (260) 19
+TK_PR_CHAR (261) 20
+TK_PR_STRING (262) 21
+TK_PR_IF (263) 69
+TK_PR_THEN (264) 69
+TK_PR_ELSE (265) 71
+TK_PR_WHILE (266) 74 75
+TK_PR_DO (267) 74 75
+TK_PR_INPUT (268) 120
+TK_PR_OUTPUT (269) 121 122
+TK_PR_RETURN (270) 137
+TK_PR_CONST (271) 26 83 84 87 88 92 93 94 95 98 99 102 103
+TK_PR_STATIC (272) 6 8 24 82 84 86 88 90 91 94 95 98 99 100 101
+TK_PR_FOREACH (273) 72
+TK_PR_FOR (274) 73
+TK_PR_SWITCH (275) 80
+TK_PR_CASE (276) 81
+TK_PR_BREAK (277) 60
+TK_PR_CONTINUE (278) 61
+TK_PR_CLASS (279) 34
+TK_PR_PRIVATE (280) 14
+TK_PR_PUBLIC (281) 15
+TK_PR_PROTECTED (282) 16
+TK_OC_LE (283) 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105
+    181
+TK_OC_GE (284) 180
+TK_OC_EQ (285) 178
+TK_OC_NE (286) 179
+TK_OC_AND (287) 174
+TK_OC_OR (288) 175
+TK_OC_SL (289) 131
+TK_OC_SR (290) 132
+TK_OC_FORWARD_PIPE (291) 144 145
+TK_OC_BASH_PIPE (292) 146 147
+TK_LIT_INT (293) 28 39 81 111 114 160
+TK_LIT_FLOAT (294) 29 112 115 161
+TK_LIT_FALSE (295) 30 163
+TK_LIT_TRUE (296) 31 162
+TK_LIT_CHAR (297) 32 164
+TK_LIT_STRING (298) 33 165
+TK_IDENTIFICADOR (299) 4 5 6 10 23 34 38 44 72 82 83 84 85 86 87 88
+    89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 107 109
+    116 117 118 119 125 126 133 134 135 136 156 157 158 159
+TOKEN_ERRO (300)
+
+
+Nonterminals, with rules where they appear
+
+$accept (71)
+    on left: 0
+programa (72)
+    on left: 1 2, on right: 0 2
+componente (73)
+    on left: 3 4 5 6, on right: 2
+depoisDeIdent (74)
+    on left: 7 8 9 10, on right: 4
+fechaVarOuFunc (75)
+    on left: 11 12, on right: 10
+encapsulamento (76)
+    on left: 13 14 15 16, on right: 38
+tiposPrimitivos (77)
+    on left: 17 18 19 20 21, on right: 5 9 22 38 86 87 88 89 90 91
+    92 93 94 95 96 97 98 99 100 101 102 103 104 105
+tipo (78)
+    on left: 22 23, on right: 6 7 8 26 27
+static (79)
+    on left: 24 25, on right: 7
+tipoConst (80)
+    on left: 26 27, on right: 44
+literais (81)
+    on left: 28 29 30 31 32 33, on right: 98 100 102 104
+novoTipo (82)
+    on left: 34, on right: 3
+listaCampos (83)
+    on left: 35, on right: 34
+list (84)
+    on left: 36 37, on right: 35 37
+campo (85)
+    on left: 38, on right: 36 37
+tamanhoVetor (86)
+    on left: 39, on right: 7
+args (87)
+    on left: 40 41, on right: 45
+parameters (88)
+    on left: 42 43, on right: 41 42
+parameter (89)
+    on left: 44, on right: 42 43
+argsAndCommands (90)
+    on left: 45, on right: 5 6 12
+blocoComandos (91)
+    on left: 46, on right: 45 68 69 71 72 73 74 75 80
+comando (92)
+    on left: 47 48, on right: 50
+comandos (93)
+    on left: 49 50, on right: 46 50
+comandoSimples (94)
+    on left: 51 52 53 54 55, on right: 47
+comandosSemVirgula (95)
+    on left: 56 57 58 59 60 61 62 63 64 65 66 67 68, on right: 51 78
+    79
+ifThenElse (96)
+    on left: 69, on right: 63
+optElse (97)
+    on left: 70 71, on right: 69
+foreach (98)
+    on left: 72, on right: 54
+for (99)
+    on left: 73, on right: 55
+while_do (100)
+    on left: 74, on right: 64
+do_while (101)
+    on left: 75, on right: 65
+foreachList (102)
+    on left: 76 77, on right: 72 77
+forList (103)
+    on left: 78 79, on right: 73 79
+switch (104)
+    on left: 80, on right: 66
+case (105)
+    on left: 81, on right: 48
+localVarDefinition (106)
+    on left: 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
+    100 101 102 103 104 105, on right: 56
+negativeOrPositiveIdentifier (107)
+    on left: 106 107 108 109, on right: 91 93 95 97 106 108
+negativeOrPositiveLiteral (108)
+    on left: 110 111 112 113 114 115, on right: 99 101 103 105 110
+    113
+assignment (109)
+    on left: 116 117 118 119, on right: 57
+input (110)
+    on left: 120, on right: 58
+output (111)
+    on left: 121 122, on right: 52
+continueOutput (112)
+    on left: 123 124, on right: 121 124
+funcCall (113)
+    on left: 125 126, on right: 53 144 145 146 147 166
+argsCall (114)
+    on left: 127 128, on right: 125 128
+argCall (115)
+    on left: 129 130, on right: 127 128
+shiftOp (116)
+    on left: 131 132, on right: 133 134 135 136
+shift (117)
+    on left: 133 134 135 136, on right: 59
+return (118)
+    on left: 137, on right: 62
+expression (119)
+    on left: 138 139 140 141, on right: 69 73 74 75 76 77 80 116 117
+    118 119 120 121 122 123 124 129 133 134 135 136 137 138 139 148
+    156 159
+infiniteQuestionMarks (120)
+    on left: 142 143, on right: 139 141 143
+pipe (121)
+    on left: 144 145 146 147, on right: 67 145 147 167
+parenthesisOrOperand (122)
+    on left: 148 149 150 151 152 153 154 155, on right: 138 140 142
+    150 151 152 153 154 155
+operands (123)
+    on left: 156 157 158 159 160 161 162 163 164 165 166 167, on right:
+    149
+operators (124)
+    on left: 168 169 170 171 172 173 174 175 176 177 178 179 180 181
+    182 183, on right: 138 139
+
+
+State 0
+
+    0 $accept: . programa $end
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_STATIC      shift, and go to state 6
+    TK_PR_CLASS       shift, and go to state 7
+    TK_IDENTIFICADOR  shift, and go to state 8
+
+    $default  reduce using rule 1 (programa)
+
+    programa         go to state 9
+    componente       go to state 10
+    tiposPrimitivos  go to state 11
+    novoTipo         go to state 12
+
+
+State 1
+
+   17 tiposPrimitivos: TK_PR_INT .
+
+    $default  reduce using rule 17 (tiposPrimitivos)
+
+
+State 2
+
+   18 tiposPrimitivos: TK_PR_FLOAT .
+
+    $default  reduce using rule 18 (tiposPrimitivos)
+
+
+State 3
+
+   19 tiposPrimitivos: TK_PR_BOOL .
+
+    $default  reduce using rule 19 (tiposPrimitivos)
+
+
+State 4
+
+   20 tiposPrimitivos: TK_PR_CHAR .
+
+    $default  reduce using rule 20 (tiposPrimitivos)
+
+
+State 5
+
+   21 tiposPrimitivos: TK_PR_STRING .
+
+    $default  reduce using rule 21 (tiposPrimitivos)
+
+
+State 6
+
+    6 componente: TK_PR_STATIC . tipo TK_IDENTIFICADOR argsAndCommands
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_IDENTIFICADOR  shift, and go to state 13
+
+    tiposPrimitivos  go to state 14
+    tipo             go to state 15
+
+
+State 7
+
+   34 novoTipo: TK_PR_CLASS . TK_IDENTIFICADOR listaCampos ';'
+
+    TK_IDENTIFICADOR  shift, and go to state 16
+
+
+State 8
+
+    4 componente: TK_IDENTIFICADOR . depoisDeIdent
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_STATIC      shift, and go to state 17
+    TK_IDENTIFICADOR  shift, and go to state 18
+    '['               shift, and go to state 19
+
+    depoisDeIdent    go to state 20
+    tiposPrimitivos  go to state 21
+    tamanhoVetor     go to state 22
+
+
+State 9
+
+    0 $accept: programa . $end
+
+    $end  shift, and go to state 23
+
+
+State 10
+
+    2 programa: componente . programa
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_STATIC      shift, and go to state 6
+    TK_PR_CLASS       shift, and go to state 7
+    TK_IDENTIFICADOR  shift, and go to state 8
+
+    $default  reduce using rule 1 (programa)
+
+    programa         go to state 24
+    componente       go to state 10
+    tiposPrimitivos  go to state 11
+    novoTipo         go to state 12
+
+
+State 11
+
+    5 componente: tiposPrimitivos . TK_IDENTIFICADOR argsAndCommands
+
+    TK_IDENTIFICADOR  shift, and go to state 25
+
+
+State 12
+
+    3 componente: novoTipo .
+
+    $default  reduce using rule 3 (componente)
+
+
+State 13
+
+   23 tipo: TK_IDENTIFICADOR .
+
+    $default  reduce using rule 23 (tipo)
+
+
+State 14
+
+   22 tipo: tiposPrimitivos .
+
+    $default  reduce using rule 22 (tipo)
+
+
+State 15
+
+    6 componente: TK_PR_STATIC tipo . TK_IDENTIFICADOR argsAndCommands
+
+    TK_IDENTIFICADOR  shift, and go to state 26
+
+
+State 16
+
+   34 novoTipo: TK_PR_CLASS TK_IDENTIFICADOR . listaCampos ';'
+
+    '['  shift, and go to state 27
+
+    listaCampos  go to state 28
+
+
+State 17
+
+    8 depoisDeIdent: TK_PR_STATIC . tipo ';'
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_IDENTIFICADOR  shift, and go to state 13
+
+    tiposPrimitivos  go to state 14
+    tipo             go to state 29
+
+
+State 18
+
+   10 depoisDeIdent: TK_IDENTIFICADOR . fechaVarOuFunc
+
+    ';'  shift, and go to state 30
+    '('  shift, and go to state 31
+
+    fechaVarOuFunc   go to state 32
+    argsAndCommands  go to state 33
+
+
+State 19
+
+   39 tamanhoVetor: '[' . TK_LIT_INT ']'
+
+    TK_LIT_INT  shift, and go to state 34
+
+
+State 20
+
+    4 componente: TK_IDENTIFICADOR depoisDeIdent .
+
+    $default  reduce using rule 4 (componente)
+
+
+State 21
+
+    9 depoisDeIdent: tiposPrimitivos . ';'
+
+    ';'  shift, and go to state 35
+
+
+State 22
+
+    7 depoisDeIdent: tamanhoVetor . static tipo ';'
+
+    TK_PR_STATIC  shift, and go to state 36
+
+    $default  reduce using rule 25 (static)
+
+    static  go to state 37
+
+
+State 23
+
+    0 $accept: programa $end .
+
+    $default  accept
+
+
+State 24
+
+    2 programa: componente programa .
+
+    $default  reduce using rule 2 (programa)
+
+
+State 25
+
+    5 componente: tiposPrimitivos TK_IDENTIFICADOR . argsAndCommands
+
+    '('  shift, and go to state 31
+
+    argsAndCommands  go to state 38
+
+
+State 26
+
+    6 componente: TK_PR_STATIC tipo TK_IDENTIFICADOR . argsAndCommands
+
+    '('  shift, and go to state 31
+
+    argsAndCommands  go to state 39
+
+
+State 27
+
+   35 listaCampos: '[' . list ']'
+
+    TK_PR_PRIVATE    shift, and go to state 40
+    TK_PR_PUBLIC     shift, and go to state 41
+    TK_PR_PROTECTED  shift, and go to state 42
+
+    $default  reduce using rule 13 (encapsulamento)
+
+    encapsulamento  go to state 43
+    list            go to state 44
+    campo           go to state 45
+
+
+State 28
+
+   34 novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos . ';'
+
+    ';'  shift, and go to state 46
+
+
+State 29
+
+    8 depoisDeIdent: TK_PR_STATIC tipo . ';'
+
+    ';'  shift, and go to state 47
+
+
+State 30
+
+   11 fechaVarOuFunc: ';' .
+
+    $default  reduce using rule 11 (fechaVarOuFunc)
+
+
+State 31
+
+   45 argsAndCommands: '(' . args ')' blocoComandos
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_CONST       shift, and go to state 48
+    TK_IDENTIFICADOR  shift, and go to state 13
+
+    $default  reduce using rule 40 (args)
+
+    tiposPrimitivos  go to state 14
+    tipo             go to state 49
+    tipoConst        go to state 50
+    args             go to state 51
+    parameters       go to state 52
+    parameter        go to state 53
+
+
+State 32
+
+   10 depoisDeIdent: TK_IDENTIFICADOR fechaVarOuFunc .
+
+    $default  reduce using rule 10 (depoisDeIdent)
+
+
+State 33
+
+   12 fechaVarOuFunc: argsAndCommands .
+
+    $default  reduce using rule 12 (fechaVarOuFunc)
+
+
+State 34
+
+   39 tamanhoVetor: '[' TK_LIT_INT . ']'
+
+    ']'  shift, and go to state 54
+
+
+State 35
+
+    9 depoisDeIdent: tiposPrimitivos ';' .
+
+    $default  reduce using rule 9 (depoisDeIdent)
+
+
+State 36
+
+   24 static: TK_PR_STATIC .
+
+    $default  reduce using rule 24 (static)
+
+
+State 37
+
+    7 depoisDeIdent: tamanhoVetor static . tipo ';'
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_IDENTIFICADOR  shift, and go to state 13
+
+    tiposPrimitivos  go to state 14
+    tipo             go to state 55
+
+
+State 38
+
+    5 componente: tiposPrimitivos TK_IDENTIFICADOR argsAndCommands .
+
+    $default  reduce using rule 5 (componente)
+
+
+State 39
+
+    6 componente: TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands .
+
+    $default  reduce using rule 6 (componente)
+
+
+State 40
+
+   14 encapsulamento: TK_PR_PRIVATE .
+
+    $default  reduce using rule 14 (encapsulamento)
+
+
+State 41
+
+   15 encapsulamento: TK_PR_PUBLIC .
+
+    $default  reduce using rule 15 (encapsulamento)
+
+
+State 42
+
+   16 encapsulamento: TK_PR_PROTECTED .
+
+    $default  reduce using rule 16 (encapsulamento)
+
+
+State 43
+
+   38 campo: encapsulamento . tiposPrimitivos TK_IDENTIFICADOR
+
+    TK_PR_INT     shift, and go to state 1
+    TK_PR_FLOAT   shift, and go to state 2
+    TK_PR_BOOL    shift, and go to state 3
+    TK_PR_CHAR    shift, and go to state 4
+    TK_PR_STRING  shift, and go to state 5
+
+    tiposPrimitivos  go to state 56
+
+
+State 44
+
+   35 listaCampos: '[' list . ']'
+
+    ']'  shift, and go to state 57
+
+
+State 45
+
+   36 list: campo .
+   37     | campo . ':' list
+
+    ':'  shift, and go to state 58
+
+    $default  reduce using rule 36 (list)
+
+
+State 46
+
+   34 novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos ';' .
+
+    $default  reduce using rule 34 (novoTipo)
+
+
+State 47
+
+    8 depoisDeIdent: TK_PR_STATIC tipo ';' .
+
+    $default  reduce using rule 8 (depoisDeIdent)
+
+
+State 48
+
+   26 tipoConst: TK_PR_CONST . tipo
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_IDENTIFICADOR  shift, and go to state 13
+
+    tiposPrimitivos  go to state 14
+    tipo             go to state 59
+
+
+State 49
+
+   27 tipoConst: tipo .
+
+    $default  reduce using rule 27 (tipoConst)
+
+
+State 50
+
+   44 parameter: tipoConst . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 60
+
+
+State 51
+
+   45 argsAndCommands: '(' args . ')' blocoComandos
+
+    ')'  shift, and go to state 61
+
+
+State 52
+
+   41 args: parameters .
+
+    $default  reduce using rule 41 (args)
+
+
+State 53
+
+   42 parameters: parameter . ',' parameters
+   43           | parameter .
+
+    ','  shift, and go to state 62
+
+    $default  reduce using rule 43 (parameters)
+
+
+State 54
+
+   39 tamanhoVetor: '[' TK_LIT_INT ']' .
+
+    $default  reduce using rule 39 (tamanhoVetor)
+
+
+State 55
+
+    7 depoisDeIdent: tamanhoVetor static tipo . ';'
+
+    ';'  shift, and go to state 63
+
+
+State 56
+
+   38 campo: encapsulamento tiposPrimitivos . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 64
+
+
+State 57
+
+   35 listaCampos: '[' list ']' .
+
+    $default  reduce using rule 35 (listaCampos)
+
+
+State 58
+
+   37 list: campo ':' . list
+
+    TK_PR_PRIVATE    shift, and go to state 40
+    TK_PR_PUBLIC     shift, and go to state 41
+    TK_PR_PROTECTED  shift, and go to state 42
+
+    $default  reduce using rule 13 (encapsulamento)
+
+    encapsulamento  go to state 43
+    list            go to state 65
+    campo           go to state 45
+
+
+State 59
+
+   26 tipoConst: TK_PR_CONST tipo .
+
+    $default  reduce using rule 26 (tipoConst)
+
+
+State 60
+
+   44 parameter: tipoConst TK_IDENTIFICADOR .
+
+    $default  reduce using rule 44 (parameter)
+
+
+State 61
+
+   45 argsAndCommands: '(' args ')' . blocoComandos
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 67
+
+
+State 62
+
+   42 parameters: parameter ',' . parameters
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_CONST       shift, and go to state 48
+    TK_IDENTIFICADOR  shift, and go to state 13
+
+    tiposPrimitivos  go to state 14
+    tipo             go to state 49
+    tipoConst        go to state 50
+    parameters       go to state 68
+    parameter        go to state 53
+
+
+State 63
+
+    7 depoisDeIdent: tamanhoVetor static tipo ';' .
+
+    $default  reduce using rule 7 (depoisDeIdent)
+
+
+State 64
+
+   38 campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR .
+
+    $default  reduce using rule 38 (campo)
+
+
+State 65
+
+   37 list: campo ':' list .
+
+    $default  reduce using rule 37 (list)
+
+
+State 66
+
+   46 blocoComandos: '{' . comandos '}'
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_IF          shift, and go to state 69
+    TK_PR_WHILE       shift, and go to state 70
+    TK_PR_DO          shift, and go to state 71
+    TK_PR_INPUT       shift, and go to state 72
+    TK_PR_OUTPUT      shift, and go to state 73
+    TK_PR_RETURN      shift, and go to state 74
+    TK_PR_CONST       shift, and go to state 75
+    TK_PR_STATIC      shift, and go to state 76
+    TK_PR_FOREACH     shift, and go to state 77
+    TK_PR_FOR         shift, and go to state 78
+    TK_PR_SWITCH      shift, and go to state 79
+    TK_PR_CASE        shift, and go to state 80
+    TK_PR_BREAK       shift, and go to state 81
+    TK_PR_CONTINUE    shift, and go to state 82
+    TK_IDENTIFICADOR  shift, and go to state 83
+    '{'               shift, and go to state 66
+
+    $default  reduce using rule 49 (comandos)
+
+    tiposPrimitivos     go to state 84
+    blocoComandos       go to state 85
+    comando             go to state 86
+    comandos            go to state 87
+    comandoSimples      go to state 88
+    comandosSemVirgula  go to state 89
+    ifThenElse          go to state 90
+    foreach             go to state 91
+    for                 go to state 92
+    while_do            go to state 93
+    do_while            go to state 94
+    switch              go to state 95
+    case                go to state 96
+    localVarDefinition  go to state 97
+    assignment          go to state 98
+    input               go to state 99
+    output              go to state 100
+    funcCall            go to state 101
+    shift               go to state 102
+    return              go to state 103
+    pipe                go to state 104
+
+
+State 67
+
+   45 argsAndCommands: '(' args ')' blocoComandos .
+
+    $default  reduce using rule 45 (argsAndCommands)
+
+
+State 68
+
+   42 parameters: parameter ',' parameters .
+
+    $default  reduce using rule 42 (parameters)
+
+
+State 69
+
+   69 ifThenElse: TK_PR_IF . '(' expression ')' TK_PR_THEN blocoComandos optElse
+
+    '('  shift, and go to state 105
+
+
+State 70
+
+   74 while_do: TK_PR_WHILE . '(' expression ')' TK_PR_DO blocoComandos
+
+    '('  shift, and go to state 106
+
+
+State 71
+
+   75 do_while: TK_PR_DO . blocoComandos TK_PR_WHILE '(' expression ')'
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 107
+
+
+State 72
+
+  120 input: TK_PR_INPUT . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 123
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 73
+
+  121 output: TK_PR_OUTPUT . expression continueOutput
+  122       | TK_PR_OUTPUT . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 128
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 74
+
+  137 return: TK_PR_RETURN . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 129
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 75
+
+   83 localVarDefinition: TK_PR_CONST . TK_IDENTIFICADOR TK_IDENTIFICADOR
+   87                   | TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR
+   92                   | TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   93                   | TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+  102                   | TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+  103                   | TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_IDENTIFICADOR  shift, and go to state 130
+
+    tiposPrimitivos  go to state 131
+
+
+State 76
+
+   82 localVarDefinition: TK_PR_STATIC . TK_IDENTIFICADOR TK_IDENTIFICADOR
+   84                   | TK_PR_STATIC . TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR
+   86                   | TK_PR_STATIC . tiposPrimitivos TK_IDENTIFICADOR
+   88                   | TK_PR_STATIC . TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR
+   90                   | TK_PR_STATIC . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   91                   | TK_PR_STATIC . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   94                   | TK_PR_STATIC . TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   95                   | TK_PR_STATIC . TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   98                   | TK_PR_STATIC . TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+   99                   | TK_PR_STATIC . TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+  100                   | TK_PR_STATIC . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+  101                   | TK_PR_STATIC . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_CONST       shift, and go to state 132
+    TK_IDENTIFICADOR  shift, and go to state 133
+
+    tiposPrimitivos  go to state 134
+
+
+State 77
+
+   72 foreach: TK_PR_FOREACH . '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos
+
+    '('  shift, and go to state 135
+
+
+State 78
+
+   73 for: TK_PR_FOR . '(' forList ':' expression ':' forList ')' blocoComandos
+
+    '('  shift, and go to state 136
+
+
+State 79
+
+   80 switch: TK_PR_SWITCH . '(' expression ')' blocoComandos
+
+    '('  shift, and go to state 137
+
+
+State 80
+
+   81 case: TK_PR_CASE . TK_LIT_INT ':'
+
+    TK_LIT_INT  shift, and go to state 138
+
+
+State 81
+
+   60 comandosSemVirgula: TK_PR_BREAK .
+
+    $default  reduce using rule 60 (comandosSemVirgula)
+
+
+State 82
+
+   61 comandosSemVirgula: TK_PR_CONTINUE .
+
+    $default  reduce using rule 61 (comandosSemVirgula)
+
+
+State 83
+
+   85 localVarDefinition: TK_IDENTIFICADOR . TK_IDENTIFICADOR
+  116 assignment: TK_IDENTIFICADOR . '=' expression
+  117           | TK_IDENTIFICADOR . '[' expression ']' '=' expression
+  118           | TK_IDENTIFICADOR . '$' TK_IDENTIFICADOR '=' expression
+  119           | TK_IDENTIFICADOR . '[' expression ']' '$' TK_IDENTIFICADOR '=' expression
+  125 funcCall: TK_IDENTIFICADOR . '(' argsCall ')'
+  126         | TK_IDENTIFICADOR . '(' ')'
+  133 shift: TK_IDENTIFICADOR . shiftOp expression
+  134      | TK_IDENTIFICADOR . '$' TK_IDENTIFICADOR shiftOp expression
+  135      | TK_IDENTIFICADOR . '[' expression ']' shiftOp expression
+  136      | TK_IDENTIFICADOR . '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression
+
+    TK_OC_SL          shift, and go to state 139
+    TK_OC_SR          shift, and go to state 140
+    TK_IDENTIFICADOR  shift, and go to state 141
+    '['               shift, and go to state 142
+    '('               shift, and go to state 143
+    '='               shift, and go to state 144
+    '$'               shift, and go to state 145
+
+    shiftOp  go to state 146
+
+
+State 84
+
+   89 localVarDefinition: tiposPrimitivos . TK_IDENTIFICADOR
+   96                   | tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   97                   | tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+  104                   | tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE literais
+  105                   | tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+    TK_IDENTIFICADOR  shift, and go to state 147
+
+
+State 85
+
+   68 comandosSemVirgula: blocoComandos .
+
+    $default  reduce using rule 68 (comandosSemVirgula)
+
+
+State 86
+
+   50 comandos: comando . comandos
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_IF          shift, and go to state 69
+    TK_PR_WHILE       shift, and go to state 70
+    TK_PR_DO          shift, and go to state 71
+    TK_PR_INPUT       shift, and go to state 72
+    TK_PR_OUTPUT      shift, and go to state 73
+    TK_PR_RETURN      shift, and go to state 74
+    TK_PR_CONST       shift, and go to state 75
+    TK_PR_STATIC      shift, and go to state 76
+    TK_PR_FOREACH     shift, and go to state 77
+    TK_PR_FOR         shift, and go to state 78
+    TK_PR_SWITCH      shift, and go to state 79
+    TK_PR_CASE        shift, and go to state 80
+    TK_PR_BREAK       shift, and go to state 81
+    TK_PR_CONTINUE    shift, and go to state 82
+    TK_IDENTIFICADOR  shift, and go to state 83
+    '{'               shift, and go to state 66
+
+    $default  reduce using rule 49 (comandos)
+
+    tiposPrimitivos     go to state 84
+    blocoComandos       go to state 85
+    comando             go to state 86
+    comandos            go to state 148
+    comandoSimples      go to state 88
+    comandosSemVirgula  go to state 89
+    ifThenElse          go to state 90
+    foreach             go to state 91
+    for                 go to state 92
+    while_do            go to state 93
+    do_while            go to state 94
+    switch              go to state 95
+    case                go to state 96
+    localVarDefinition  go to state 97
+    assignment          go to state 98
+    input               go to state 99
+    output              go to state 100
+    funcCall            go to state 101
+    shift               go to state 102
+    return              go to state 103
+    pipe                go to state 104
+
+
+State 87
+
+   46 blocoComandos: '{' comandos . '}'
+
+    '}'  shift, and go to state 149
+
+
+State 88
+
+   47 comando: comandoSimples . ';'
+
+    ';'  shift, and go to state 150
+
+
+State 89
+
+   51 comandoSimples: comandosSemVirgula .
+
+    $default  reduce using rule 51 (comandoSimples)
+
+
+State 90
+
+   63 comandosSemVirgula: ifThenElse .
+
+    $default  reduce using rule 63 (comandosSemVirgula)
+
+
+State 91
+
+   54 comandoSimples: foreach .
+
+    $default  reduce using rule 54 (comandoSimples)
+
+
+State 92
+
+   55 comandoSimples: for .
+
+    $default  reduce using rule 55 (comandoSimples)
+
+
+State 93
+
+   64 comandosSemVirgula: while_do .
+
+    $default  reduce using rule 64 (comandosSemVirgula)
+
+
+State 94
+
+   65 comandosSemVirgula: do_while .
+
+    $default  reduce using rule 65 (comandosSemVirgula)
+
+
+State 95
+
+   66 comandosSemVirgula: switch .
+
+    $default  reduce using rule 66 (comandosSemVirgula)
+
+
+State 96
+
+   48 comando: case .
+
+    $default  reduce using rule 48 (comando)
+
+
+State 97
+
+   56 comandosSemVirgula: localVarDefinition .
+
+    $default  reduce using rule 56 (comandosSemVirgula)
+
+
+State 98
+
+   57 comandosSemVirgula: assignment .
+
+    $default  reduce using rule 57 (comandosSemVirgula)
+
+
+State 99
+
+   58 comandosSemVirgula: input .
+
+    $default  reduce using rule 58 (comandosSemVirgula)
+
+
+State 100
+
+   52 comandoSimples: output .
+
+    $default  reduce using rule 52 (comandoSimples)
+
+
+State 101
+
+   53 comandoSimples: funcCall .
+  144 pipe: funcCall . TK_OC_FORWARD_PIPE funcCall
+  146     | funcCall . TK_OC_BASH_PIPE funcCall
+
+    TK_OC_FORWARD_PIPE  shift, and go to state 151
+    TK_OC_BASH_PIPE     shift, and go to state 152
+
+    $default  reduce using rule 53 (comandoSimples)
+
+
+State 102
+
+   59 comandosSemVirgula: shift .
+
+    $default  reduce using rule 59 (comandosSemVirgula)
+
+
+State 103
+
+   62 comandosSemVirgula: return .
+
+    $default  reduce using rule 62 (comandosSemVirgula)
+
+
+State 104
+
+   67 comandosSemVirgula: pipe .
+  145 pipe: pipe . TK_OC_FORWARD_PIPE funcCall
+  147     | pipe . TK_OC_BASH_PIPE funcCall
+
+    TK_OC_FORWARD_PIPE  shift, and go to state 153
+    TK_OC_BASH_PIPE     shift, and go to state 154
+
+    $default  reduce using rule 67 (comandosSemVirgula)
+
+
+State 105
+
+   69 ifThenElse: TK_PR_IF '(' . expression ')' TK_PR_THEN blocoComandos optElse
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 155
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 106
+
+   74 while_do: TK_PR_WHILE '(' . expression ')' TK_PR_DO blocoComandos
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 156
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 107
+
+   75 do_while: TK_PR_DO blocoComandos . TK_PR_WHILE '(' expression ')'
+
+    TK_PR_WHILE  shift, and go to state 157
+
+
+State 108
+
+  160 operands: TK_LIT_INT .
+
+    $default  reduce using rule 160 (operands)
+
+
+State 109
+
+  161 operands: TK_LIT_FLOAT .
+
+    $default  reduce using rule 161 (operands)
+
+
+State 110
+
+  163 operands: TK_LIT_FALSE .
+
+    $default  reduce using rule 163 (operands)
+
+
+State 111
+
+  162 operands: TK_LIT_TRUE .
+
+    $default  reduce using rule 162 (operands)
+
+
+State 112
+
+  164 operands: TK_LIT_CHAR .
+
+    $default  reduce using rule 164 (operands)
+
+
+State 113
+
+  165 operands: TK_LIT_STRING .
+
+    $default  reduce using rule 165 (operands)
+
+
+State 114
+
+  125 funcCall: TK_IDENTIFICADOR . '(' argsCall ')'
+  126         | TK_IDENTIFICADOR . '(' ')'
+  156 operands: TK_IDENTIFICADOR . '[' expression ']'
+  157         | TK_IDENTIFICADOR .
+  158         | TK_IDENTIFICADOR . '$' TK_IDENTIFICADOR
+  159         | TK_IDENTIFICADOR . '[' expression ']' '$' TK_IDENTIFICADOR
+
+    '['  shift, and go to state 158
+    '('  shift, and go to state 143
+    '$'  shift, and go to state 159
+
+    $default  reduce using rule 157 (operands)
+
+
+State 115
+
+  148 parenthesisOrOperand: '(' . expression ')'
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 160
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 116
+
+  150 parenthesisOrOperand: '-' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall              go to state 122
+    pipe                  go to state 125
+    parenthesisOrOperand  go to state 161
+    operands              go to state 127
+
+
+State 117
+
+  151 parenthesisOrOperand: '+' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall              go to state 122
+    pipe                  go to state 125
+    parenthesisOrOperand  go to state 162
+    operands              go to state 127
+
+
+State 118
+
+  152 parenthesisOrOperand: '!' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall              go to state 122
+    pipe                  go to state 125
+    parenthesisOrOperand  go to state 163
+    operands              go to state 127
+
+
+State 119
+
+  153 parenthesisOrOperand: '*' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall              go to state 122
+    pipe                  go to state 125
+    parenthesisOrOperand  go to state 164
+    operands              go to state 127
+
+
+State 120
+
+  154 parenthesisOrOperand: '&' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall              go to state 122
+    pipe                  go to state 125
+    parenthesisOrOperand  go to state 165
+    operands              go to state 127
+
+
+State 121
+
+  155 parenthesisOrOperand: '#' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall              go to state 122
+    pipe                  go to state 125
+    parenthesisOrOperand  go to state 166
+    operands              go to state 127
+
+
+State 122
+
+  144 pipe: funcCall . TK_OC_FORWARD_PIPE funcCall
+  146     | funcCall . TK_OC_BASH_PIPE funcCall
+  166 operands: funcCall .
+
+    TK_OC_FORWARD_PIPE  shift, and go to state 151
+    TK_OC_BASH_PIPE     shift, and go to state 152
+
+    $default  reduce using rule 166 (operands)
+
+
+State 123
+
+  120 input: TK_PR_INPUT expression .
+
+    $default  reduce using rule 120 (input)
+
+
+State 124
+
+  139 expression: infiniteQuestionMarks . operators expression
+  141           | infiniteQuestionMarks .
+  143 infiniteQuestionMarks: infiniteQuestionMarks . '?'
+
+    TK_OC_LE   shift, and go to state 167
+    TK_OC_GE   shift, and go to state 168
+    TK_OC_EQ   shift, and go to state 169
+    TK_OC_NE   shift, and go to state 170
+    TK_OC_AND  shift, and go to state 171
+    TK_OC_OR   shift, and go to state 172
+    '-'        shift, and go to state 173
+    '+'        shift, and go to state 174
+    '?'        shift, and go to state 175
+    '*'        shift, and go to state 176
+    '&'        shift, and go to state 177
+    '/'        shift, and go to state 178
+    '%'        shift, and go to state 179
+    '^'        shift, and go to state 180
+    '|'        shift, and go to state 181
+    '<'        shift, and go to state 182
+    '>'        shift, and go to state 183
+
+    $default  reduce using rule 141 (expression)
+
+    operators  go to state 184
+
+
+State 125
+
+  145 pipe: pipe . TK_OC_FORWARD_PIPE funcCall
+  147     | pipe . TK_OC_BASH_PIPE funcCall
+  167 operands: pipe .
+
+    TK_OC_FORWARD_PIPE  shift, and go to state 153
+    TK_OC_BASH_PIPE     shift, and go to state 154
+
+    $default  reduce using rule 167 (operands)
+
+
+State 126
+
+  138 expression: parenthesisOrOperand . operators expression
+  140           | parenthesisOrOperand .
+  142 infiniteQuestionMarks: parenthesisOrOperand . '?'
+
+    TK_OC_LE   shift, and go to state 167
+    TK_OC_GE   shift, and go to state 168
+    TK_OC_EQ   shift, and go to state 169
+    TK_OC_NE   shift, and go to state 170
+    TK_OC_AND  shift, and go to state 171
+    TK_OC_OR   shift, and go to state 172
+    '-'        shift, and go to state 173
+    '+'        shift, and go to state 174
+    '?'        shift, and go to state 185
+    '*'        shift, and go to state 176
+    '&'        shift, and go to state 177
+    '/'        shift, and go to state 178
+    '%'        shift, and go to state 179
+    '^'        shift, and go to state 180
+    '|'        shift, and go to state 181
+    '<'        shift, and go to state 182
+    '>'        shift, and go to state 183
+
+    $default  reduce using rule 140 (expression)
+
+    operators  go to state 186
+
+
+State 127
+
+  149 parenthesisOrOperand: operands .
+
+    $default  reduce using rule 149 (parenthesisOrOperand)
+
+
+State 128
+
+  121 output: TK_PR_OUTPUT expression . continueOutput
+  122       | TK_PR_OUTPUT expression .
+
+    ','  shift, and go to state 187
+
+    $default  reduce using rule 122 (output)
+
+    continueOutput  go to state 188
+
+
+State 129
+
+  137 return: TK_PR_RETURN expression .
+
+    $default  reduce using rule 137 (return)
+
+
+State 130
+
+   83 localVarDefinition: TK_PR_CONST TK_IDENTIFICADOR . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 189
+
+
+State 131
+
+   87 localVarDefinition: TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR
+   92                   | TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   93                   | TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+  102                   | TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE literais
+  103                   | TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+    TK_IDENTIFICADOR  shift, and go to state 190
+
+
+State 132
+
+   84 localVarDefinition: TK_PR_STATIC TK_PR_CONST . TK_IDENTIFICADOR TK_IDENTIFICADOR
+   88                   | TK_PR_STATIC TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR
+   94                   | TK_PR_STATIC TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   95                   | TK_PR_STATIC TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   98                   | TK_PR_STATIC TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
+   99                   | TK_PR_STATIC TK_PR_CONST . tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_IDENTIFICADOR  shift, and go to state 191
+
+    tiposPrimitivos  go to state 192
+
+
+State 133
+
+   82 localVarDefinition: TK_PR_STATIC TK_IDENTIFICADOR . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 193
+
+
+State 134
+
+   86 localVarDefinition: TK_PR_STATIC tiposPrimitivos . TK_IDENTIFICADOR
+   90                   | TK_PR_STATIC tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   91                   | TK_PR_STATIC tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+  100                   | TK_PR_STATIC tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE literais
+  101                   | TK_PR_STATIC tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+    TK_IDENTIFICADOR  shift, and go to state 194
+
+
+State 135
+
+   72 foreach: TK_PR_FOREACH '(' . TK_IDENTIFICADOR ':' foreachList ')' blocoComandos
+
+    TK_IDENTIFICADOR  shift, and go to state 195
+
+
+State 136
+
+   73 for: TK_PR_FOR '(' . forList ':' expression ':' forList ')' blocoComandos
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_IF          shift, and go to state 69
+    TK_PR_WHILE       shift, and go to state 70
+    TK_PR_DO          shift, and go to state 71
+    TK_PR_INPUT       shift, and go to state 72
+    TK_PR_RETURN      shift, and go to state 74
+    TK_PR_CONST       shift, and go to state 75
+    TK_PR_STATIC      shift, and go to state 76
+    TK_PR_SWITCH      shift, and go to state 79
+    TK_PR_BREAK       shift, and go to state 81
+    TK_PR_CONTINUE    shift, and go to state 82
+    TK_IDENTIFICADOR  shift, and go to state 83
+    '{'               shift, and go to state 66
+
+    tiposPrimitivos     go to state 84
+    blocoComandos       go to state 85
+    comandosSemVirgula  go to state 196
+    ifThenElse          go to state 90
+    while_do            go to state 93
+    do_while            go to state 94
+    forList             go to state 197
+    switch              go to state 95
+    localVarDefinition  go to state 97
+    assignment          go to state 98
+    input               go to state 99
+    funcCall            go to state 198
+    shift               go to state 102
+    return              go to state 103
+    pipe                go to state 104
+
+
+State 137
+
+   80 switch: TK_PR_SWITCH '(' . expression ')' blocoComandos
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 199
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 138
+
+   81 case: TK_PR_CASE TK_LIT_INT . ':'
+
+    ':'  shift, and go to state 200
+
+
+State 139
+
+  131 shiftOp: TK_OC_SL .
+
+    $default  reduce using rule 131 (shiftOp)
+
+
+State 140
+
+  132 shiftOp: TK_OC_SR .
+
+    $default  reduce using rule 132 (shiftOp)
+
+
+State 141
+
+   85 localVarDefinition: TK_IDENTIFICADOR TK_IDENTIFICADOR .
+
+    $default  reduce using rule 85 (localVarDefinition)
+
+
+State 142
+
+  117 assignment: TK_IDENTIFICADOR '[' . expression ']' '=' expression
+  119           | TK_IDENTIFICADOR '[' . expression ']' '$' TK_IDENTIFICADOR '=' expression
+  135 shift: TK_IDENTIFICADOR '[' . expression ']' shiftOp expression
+  136      | TK_IDENTIFICADOR '[' . expression ']' '$' TK_IDENTIFICADOR shiftOp expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 201
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 143
+
+  125 funcCall: TK_IDENTIFICADOR '(' . argsCall ')'
+  126         | TK_IDENTIFICADOR '(' . ')'
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    ')'               shift, and go to state 202
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '.'               shift, and go to state 203
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    argsCall               go to state 204
+    argCall                go to state 205
+    expression             go to state 206
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 144
+
+  116 assignment: TK_IDENTIFICADOR '=' . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 207
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 145
+
+  118 assignment: TK_IDENTIFICADOR '$' . TK_IDENTIFICADOR '=' expression
+  134 shift: TK_IDENTIFICADOR '$' . TK_IDENTIFICADOR shiftOp expression
+
+    TK_IDENTIFICADOR  shift, and go to state 208
+
+
+State 146
+
+  133 shift: TK_IDENTIFICADOR shiftOp . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 209
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 147
+
+   89 localVarDefinition: tiposPrimitivos TK_IDENTIFICADOR .
+   96                   | tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE TK_IDENTIFICADOR
+   97                   | tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveIdentifier
+  104                   | tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE literais
+  105                   | tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveLiteral
+
+    TK_OC_LE  shift, and go to state 210
+
+    $default  reduce using rule 89 (localVarDefinition)
+
+
+State 148
+
+   50 comandos: comando comandos .
+
+    $default  reduce using rule 50 (comandos)
+
+
+State 149
+
+   46 blocoComandos: '{' comandos '}' .
+
+    $default  reduce using rule 46 (blocoComandos)
+
+
+State 150
+
+   47 comando: comandoSimples ';' .
+
+    $default  reduce using rule 47 (comando)
+
+
+State 151
+
+  144 pipe: funcCall TK_OC_FORWARD_PIPE . funcCall
+
+    TK_IDENTIFICADOR  shift, and go to state 211
+
+    funcCall  go to state 212
+
+
+State 152
+
+  146 pipe: funcCall TK_OC_BASH_PIPE . funcCall
+
+    TK_IDENTIFICADOR  shift, and go to state 211
+
+    funcCall  go to state 213
+
+
+State 153
+
+  145 pipe: pipe TK_OC_FORWARD_PIPE . funcCall
+
+    TK_IDENTIFICADOR  shift, and go to state 211
+
+    funcCall  go to state 214
+
+
+State 154
+
+  147 pipe: pipe TK_OC_BASH_PIPE . funcCall
+
+    TK_IDENTIFICADOR  shift, and go to state 211
+
+    funcCall  go to state 215
+
+
+State 155
+
+   69 ifThenElse: TK_PR_IF '(' expression . ')' TK_PR_THEN blocoComandos optElse
+
+    ')'  shift, and go to state 216
+
+
+State 156
+
+   74 while_do: TK_PR_WHILE '(' expression . ')' TK_PR_DO blocoComandos
+
+    ')'  shift, and go to state 217
+
+
+State 157
+
+   75 do_while: TK_PR_DO blocoComandos TK_PR_WHILE . '(' expression ')'
+
+    '('  shift, and go to state 218
+
+
+State 158
+
+  156 operands: TK_IDENTIFICADOR '[' . expression ']'
+  159         | TK_IDENTIFICADOR '[' . expression ']' '$' TK_IDENTIFICADOR
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 219
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 159
+
+  158 operands: TK_IDENTIFICADOR '$' . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 220
+
+
+State 160
+
+  148 parenthesisOrOperand: '(' expression . ')'
+
+    ')'  shift, and go to state 221
+
+
+State 161
+
+  150 parenthesisOrOperand: '-' parenthesisOrOperand .
+
+    $default  reduce using rule 150 (parenthesisOrOperand)
+
+
+State 162
+
+  151 parenthesisOrOperand: '+' parenthesisOrOperand .
+
+    $default  reduce using rule 151 (parenthesisOrOperand)
+
+
+State 163
+
+  152 parenthesisOrOperand: '!' parenthesisOrOperand .
+
+    $default  reduce using rule 152 (parenthesisOrOperand)
+
+
+State 164
+
+  153 parenthesisOrOperand: '*' parenthesisOrOperand .
+
+    $default  reduce using rule 153 (parenthesisOrOperand)
+
+
+State 165
+
+  154 parenthesisOrOperand: '&' parenthesisOrOperand .
+
+    $default  reduce using rule 154 (parenthesisOrOperand)
+
+
+State 166
+
+  155 parenthesisOrOperand: '#' parenthesisOrOperand .
+
+    $default  reduce using rule 155 (parenthesisOrOperand)
+
+
+State 167
+
+  181 operators: TK_OC_LE .
+
+    $default  reduce using rule 181 (operators)
+
+
+State 168
+
+  180 operators: TK_OC_GE .
+
+    $default  reduce using rule 180 (operators)
+
+
+State 169
+
+  178 operators: TK_OC_EQ .
+
+    $default  reduce using rule 178 (operators)
+
+
+State 170
+
+  179 operators: TK_OC_NE .
+
+    $default  reduce using rule 179 (operators)
+
+
+State 171
+
+  174 operators: TK_OC_AND .
+
+    $default  reduce using rule 174 (operators)
+
+
+State 172
+
+  175 operators: TK_OC_OR .
+
+    $default  reduce using rule 175 (operators)
+
+
+State 173
+
+  169 operators: '-' .
+
+    $default  reduce using rule 169 (operators)
+
+
+State 174
+
+  168 operators: '+' .
+
+    $default  reduce using rule 168 (operators)
+
+
+State 175
+
+  143 infiniteQuestionMarks: infiniteQuestionMarks '?' .
+
+    $default  reduce using rule 143 (infiniteQuestionMarks)
+
+
+State 176
+
+  170 operators: '*' .
+
+    $default  reduce using rule 170 (operators)
+
+
+State 177
+
+  177 operators: '&' .
+
+    $default  reduce using rule 177 (operators)
+
+
+State 178
+
+  171 operators: '/' .
+
+    $default  reduce using rule 171 (operators)
+
+
+State 179
+
+  172 operators: '%' .
+
+    $default  reduce using rule 172 (operators)
+
+
+State 180
+
+  173 operators: '^' .
+
+    $default  reduce using rule 173 (operators)
+
+
+State 181
+
+  176 operators: '|' .
+
+    $default  reduce using rule 176 (operators)
+
+
+State 182
+
+  182 operators: '<' .
+
+    $default  reduce using rule 182 (operators)
+
+
+State 183
+
+  183 operators: '>' .
+
+    $default  reduce using rule 183 (operators)
+
+
+State 184
+
+  139 expression: infiniteQuestionMarks operators . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 222
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 185
+
+  142 infiniteQuestionMarks: parenthesisOrOperand '?' .
+
+    $default  reduce using rule 142 (infiniteQuestionMarks)
+
+
+State 186
+
+  138 expression: parenthesisOrOperand operators . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 223
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 187
+
+  123 continueOutput: ',' . expression
+  124               | ',' . expression continueOutput
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 224
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 188
+
+  121 output: TK_PR_OUTPUT expression continueOutput .
+
+    $default  reduce using rule 121 (output)
+
+
+State 189
+
+   83 localVarDefinition: TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR .
+
+    $default  reduce using rule 83 (localVarDefinition)
+
+
+State 190
+
+   87 localVarDefinition: TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR .
+   92                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE TK_IDENTIFICADOR
+   93                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveIdentifier
+  102                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE literais
+  103                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveLiteral
+
+    TK_OC_LE  shift, and go to state 225
+
+    $default  reduce using rule 87 (localVarDefinition)
+
+
+State 191
+
+   84 localVarDefinition: TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 226
+
+
+State 192
+
+   88 localVarDefinition: TK_PR_STATIC TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR
+   94                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+   95                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier
+   98                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE literais
+   99                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos . TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
+
+    TK_IDENTIFICADOR  shift, and go to state 227
+
+
+State 193
+
+   82 localVarDefinition: TK_PR_STATIC TK_IDENTIFICADOR TK_IDENTIFICADOR .
+
+    $default  reduce using rule 82 (localVarDefinition)
+
+
+State 194
+
+   86 localVarDefinition: TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR .
+   90                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE TK_IDENTIFICADOR
+   91                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveIdentifier
+  100                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE literais
+  101                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveLiteral
+
+    TK_OC_LE  shift, and go to state 228
+
+    $default  reduce using rule 86 (localVarDefinition)
+
+
+State 195
+
+   72 foreach: TK_PR_FOREACH '(' TK_IDENTIFICADOR . ':' foreachList ')' blocoComandos
+
+    ':'  shift, and go to state 229
+
+
+State 196
+
+   78 forList: comandosSemVirgula .
+
+    $default  reduce using rule 78 (forList)
+
+
+State 197
+
+   73 for: TK_PR_FOR '(' forList . ':' expression ':' forList ')' blocoComandos
+   79 forList: forList . ',' comandosSemVirgula
+
+    ':'  shift, and go to state 230
+    ','  shift, and go to state 231
+
+
+State 198
+
+  144 pipe: funcCall . TK_OC_FORWARD_PIPE funcCall
+  146     | funcCall . TK_OC_BASH_PIPE funcCall
+
+    TK_OC_FORWARD_PIPE  shift, and go to state 151
+    TK_OC_BASH_PIPE     shift, and go to state 152
+
+
+State 199
+
+   80 switch: TK_PR_SWITCH '(' expression . ')' blocoComandos
+
+    ')'  shift, and go to state 232
+
+
+State 200
+
+   81 case: TK_PR_CASE TK_LIT_INT ':' .
+
+    $default  reduce using rule 81 (case)
+
+
+State 201
+
+  117 assignment: TK_IDENTIFICADOR '[' expression . ']' '=' expression
+  119           | TK_IDENTIFICADOR '[' expression . ']' '$' TK_IDENTIFICADOR '=' expression
+  135 shift: TK_IDENTIFICADOR '[' expression . ']' shiftOp expression
+  136      | TK_IDENTIFICADOR '[' expression . ']' '$' TK_IDENTIFICADOR shiftOp expression
+
+    ']'  shift, and go to state 233
+
+
+State 202
+
+  126 funcCall: TK_IDENTIFICADOR '(' ')' .
+
+    $default  reduce using rule 126 (funcCall)
+
+
+State 203
+
+  130 argCall: '.' .
+
+    $default  reduce using rule 130 (argCall)
+
+
+State 204
+
+  125 funcCall: TK_IDENTIFICADOR '(' argsCall . ')'
+  128 argsCall: argsCall . ',' argCall
+
+    ','  shift, and go to state 234
+    ')'  shift, and go to state 235
+
+
+State 205
+
+  127 argsCall: argCall .
+
+    $default  reduce using rule 127 (argsCall)
+
+
+State 206
+
+  129 argCall: expression .
+
+    $default  reduce using rule 129 (argCall)
+
+
+State 207
+
+  116 assignment: TK_IDENTIFICADOR '=' expression .
+
+    $default  reduce using rule 116 (assignment)
+
+
+State 208
+
+  118 assignment: TK_IDENTIFICADOR '$' TK_IDENTIFICADOR . '=' expression
+  134 shift: TK_IDENTIFICADOR '$' TK_IDENTIFICADOR . shiftOp expression
+
+    TK_OC_SL  shift, and go to state 139
+    TK_OC_SR  shift, and go to state 140
+    '='       shift, and go to state 236
+
+    shiftOp  go to state 237
+
+
+State 209
+
+  133 shift: TK_IDENTIFICADOR shiftOp expression .
+
+    $default  reduce using rule 133 (shift)
+
+
+State 210
+
+   96 localVarDefinition: tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . TK_IDENTIFICADOR
+   97                   | tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveIdentifier
+  104                   | tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . literais
+  105                   | tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveLiteral
+
+    TK_LIT_INT        shift, and go to state 238
+    TK_LIT_FLOAT      shift, and go to state 239
+    TK_LIT_FALSE      shift, and go to state 240
+    TK_LIT_TRUE       shift, and go to state 241
+    TK_LIT_CHAR       shift, and go to state 242
+    TK_LIT_STRING     shift, and go to state 243
+    TK_IDENTIFICADOR  shift, and go to state 244
+    '-'               shift, and go to state 245
+    '+'               shift, and go to state 246
+
+    literais                      go to state 247
+    negativeOrPositiveIdentifier  go to state 248
+    negativeOrPositiveLiteral     go to state 249
+
+
+State 211
+
+  125 funcCall: TK_IDENTIFICADOR . '(' argsCall ')'
+  126         | TK_IDENTIFICADOR . '(' ')'
+
+    '('  shift, and go to state 143
+
+
+State 212
+
+  144 pipe: funcCall TK_OC_FORWARD_PIPE funcCall .
+
+    $default  reduce using rule 144 (pipe)
+
+
+State 213
+
+  146 pipe: funcCall TK_OC_BASH_PIPE funcCall .
+
+    $default  reduce using rule 146 (pipe)
+
+
+State 214
+
+  145 pipe: pipe TK_OC_FORWARD_PIPE funcCall .
+
+    $default  reduce using rule 145 (pipe)
+
+
+State 215
+
+  147 pipe: pipe TK_OC_BASH_PIPE funcCall .
+
+    $default  reduce using rule 147 (pipe)
+
+
+State 216
+
+   69 ifThenElse: TK_PR_IF '(' expression ')' . TK_PR_THEN blocoComandos optElse
+
+    TK_PR_THEN  shift, and go to state 250
+
+
+State 217
+
+   74 while_do: TK_PR_WHILE '(' expression ')' . TK_PR_DO blocoComandos
+
+    TK_PR_DO  shift, and go to state 251
+
+
+State 218
+
+   75 do_while: TK_PR_DO blocoComandos TK_PR_WHILE '(' . expression ')'
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 252
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 219
+
+  156 operands: TK_IDENTIFICADOR '[' expression . ']'
+  159         | TK_IDENTIFICADOR '[' expression . ']' '$' TK_IDENTIFICADOR
+
+    ']'  shift, and go to state 253
+
+
+State 220
+
+  158 operands: TK_IDENTIFICADOR '$' TK_IDENTIFICADOR .
+
+    $default  reduce using rule 158 (operands)
+
+
+State 221
+
+  148 parenthesisOrOperand: '(' expression ')' .
+
+    $default  reduce using rule 148 (parenthesisOrOperand)
+
+
+State 222
+
+  139 expression: infiniteQuestionMarks operators expression .
+
+    $default  reduce using rule 139 (expression)
+
+
+State 223
+
+  138 expression: parenthesisOrOperand operators expression .
+
+    $default  reduce using rule 138 (expression)
+
+
+State 224
+
+  123 continueOutput: ',' expression .
+  124               | ',' expression . continueOutput
+
+    ','  shift, and go to state 187
+
+    $default  reduce using rule 123 (continueOutput)
+
+    continueOutput  go to state 254
+
+
+State 225
+
+   92 localVarDefinition: TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . TK_IDENTIFICADOR
+   93                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveIdentifier
+  102                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . literais
+  103                   | TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveLiteral
+
+    TK_LIT_INT        shift, and go to state 238
+    TK_LIT_FLOAT      shift, and go to state 239
+    TK_LIT_FALSE      shift, and go to state 240
+    TK_LIT_TRUE       shift, and go to state 241
+    TK_LIT_CHAR       shift, and go to state 242
+    TK_LIT_STRING     shift, and go to state 243
+    TK_IDENTIFICADOR  shift, and go to state 255
+    '-'               shift, and go to state 245
+    '+'               shift, and go to state 246
+
+    literais                      go to state 256
+    negativeOrPositiveIdentifier  go to state 257
+    negativeOrPositiveLiteral     go to state 258
+
+
+State 226
+
+   84 localVarDefinition: TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR .
+
+    $default  reduce using rule 84 (localVarDefinition)
+
+
+State 227
+
+   88 localVarDefinition: TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR .
+   94                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE TK_IDENTIFICADOR
+   95                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveIdentifier
+   98                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE literais
+   99                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR . TK_OC_LE negativeOrPositiveLiteral
+
+    TK_OC_LE  shift, and go to state 259
+
+    $default  reduce using rule 88 (localVarDefinition)
+
+
+State 228
+
+   90 localVarDefinition: TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . TK_IDENTIFICADOR
+   91                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveIdentifier
+  100                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . literais
+  101                   | TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveLiteral
+
+    TK_LIT_INT        shift, and go to state 238
+    TK_LIT_FLOAT      shift, and go to state 239
+    TK_LIT_FALSE      shift, and go to state 240
+    TK_LIT_TRUE       shift, and go to state 241
+    TK_LIT_CHAR       shift, and go to state 242
+    TK_LIT_STRING     shift, and go to state 243
+    TK_IDENTIFICADOR  shift, and go to state 260
+    '-'               shift, and go to state 245
+    '+'               shift, and go to state 246
+
+    literais                      go to state 261
+    negativeOrPositiveIdentifier  go to state 262
+    negativeOrPositiveLiteral     go to state 263
+
+
+State 229
+
+   72 foreach: TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' . foreachList ')' blocoComandos
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    foreachList            go to state 264
+    funcCall               go to state 122
+    expression             go to state 265
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 230
+
+   73 for: TK_PR_FOR '(' forList ':' . expression ':' forList ')' blocoComandos
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 266
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 231
+
+   79 forList: forList ',' . comandosSemVirgula
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_IF          shift, and go to state 69
+    TK_PR_WHILE       shift, and go to state 70
+    TK_PR_DO          shift, and go to state 71
+    TK_PR_INPUT       shift, and go to state 72
+    TK_PR_RETURN      shift, and go to state 74
+    TK_PR_CONST       shift, and go to state 75
+    TK_PR_STATIC      shift, and go to state 76
+    TK_PR_SWITCH      shift, and go to state 79
+    TK_PR_BREAK       shift, and go to state 81
+    TK_PR_CONTINUE    shift, and go to state 82
+    TK_IDENTIFICADOR  shift, and go to state 83
+    '{'               shift, and go to state 66
+
+    tiposPrimitivos     go to state 84
+    blocoComandos       go to state 85
+    comandosSemVirgula  go to state 267
+    ifThenElse          go to state 90
+    while_do            go to state 93
+    do_while            go to state 94
+    switch              go to state 95
+    localVarDefinition  go to state 97
+    assignment          go to state 98
+    input               go to state 99
+    funcCall            go to state 198
+    shift               go to state 102
+    return              go to state 103
+    pipe                go to state 104
+
+
+State 232
+
+   80 switch: TK_PR_SWITCH '(' expression ')' . blocoComandos
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 268
+
+
+State 233
+
+  117 assignment: TK_IDENTIFICADOR '[' expression ']' . '=' expression
+  119           | TK_IDENTIFICADOR '[' expression ']' . '$' TK_IDENTIFICADOR '=' expression
+  135 shift: TK_IDENTIFICADOR '[' expression ']' . shiftOp expression
+  136      | TK_IDENTIFICADOR '[' expression ']' . '$' TK_IDENTIFICADOR shiftOp expression
+
+    TK_OC_SL  shift, and go to state 139
+    TK_OC_SR  shift, and go to state 140
+    '='       shift, and go to state 269
+    '$'       shift, and go to state 270
+
+    shiftOp  go to state 271
+
+
+State 234
+
+  128 argsCall: argsCall ',' . argCall
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '.'               shift, and go to state 203
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    argCall                go to state 272
+    expression             go to state 206
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 235
+
+  125 funcCall: TK_IDENTIFICADOR '(' argsCall ')' .
+
+    $default  reduce using rule 125 (funcCall)
+
+
+State 236
+
+  118 assignment: TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 273
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 237
+
+  134 shift: TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 274
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 238
+
+   28 literais: TK_LIT_INT .
+
+    $default  reduce using rule 28 (literais)
+
+
+State 239
+
+   29 literais: TK_LIT_FLOAT .
+
+    $default  reduce using rule 29 (literais)
+
+
+State 240
+
+   30 literais: TK_LIT_FALSE .
+
+    $default  reduce using rule 30 (literais)
+
+
+State 241
+
+   31 literais: TK_LIT_TRUE .
+
+    $default  reduce using rule 31 (literais)
+
+
+State 242
+
+   32 literais: TK_LIT_CHAR .
+
+    $default  reduce using rule 32 (literais)
+
+
+State 243
+
+   33 literais: TK_LIT_STRING .
+
+    $default  reduce using rule 33 (literais)
+
+
+State 244
+
+   96 localVarDefinition: tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR .
+
+    $default  reduce using rule 96 (localVarDefinition)
+
+
+State 245
+
+  106 negativeOrPositiveIdentifier: '-' . negativeOrPositiveIdentifier
+  107                             | '-' . TK_IDENTIFICADOR
+  110 negativeOrPositiveLiteral: '-' . negativeOrPositiveLiteral
+  111                          | '-' . TK_LIT_INT
+  112                          | '-' . TK_LIT_FLOAT
+
+    TK_LIT_INT        shift, and go to state 275
+    TK_LIT_FLOAT      shift, and go to state 276
+    TK_IDENTIFICADOR  shift, and go to state 277
+    '-'               shift, and go to state 245
+    '+'               shift, and go to state 246
+
+    negativeOrPositiveIdentifier  go to state 278
+    negativeOrPositiveLiteral     go to state 279
+
+
+State 246
+
+  108 negativeOrPositiveIdentifier: '+' . negativeOrPositiveIdentifier
+  109                             | '+' . TK_IDENTIFICADOR
+  113 negativeOrPositiveLiteral: '+' . negativeOrPositiveLiteral
+  114                          | '+' . TK_LIT_INT
+  115                          | '+' . TK_LIT_FLOAT
+
+    TK_LIT_INT        shift, and go to state 280
+    TK_LIT_FLOAT      shift, and go to state 281
+    TK_IDENTIFICADOR  shift, and go to state 282
+    '-'               shift, and go to state 245
+    '+'               shift, and go to state 246
+
+    negativeOrPositiveIdentifier  go to state 283
+    negativeOrPositiveLiteral     go to state 284
+
+
+State 247
+
+  104 localVarDefinition: tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais .
+
+    $default  reduce using rule 104 (localVarDefinition)
+
+
+State 248
+
+   97 localVarDefinition: tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier .
+
+    $default  reduce using rule 97 (localVarDefinition)
+
+
+State 249
+
+  105 localVarDefinition: tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral .
+
+    $default  reduce using rule 105 (localVarDefinition)
+
+
+State 250
+
+   69 ifThenElse: TK_PR_IF '(' expression ')' TK_PR_THEN . blocoComandos optElse
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 285
+
+
+State 251
+
+   74 while_do: TK_PR_WHILE '(' expression ')' TK_PR_DO . blocoComandos
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 286
+
+
+State 252
+
+   75 do_while: TK_PR_DO blocoComandos TK_PR_WHILE '(' expression . ')'
+
+    ')'  shift, and go to state 287
+
+
+State 253
+
+  156 operands: TK_IDENTIFICADOR '[' expression ']' .
+  159         | TK_IDENTIFICADOR '[' expression ']' . '$' TK_IDENTIFICADOR
+
+    '$'  shift, and go to state 288
+
+    $default  reduce using rule 156 (operands)
+
+
+State 254
+
+  124 continueOutput: ',' expression continueOutput .
+
+    $default  reduce using rule 124 (continueOutput)
+
+
+State 255
+
+   92 localVarDefinition: TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR .
+
+    $default  reduce using rule 92 (localVarDefinition)
+
+
+State 256
+
+  102 localVarDefinition: TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais .
+
+    $default  reduce using rule 102 (localVarDefinition)
+
+
+State 257
+
+   93 localVarDefinition: TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier .
+
+    $default  reduce using rule 93 (localVarDefinition)
+
+
+State 258
+
+  103 localVarDefinition: TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral .
+
+    $default  reduce using rule 103 (localVarDefinition)
+
+
+State 259
+
+   94 localVarDefinition: TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . TK_IDENTIFICADOR
+   95                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveIdentifier
+   98                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . literais
+   99                   | TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE . negativeOrPositiveLiteral
+
+    TK_LIT_INT        shift, and go to state 238
+    TK_LIT_FLOAT      shift, and go to state 239
+    TK_LIT_FALSE      shift, and go to state 240
+    TK_LIT_TRUE       shift, and go to state 241
+    TK_LIT_CHAR       shift, and go to state 242
+    TK_LIT_STRING     shift, and go to state 243
+    TK_IDENTIFICADOR  shift, and go to state 289
+    '-'               shift, and go to state 245
+    '+'               shift, and go to state 246
+
+    literais                      go to state 290
+    negativeOrPositiveIdentifier  go to state 291
+    negativeOrPositiveLiteral     go to state 292
+
+
+State 260
+
+   90 localVarDefinition: TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR .
+
+    $default  reduce using rule 90 (localVarDefinition)
+
+
+State 261
+
+  100 localVarDefinition: TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais .
+
+    $default  reduce using rule 100 (localVarDefinition)
+
+
+State 262
+
+   91 localVarDefinition: TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier .
+
+    $default  reduce using rule 91 (localVarDefinition)
+
+
+State 263
+
+  101 localVarDefinition: TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral .
+
+    $default  reduce using rule 101 (localVarDefinition)
+
+
+State 264
+
+   72 foreach: TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList . ')' blocoComandos
+   77 foreachList: foreachList . ',' expression
+
+    ','  shift, and go to state 293
+    ')'  shift, and go to state 294
+
+
+State 265
+
+   76 foreachList: expression .
+
+    $default  reduce using rule 76 (foreachList)
+
+
+State 266
+
+   73 for: TK_PR_FOR '(' forList ':' expression . ':' forList ')' blocoComandos
+
+    ':'  shift, and go to state 295
+
+
+State 267
+
+   79 forList: forList ',' comandosSemVirgula .
+
+    $default  reduce using rule 79 (forList)
+
+
+State 268
+
+   80 switch: TK_PR_SWITCH '(' expression ')' blocoComandos .
+
+    $default  reduce using rule 80 (switch)
+
+
+State 269
+
+  117 assignment: TK_IDENTIFICADOR '[' expression ']' '=' . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 296
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 270
+
+  119 assignment: TK_IDENTIFICADOR '[' expression ']' '$' . TK_IDENTIFICADOR '=' expression
+  136 shift: TK_IDENTIFICADOR '[' expression ']' '$' . TK_IDENTIFICADOR shiftOp expression
+
+    TK_IDENTIFICADOR  shift, and go to state 297
+
+
+State 271
+
+  135 shift: TK_IDENTIFICADOR '[' expression ']' shiftOp . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 298
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 272
+
+  128 argsCall: argsCall ',' argCall .
+
+    $default  reduce using rule 128 (argsCall)
+
+
+State 273
+
+  118 assignment: TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression .
+
+    $default  reduce using rule 118 (assignment)
+
+
+State 274
+
+  134 shift: TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression .
+
+    $default  reduce using rule 134 (shift)
+
+
+State 275
+
+  111 negativeOrPositiveLiteral: '-' TK_LIT_INT .
+
+    $default  reduce using rule 111 (negativeOrPositiveLiteral)
+
+
+State 276
+
+  112 negativeOrPositiveLiteral: '-' TK_LIT_FLOAT .
+
+    $default  reduce using rule 112 (negativeOrPositiveLiteral)
+
+
+State 277
+
+  107 negativeOrPositiveIdentifier: '-' TK_IDENTIFICADOR .
+
+    $default  reduce using rule 107 (negativeOrPositiveIdentifier)
+
+
+State 278
+
+  106 negativeOrPositiveIdentifier: '-' negativeOrPositiveIdentifier .
+
+    $default  reduce using rule 106 (negativeOrPositiveIdentifier)
+
+
+State 279
+
+  110 negativeOrPositiveLiteral: '-' negativeOrPositiveLiteral .
+
+    $default  reduce using rule 110 (negativeOrPositiveLiteral)
+
+
+State 280
+
+  114 negativeOrPositiveLiteral: '+' TK_LIT_INT .
+
+    $default  reduce using rule 114 (negativeOrPositiveLiteral)
+
+
+State 281
+
+  115 negativeOrPositiveLiteral: '+' TK_LIT_FLOAT .
+
+    $default  reduce using rule 115 (negativeOrPositiveLiteral)
+
+
+State 282
+
+  109 negativeOrPositiveIdentifier: '+' TK_IDENTIFICADOR .
+
+    $default  reduce using rule 109 (negativeOrPositiveIdentifier)
+
+
+State 283
+
+  108 negativeOrPositiveIdentifier: '+' negativeOrPositiveIdentifier .
+
+    $default  reduce using rule 108 (negativeOrPositiveIdentifier)
+
+
+State 284
+
+  113 negativeOrPositiveLiteral: '+' negativeOrPositiveLiteral .
+
+    $default  reduce using rule 113 (negativeOrPositiveLiteral)
+
+
+State 285
+
+   69 ifThenElse: TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos . optElse
+
+    TK_PR_ELSE  shift, and go to state 299
+
+    $default  reduce using rule 70 (optElse)
+
+    optElse  go to state 300
+
+
+State 286
+
+   74 while_do: TK_PR_WHILE '(' expression ')' TK_PR_DO blocoComandos .
+
+    $default  reduce using rule 74 (while_do)
+
+
+State 287
+
+   75 do_while: TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')' .
+
+    $default  reduce using rule 75 (do_while)
+
+
+State 288
+
+  159 operands: TK_IDENTIFICADOR '[' expression ']' '$' . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 301
+
+
+State 289
+
+   94 localVarDefinition: TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR .
+
+    $default  reduce using rule 94 (localVarDefinition)
+
+
+State 290
+
+   98 localVarDefinition: TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais .
+
+    $default  reduce using rule 98 (localVarDefinition)
+
+
+State 291
+
+   95 localVarDefinition: TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier .
+
+    $default  reduce using rule 95 (localVarDefinition)
+
+
+State 292
+
+   99 localVarDefinition: TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral .
+
+    $default  reduce using rule 99 (localVarDefinition)
+
+
+State 293
+
+   77 foreachList: foreachList ',' . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 302
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 294
+
+   72 foreach: TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' . blocoComandos
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 303
+
+
+State 295
+
+   73 for: TK_PR_FOR '(' forList ':' expression ':' . forList ')' blocoComandos
+
+    TK_PR_INT         shift, and go to state 1
+    TK_PR_FLOAT       shift, and go to state 2
+    TK_PR_BOOL        shift, and go to state 3
+    TK_PR_CHAR        shift, and go to state 4
+    TK_PR_STRING      shift, and go to state 5
+    TK_PR_IF          shift, and go to state 69
+    TK_PR_WHILE       shift, and go to state 70
+    TK_PR_DO          shift, and go to state 71
+    TK_PR_INPUT       shift, and go to state 72
+    TK_PR_RETURN      shift, and go to state 74
+    TK_PR_CONST       shift, and go to state 75
+    TK_PR_STATIC      shift, and go to state 76
+    TK_PR_SWITCH      shift, and go to state 79
+    TK_PR_BREAK       shift, and go to state 81
+    TK_PR_CONTINUE    shift, and go to state 82
+    TK_IDENTIFICADOR  shift, and go to state 83
+    '{'               shift, and go to state 66
+
+    tiposPrimitivos     go to state 84
+    blocoComandos       go to state 85
+    comandosSemVirgula  go to state 196
+    ifThenElse          go to state 90
+    while_do            go to state 93
+    do_while            go to state 94
+    forList             go to state 304
+    switch              go to state 95
+    localVarDefinition  go to state 97
+    assignment          go to state 98
+    input               go to state 99
+    funcCall            go to state 198
+    shift               go to state 102
+    return              go to state 103
+    pipe                go to state 104
+
+
+State 296
+
+  117 assignment: TK_IDENTIFICADOR '[' expression ']' '=' expression .
+
+    $default  reduce using rule 117 (assignment)
+
+
+State 297
+
+  119 assignment: TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR . '=' expression
+  136 shift: TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR . shiftOp expression
+
+    TK_OC_SL  shift, and go to state 139
+    TK_OC_SR  shift, and go to state 140
+    '='       shift, and go to state 305
+
+    shiftOp  go to state 306
+
+
+State 298
+
+  135 shift: TK_IDENTIFICADOR '[' expression ']' shiftOp expression .
+
+    $default  reduce using rule 135 (shift)
+
+
+State 299
+
+   71 optElse: TK_PR_ELSE . blocoComandos
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 307
+
+
+State 300
+
+   69 ifThenElse: TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse .
+
+    $default  reduce using rule 69 (ifThenElse)
+
+
+State 301
+
+  159 operands: TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR .
+
+    $default  reduce using rule 159 (operands)
+
+
+State 302
+
+   77 foreachList: foreachList ',' expression .
+
+    $default  reduce using rule 77 (foreachList)
+
+
+State 303
+
+   72 foreach: TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos .
+
+    $default  reduce using rule 72 (foreach)
+
+
+State 304
+
+   73 for: TK_PR_FOR '(' forList ':' expression ':' forList . ')' blocoComandos
+   79 forList: forList . ',' comandosSemVirgula
+
+    ','  shift, and go to state 231
+    ')'  shift, and go to state 308
+
+
+State 305
+
+  119 assignment: TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 309
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 306
+
+  136 shift: TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp . expression
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 310
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
+
+
+State 307
+
+   71 optElse: TK_PR_ELSE blocoComandos .
+
+    $default  reduce using rule 71 (optElse)
+
+
+State 308
+
+   73 for: TK_PR_FOR '(' forList ':' expression ':' forList ')' . blocoComandos
+
+    '{'  shift, and go to state 66
+
+    blocoComandos  go to state 311
+
+
+State 309
+
+  119 assignment: TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression .
+
+    $default  reduce using rule 119 (assignment)
+
+
+State 310
+
+  136 shift: TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression .
+
+    $default  reduce using rule 136 (shift)
+
+
+State 311
+
+   73 for: TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos .
+
+    $default  reduce using rule 73 (for)
