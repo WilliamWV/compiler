@@ -21,6 +21,7 @@ int get_line_number(void){
 	não literal ao yylval, recebe o tipo do token
 */
 void configLexValueNonLiteral(int tkType){
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines; 
 	yylval.valor_lexico->tokenType = tkType;
 	yylval.valor_lexico->literType = NONE;
