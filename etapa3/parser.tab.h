@@ -99,8 +99,9 @@ union YYSTYPE
 #line 18 "parser.y" /* yacc.c:1909  */
 
 	struct lexval* valor_lexico;
+	struct node* ast;
 
-#line 104 "parser.tab.h" /* yacc.c:1909  */
+#line 105 "parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

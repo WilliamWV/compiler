@@ -2691,8 +2691,8 @@ State 197
    73 for: TK_PR_FOR '(' forList . ':' expression ':' forList ')' blocoComandos
    79 forList: forList . ',' comandosSemVirgula
 
-    ':'  shift, and go to state 230
-    ','  shift, and go to state 231
+    ','  shift, and go to state 230
+    ':'  shift, and go to state 231
 
 
 State 198
@@ -3032,33 +3032,6 @@ State 229
 
 State 230
 
-   73 for: TK_PR_FOR '(' forList ':' . expression ':' forList ')' blocoComandos
-
-    TK_LIT_INT        shift, and go to state 108
-    TK_LIT_FLOAT      shift, and go to state 109
-    TK_LIT_FALSE      shift, and go to state 110
-    TK_LIT_TRUE       shift, and go to state 111
-    TK_LIT_CHAR       shift, and go to state 112
-    TK_LIT_STRING     shift, and go to state 113
-    TK_IDENTIFICADOR  shift, and go to state 114
-    '('               shift, and go to state 115
-    '-'               shift, and go to state 116
-    '+'               shift, and go to state 117
-    '!'               shift, and go to state 118
-    '*'               shift, and go to state 119
-    '&'               shift, and go to state 120
-    '#'               shift, and go to state 121
-
-    funcCall               go to state 122
-    expression             go to state 266
-    infiniteQuestionMarks  go to state 124
-    pipe                   go to state 125
-    parenthesisOrOperand   go to state 126
-    operands               go to state 127
-
-
-State 231
-
    79 forList: forList ',' . comandosSemVirgula
 
     TK_PR_INT         shift, and go to state 1
@@ -3081,7 +3054,7 @@ State 231
 
     tiposPrimitivos     go to state 84
     blocoComandos       go to state 85
-    comandosSemVirgula  go to state 267
+    comandosSemVirgula  go to state 266
     ifThenElse          go to state 90
     while_do            go to state 93
     do_while            go to state 94
@@ -3093,6 +3066,33 @@ State 231
     shift               go to state 102
     return              go to state 103
     pipe                go to state 104
+
+
+State 231
+
+   73 for: TK_PR_FOR '(' forList ':' . expression ':' forList ')' blocoComandos
+
+    TK_LIT_INT        shift, and go to state 108
+    TK_LIT_FLOAT      shift, and go to state 109
+    TK_LIT_FALSE      shift, and go to state 110
+    TK_LIT_TRUE       shift, and go to state 111
+    TK_LIT_CHAR       shift, and go to state 112
+    TK_LIT_STRING     shift, and go to state 113
+    TK_IDENTIFICADOR  shift, and go to state 114
+    '('               shift, and go to state 115
+    '-'               shift, and go to state 116
+    '+'               shift, and go to state 117
+    '!'               shift, and go to state 118
+    '*'               shift, and go to state 119
+    '&'               shift, and go to state 120
+    '#'               shift, and go to state 121
+
+    funcCall               go to state 122
+    expression             go to state 267
+    infiniteQuestionMarks  go to state 124
+    pipe                   go to state 125
+    parenthesisOrOperand   go to state 126
+    operands               go to state 127
 
 
 State 232
@@ -3453,16 +3453,16 @@ State 265
 
 State 266
 
-   73 for: TK_PR_FOR '(' forList ':' expression . ':' forList ')' blocoComandos
+   79 forList: forList ',' comandosSemVirgula .
 
-    ':'  shift, and go to state 295
+    $default  reduce using rule 79 (forList)
 
 
 State 267
 
-   79 forList: forList ',' comandosSemVirgula .
+   73 for: TK_PR_FOR '(' forList ':' expression . ':' forList ')' blocoComandos
 
-    $default  reduce using rule 79 (forList)
+    ':'  shift, and go to state 295
 
 
 State 268
@@ -3828,7 +3828,7 @@ State 304
    73 for: TK_PR_FOR '(' forList ':' expression ':' forList . ')' blocoComandos
    79 forList: forList . ',' comandosSemVirgula
 
-    ','  shift, and go to state 231
+    ','  shift, and go to state 230
     ')'  shift, and go to state 308
 
 

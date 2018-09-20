@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include "tree.h"
-
+#include "lexVal.h"
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
@@ -17,52 +17,66 @@ extern void* arvore;
 
 %union {
 	struct lexval* valor_lexico;
+	struct node* ast;
 }
-%token TK_PR_INT
-%token TK_PR_FLOAT
-%token TK_PR_BOOL
-%token TK_PR_CHAR
-%token TK_PR_STRING
-%token TK_PR_IF
-%token TK_PR_THEN
-%token TK_PR_ELSE
-%token TK_PR_WHILE
-%token TK_PR_DO
-%token TK_PR_INPUT
-%token TK_PR_OUTPUT
-%token TK_PR_RETURN
-%token TK_PR_CONST
-%token TK_PR_STATIC
-%token TK_PR_FOREACH
-%token TK_PR_FOR
-%token TK_PR_SWITCH
-%token TK_PR_CASE
-%token TK_PR_BREAK
-%token TK_PR_CONTINUE
-%token TK_PR_CLASS
-%token TK_PR_PRIVATE
-%token TK_PR_PUBLIC
-%token TK_PR_PROTECTED
-%token TK_OC_LE
-%token TK_OC_GE
-%token TK_OC_EQ
-%token TK_OC_NE
-%token TK_OC_AND
-%token TK_OC_OR
-%token TK_OC_SL
-%token TK_OC_SR
-%token TK_OC_FORWARD_PIPE
-%token TK_OC_BASH_PIPE
-%token TK_LIT_INT
-%token TK_LIT_FLOAT
-%token TK_LIT_FALSE
-%token TK_LIT_TRUE
-%token TK_LIT_CHAR
-%token TK_LIT_STRING
-%token TK_IDENTIFICADOR
-%token TOKEN_ERRO
+//Todos os nodos tem valor léxico, portanto o tipo do seu valor semântico será struct lexval representado
+//por valor_lexico do %union acima e será adicionado aos tokens
+%token <valor_lexico> TK_PR_INT
+%token <valor_lexico> TK_PR_FLOAT
+%token <valor_lexico> TK_PR_BOOL
+%token <valor_lexico> TK_PR_CHAR
+%token <valor_lexico> TK_PR_STRING
+%token <valor_lexico> TK_PR_IF
+%token <valor_lexico> TK_PR_THEN
+%token <valor_lexico> TK_PR_ELSE
+%token <valor_lexico> TK_PR_WHILE
+%token <valor_lexico> TK_PR_DO
+%token <valor_lexico> TK_PR_INPUT
+%token <valor_lexico> TK_PR_OUTPUT
+%token <valor_lexico> TK_PR_RETURN
+%token <valor_lexico> TK_PR_CONST
+%token <valor_lexico> TK_PR_STATIC
+%token <valor_lexico> TK_PR_FOREACH
+%token <valor_lexico> TK_PR_FOR
+%token <valor_lexico> TK_PR_SWITCH
+%token <valor_lexico> TK_PR_CASE
+%token <valor_lexico> TK_PR_BREAK
+%token <valor_lexico> TK_PR_CONTINUE
+%token <valor_lexico> TK_PR_CLASS
+%token <valor_lexico> TK_PR_PRIVATE
+%token <valor_lexico> TK_PR_PUBLIC
+%token <valor_lexico> TK_PR_PROTECTED
+%token <valor_lexico> TK_OC_LE
+%token <valor_lexico> TK_OC_GE
+%token <valor_lexico> TK_OC_EQ
+%token <valor_lexico> TK_OC_NE
+%token <valor_lexico> TK_OC_AND
+%token <valor_lexico> TK_OC_OR
+%token <valor_lexico> TK_OC_SL
+%token <valor_lexico> TK_OC_SR
+%token <valor_lexico> TK_OC_FORWARD_PIPE
+%token <valor_lexico> TK_OC_BASH_PIPE
+%token <valor_lexico> TK_LIT_INT
+%token <valor_lexico> TK_LIT_FLOAT
+%token <valor_lexico> TK_LIT_FALSE
+%token <valor_lexico> TK_LIT_TRUE
+%token <valor_lexico> TK_LIT_CHAR
+%token <valor_lexico> TK_LIT_STRING
+%token <valor_lexico> TK_IDENTIFICADOR
+%token <valor_lexico> TOKEN_ERRO
+//tokens para caracteres especiais, declarados para poder usar seu valor semântico atribuido no scanner
+%token <valor_lexico> ';' ','
 %start programa
 
+//Regras cujo tipo será ast, ou seja, seu valor semântico é representado como uma árvore
+%type <ast> tiposPrimitivos
+%type <ast> tipo
+%type <ast> static
+%type <ast> literais
+%type <ast> tipoConst
+%type <ast> encapsulamento
+%type <ast> fechaVarOuFunc
+%type <ast> argsAndCommands
 
 %%
 
@@ -85,38 +99,44 @@ depoisDeIdent:
 	| TK_IDENTIFICADOR fechaVarOuFunc
 ;
 fechaVarOuFunc:
-	  ';'
-	| argsAndCommands
+	  ';'				{$$ = criaNodo($1);}
+	| argsAndCommands	{$$ = $1;}
 ;
 
 //Regras gerais
 encapsulamento: 
-	%empty 
-	| TK_PR_PRIVATE 
-	| TK_PR_PUBLIC 
-	| TK_PR_PROTECTED;
+	%empty 				{$$ = NULL;}
+	| TK_PR_PRIVATE 	{$$ = criaNodo($1);}
+	| TK_PR_PUBLIC 		{$$ = criaNodo($1);}
+	| TK_PR_PROTECTED	{$$ = criaNodo($1);}
+;
 tiposPrimitivos: 
-	TK_PR_INT 
-	| TK_PR_FLOAT 
-	| TK_PR_BOOL 
-	| TK_PR_CHAR 
-	| TK_PR_STRING;
+	TK_PR_INT 			{$$ = criaNodo($1);}
+	| TK_PR_FLOAT 		{$$ = criaNodo($1);}
+	| TK_PR_BOOL 		{$$ = criaNodo($1);}
+	| TK_PR_CHAR 		{$$ = criaNodo($1);}
+	| TK_PR_STRING		{$$ = criaNodo($1);}
+;
 tipo : 
-	tiposPrimitivos 
-	| TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
+	tiposPrimitivos 	{$$ = $1;}
+	| TK_IDENTIFICADOR	{$$ = criaNodo($1);}// TK_IDENTIFICADOR para tipo do usuário
+; 
 static: 
-	TK_PR_STATIC 
-	| %empty;
+	TK_PR_STATIC 		{$$ = criaNodo($1);}
+	| %empty			{$$ = NULL;} 
+;
 tipoConst: 
-	TK_PR_CONST tipo 
-	| tipo;
+	TK_PR_CONST tipo 	{$$ = criaNodo($1); adicionaFilho((Node*)$1, (Node*)$2);} // cria uma subárvore com um nodo para CONST tendo como filho no nodo referente ao tipo
+	| tipo				{$$ = $1;}
+;
 literais: 
-	TK_LIT_INT 
-	| TK_LIT_FLOAT 
-	| TK_LIT_FALSE 
-	| TK_LIT_TRUE 
-	| TK_LIT_CHAR 
-	| TK_LIT_STRING;
+	TK_LIT_INT 			{$$ = criaNodo($1);}
+	| TK_LIT_FLOAT 		{$$ = criaNodo($1);}
+	| TK_LIT_FALSE 		{$$ = criaNodo($1);}
+	| TK_LIT_TRUE 		{$$ = criaNodo($1);}
+	| TK_LIT_CHAR 		{$$ = criaNodo($1);}
+	| TK_LIT_STRING		{$$ = criaNodo($1);}
+;
 
 //Novos tipos
 novoTipo: 
@@ -143,7 +163,8 @@ parameters :
 parameter: 
 	tipoConst TK_IDENTIFICADOR;
 argsAndCommands : 
-	'(' args ')' blocoComandos;
+	'(' args ')' blocoComandos 		//{$$ = }
+;
 //Bloco de comandos
 /**
 	Observações gerais sobre comandos:
