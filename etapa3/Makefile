@@ -11,13 +11,15 @@ BISON_O=parser.tab.o
 BISON_H=parser.tab.h
 MAIN_C=main.c
 MAIN_O=main.o
+TREE_C=tree.c
+TREE_O=tree.o
 REPORT_FILE = report
 
 all: $(FLEX_SRC) $(BISON_SRC)
 	bison -d $(BISON_SRC)
 	flex $(FLEX_SRC)
-	$(CC) -c $(FLEX_C) $(BISON_C) $(MAIN_C)
-	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) $(MAIN_O) -lfl
+	$(CC) -c $(FLEX_C) $(BISON_C) $(TREE_C) $(MAIN_C)
+	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) $(TREE_O) $(MAIN_O) -lfl
 
 clean:
 	rm -rf $(BISON_C)

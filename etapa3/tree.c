@@ -8,11 +8,6 @@ typedef struct node{
 	struct node **kids; // lista de ponteiros
 } Node;
 
-//****************************************************************************************************************************
-//****************************************************************************************************************************
-//PRECISO CRIAR UMA FUNÇÃO PARA PASSAR O PONTEIRO DA RAIZ DA ARVORE PARA A VARIÁVEL EXTERNA arvore
-//****************************************************************************************************************************
-//****************************************************************************************************************************
 
 Node* criaNodo(struct lexval* token){
 	Node *node = malloc(sizeof(Node));
@@ -29,7 +24,8 @@ void adicionaFilho(Node *pai, Node *kid){
 	pai->kids[pai->kidsNumber - 1] = kid; // acessa o ponteiro recém alocado e guarda nele um ponteiro de Node
 }
 
-void descompila(Node *n){
+void descompila(void *voidNode){
+	Node *n = (Node*) voidNode;
 	int i = 0;
 	if(n->kidsNumber == 0){ 	// o print vai depender do tipo (PRECISO IMPLEMENTAR ISSO) e só será executado se for um nodo folha
 		printf("%d\n", n->token->value.i);
@@ -40,7 +36,8 @@ void descompila(Node *n){
 		}
 }
 
-void libera(Node *n){ //recebe ponteiro de Node
+void libera(void *voidNode){ //recebe ponteiro de Node
+	Node *n = (Node*) voidNode;
 	int i = 0; // talvez dê problema por eu tentar liberar sempre o primeiro ponteiro
 	while(i < n->kidsNumber){ // enquanto houver filhos, os explora
 		libera(n->kids[i]);
@@ -50,6 +47,7 @@ void libera(Node *n){ //recebe ponteiro de Node
 	free(n);
 }
 
+/*
 int main(){
 
     struct lexval token;
@@ -158,3 +156,4 @@ int main(){
 
     return 0;
 }
+*/

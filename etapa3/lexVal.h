@@ -50,4 +50,6 @@ struct lexval{
 	union Value value; //um dos campos da union acima
 };
 
+struct lexval* createLexVal(int line, int tkType, int ltType, void* val);
+
 #endif //LEXVA_H

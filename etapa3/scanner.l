@@ -4,6 +4,7 @@
 #include <string.h> //para strdup
 #include <stdlib.h> //atoi, atof
 #include "lexVal.h"
+#include "tree.h"
 #define DEBUG 0
 
 int num_lines = 1;

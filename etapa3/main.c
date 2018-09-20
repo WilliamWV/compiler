@@ -5,6 +5,7 @@ Este arquivo não pode ser modificado.
 */
 #include <stdio.h>
 #include "parser.tab.h" //arquivo gerado com bison -d parser.y
+#include "tree.h"
 
 void *arvore = NULL;
 void descompila (void *arvore);
