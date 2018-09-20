@@ -46,6 +46,7 @@ void libera(Node *n){ //recebe ponteiro de Node
 		libera(n->kids[i]);
 		i++;
 	}
+	free(n->kids);
 	free(n);
 }
 
