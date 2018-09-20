@@ -586,34 +586,6 @@ int get_line_number(void){
 	return num_lines;
 
 }
-//Tipo do token não é um tipo de dado, mas os tipos definidos pelo
-//analisador léxico, ou seja:
-// 1) Palavra reservada
-// 2) Caracteres especiais
-// 3) operadores compostos
-// 4) Identificadores
-// 5) Literais
-// Portanto o tipo do token será representado por um inteiro que será um dos valores definidos a seguir.
-/*******TIPOS DE TOKENS*******/
-#define KEYWORD 0x0
-#define SPEC_CHAR 0x1
-#define COMP_OPER 0x2
-#define IDS 0x3
-#define LITERALS 0x4
-/*******TIPOS DE LITERAIS*****/
-#define INT 0X8
-#define FLOAT 0x9
-#define CHAR 0xA
-#define BOOL 0XB
-#define STRING 0XC
-
-/*Usado quando token não é literal no campo correspondente ao tipo do literal*/
-#define NONE 0xF
-
-
-//valores booleanos
-#define FALSE 0
-#define TRUE 1
 
 
 
@@ -628,9 +600,9 @@ void configLexValueNonLiteral(int tkType){
 	yylval.valor_lexico->value.str = strdup(yytext); //usa str pois o valor retornado por strdup também é uma cadeia de caracteres
 }
 
-#line 632 "lex.yy.c"
+#line 604 "lex.yy.c"
 
-#line 634 "lex.yy.c"
+#line 606 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -848,10 +820,10 @@ YY_DECL
 		}
 
 	{
-#line 75 "scanner.l"
+#line 47 "scanner.l"
 
 
-#line 855 "lex.yy.c"
+#line 827 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -910,200 +882,200 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 77 "scanner.l"
+#line 49 "scanner.l"
 BEGIN(COMMENT);
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 79 "scanner.l"
+#line 51 "scanner.l"
 {
 	++num_lines;
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 82 "scanner.l"
+#line 54 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_INT; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 83 "scanner.l"
+#line 55 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_FLOAT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 84 "scanner.l"
+#line 56 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_BOOL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 85 "scanner.l"
+#line 57 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_CHAR; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 86 "scanner.l"
+#line 58 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_STRING; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 87 "scanner.l"
+#line 59 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_IF; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 88 "scanner.l"
+#line 60 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_THEN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 89 "scanner.l"
+#line 61 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_ELSE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 90 "scanner.l"
+#line 62 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_WHILE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 91 "scanner.l"
+#line 63 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_DO; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 92 "scanner.l"
+#line 64 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_INPUT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 93 "scanner.l"
+#line 65 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_OUTPUT; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 94 "scanner.l"
+#line 66 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_RETURN; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 95 "scanner.l"
+#line 67 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_CONST; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 96 "scanner.l"
+#line 68 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_STATIC; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 97 "scanner.l"
+#line 69 "scanner.l"
 { configLexValueNonLiteral(KEYWORD);return TK_PR_FOREACH; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 98 "scanner.l"
+#line 70 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_FOR; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 99 "scanner.l"
+#line 71 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_SWITCH; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 100 "scanner.l"
+#line 72 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_CASE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 101 "scanner.l"
+#line 73 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_BREAK; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 102 "scanner.l"
+#line 74 "scanner.l"
 {configLexValueNonLiteral(KEYWORD);return TK_PR_CONTINUE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 103 "scanner.l"
+#line 75 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_CLASS; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 104 "scanner.l"
+#line 76 "scanner.l"
 {configLexValueNonLiteral(KEYWORD); return TK_PR_PRIVATE; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 105 "scanner.l"
+#line 77 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_PUBLIC; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 106 "scanner.l"
+#line 78 "scanner.l"
 { configLexValueNonLiteral(KEYWORD); return TK_PR_PROTECTED; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 108 "scanner.l"
+#line 80 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_LE; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 109 "scanner.l"
+#line 81 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_GE; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 110 "scanner.l"
+#line 82 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_EQ; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 111 "scanner.l"
+#line 83 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_NE; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 112 "scanner.l"
+#line 84 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_AND; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 113 "scanner.l"
+#line 85 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_OR; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 114 "scanner.l"
+#line 86 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_SR; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 115 "scanner.l"
+#line 87 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_SL; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 116 "scanner.l"
+#line 88 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_FORWARD_PIPE; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 117 "scanner.l"
+#line 89 "scanner.l"
 { configLexValueNonLiteral(COMP_OPER); return TK_OC_BASH_PIPE; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 119 "scanner.l"
+#line 91 "scanner.l"
 {	configLexValueNonLiteral(SPEC_CHAR); return *yytext; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 121 "scanner.l"
+#line 93 "scanner.l"
 { 	
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERALS;
@@ -1114,7 +1086,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 128 "scanner.l"
+#line 100 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERALS;
@@ -1125,12 +1097,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 136 "scanner.l"
+#line 108 "scanner.l"
 { configLexValueNonLiteral(IDS); return TK_IDENTIFICADOR; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 138 "scanner.l"
+#line 110 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERALS;
@@ -1141,7 +1113,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 145 "scanner.l"
+#line 117 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERALS;
@@ -1152,7 +1124,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 152 "scanner.l"
+#line 124 "scanner.l"
 { // notacao cientifica
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERALS;
@@ -1163,7 +1135,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 159 "scanner.l"
+#line 131 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERALS;
@@ -1174,7 +1146,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 166 "scanner.l"
+#line 138 "scanner.l"
 {
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERALS;
@@ -1185,47 +1157,47 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 174 "scanner.l"
+#line 146 "scanner.l"
 { }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 175 "scanner.l"
+#line 147 "scanner.l"
 {/*eat chars that is not a '*' */}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 176 "scanner.l"
+#line 148 "scanner.l"
 {/*eat chars '*' not followed by '/' */}
 	YY_BREAK
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 177 "scanner.l"
+#line 149 "scanner.l"
 {++num_lines;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 178 "scanner.l"
+#line 150 "scanner.l"
 {BEGIN(INITIAL);}
 	YY_BREAK
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 179 "scanner.l"
+#line 151 "scanner.l"
 {} // As três expressões regulares anteriores servem para ignorar trechos do código, logo as ações correspondentes devem ser substituídas por "{}" na versão final, ou seja, não retornam tokens
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 181 "scanner.l"
+#line 153 "scanner.l"
 { printf("Lexical error: "); return TOKEN_ERRO; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 183 "scanner.l"
+#line 155 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1229 "lex.yy.c"
+#line 1201 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 	yyterminate();
@@ -2231,7 +2203,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 183 "scanner.l"
+#line 155 "scanner.l"
 
 
 

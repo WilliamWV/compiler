@@ -3,6 +3,14 @@
 
 #include <stdlib.h>
 #include <string.h>
+//Tipo do token não é um tipo de dado, mas os tipos definidos pelo
+//analisador léxico, ou seja:
+// 1) Palavra reservada
+// 2) Caracteres especiais
+// 3) operadores compostos
+// 4) Identificadores
+// 5) Literais
+// Portanto o tipo do token será representado por um inteiro que será um dos valores definidos a seguir.
 /*******TIPOS DE TOKENS*******/
 #define KEYWORD 0x0
 #define SPEC_CHAR 0x1
