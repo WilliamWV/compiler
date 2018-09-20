@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "lexVal.h"
+#include "tree.h"
 
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
@@ -9,6 +9,7 @@ int yyerror (char const *s){
 	return -1;
 }
 
+extern void* arvore;
 
 %}
 %define parse.error verbose
@@ -65,7 +66,9 @@ int yyerror (char const *s){
 
 %%
 
-programa: %empty | componente programa;
+programa: 
+	%empty 
+	| componente programa; //{arvore = $$;}; // assinala a estrutura árvore a AST final
 componente:
 	  novoTipo
 	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos
@@ -87,27 +90,60 @@ fechaVarOuFunc:
 ;
 
 //Regras gerais
-encapsulamento: %empty | TK_PR_PRIVATE | TK_PR_PUBLIC | TK_PR_PROTECTED;
-tiposPrimitivos: TK_PR_INT | TK_PR_FLOAT | TK_PR_BOOL | TK_PR_CHAR | TK_PR_STRING;
-tipo : tiposPrimitivos | TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
-static: TK_PR_STATIC | %empty;
-tipoConst: TK_PR_CONST tipo | tipo;
-literais: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE | TK_LIT_CHAR | TK_LIT_STRING;
+encapsulamento: 
+	%empty 
+	| TK_PR_PRIVATE 
+	| TK_PR_PUBLIC 
+	| TK_PR_PROTECTED;
+tiposPrimitivos: 
+	TK_PR_INT 
+	| TK_PR_FLOAT 
+	| TK_PR_BOOL 
+	| TK_PR_CHAR 
+	| TK_PR_STRING;
+tipo : 
+	tiposPrimitivos 
+	| TK_IDENTIFICADOR; // TK_IDENTIFICADOR para tipo do usuário
+static: 
+	TK_PR_STATIC 
+	| %empty;
+tipoConst: 
+	TK_PR_CONST tipo 
+	| tipo;
+literais: 
+	TK_LIT_INT 
+	| TK_LIT_FLOAT 
+	| TK_LIT_FALSE 
+	| TK_LIT_TRUE 
+	| TK_LIT_CHAR 
+	| TK_LIT_STRING;
 
 //Novos tipos
-novoTipo: TK_PR_CLASS TK_IDENTIFICADOR listaCampos ';' ;
-listaCampos: '[' list ']';
-list: campo | campo ':' list;
-campo: encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
+novoTipo: 
+	TK_PR_CLASS TK_IDENTIFICADOR listaCampos ';' ;
+listaCampos: 
+	'[' list ']';
+list: 
+	campo 
+	| campo ':' list;
+campo: 
+	encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
 
 //Variáveis globais
-tamanhoVetor: '[' TK_LIT_INT ']';
+tamanhoVetor: 
+	'[' TK_LIT_INT ']';
 
 //Funções
-args: %empty | parameters;
-parameters : parameter ',' parameters| parameter;
-parameter: tipoConst TK_IDENTIFICADOR;
-argsAndCommands : '(' args ')' blocoComandos;
+args: 
+	%empty 
+	| parameters;
+parameters : 
+	parameter ',' parameters
+	| parameter;
+parameter: 
+	tipoConst TK_IDENTIFICADOR;
+argsAndCommands : 
+	'(' args ')' blocoComandos;
 //Bloco de comandos
 /**
 	Observações gerais sobre comandos:
@@ -212,9 +248,9 @@ negativeOrPositiveIdentifier:
 	| '+' TK_IDENTIFICADOR;
 
 negativeOrPositiveLiteral:
-	'-' negativeOrPositiveLiteral
-	| '-' TK_LIT_INT
-	| '-' TK_LIT_FLOAT
+	'-' negativeOrPositiveLiteral 		//{$$ = }
+	| '-' TK_LIT_INT					//{$$ = }
+	| '-' TK_LIT_FLOAT					//{$$ = }
 	| '+' negativeOrPositiveLiteral
 	| '+' TK_LIT_INT
 	| '+' TK_LIT_FLOAT;
@@ -232,7 +268,9 @@ input:
 output:
 	TK_PR_OUTPUT expression continueOutput
 	| TK_PR_OUTPUT expression;
-continueOutput: ',' expression | ',' expression continueOutput
+continueOutput: 
+	',' expression 
+	| ',' expression continueOutput;
 
 funcCall:
 	TK_IDENTIFICADOR '(' argsCall ')'
@@ -244,8 +282,11 @@ argCall:
 	expression
 	| '.';
 
-shiftOp: TK_OC_SL | TK_OC_SR;
-shift: TK_IDENTIFICADOR shiftOp expression
+shiftOp: 
+	TK_OC_SL 
+	| TK_OC_SR;
+shift: 
+	TK_IDENTIFICADOR shiftOp expression
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression
 	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression;
@@ -310,12 +351,4 @@ operators:
 
 %%
 
-
-void descompila (void *arvore)
-{
-	//DEFINIDA PARA O MAIN.C TER REFERÊNCIA
-}
-void libera (void *arvore){
-	//DEFINIDA PARA O MAIN.C TER REFERÊNCIA
-}
 

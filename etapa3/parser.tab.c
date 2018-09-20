@@ -65,7 +65,7 @@
 #line 1 "parser.y" /* yacc.c:339  */
 
 #include <stdio.h>
-#include "lexVal.h"
+#include "tree.h"
 
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
@@ -74,9 +74,10 @@ int yyerror (char const *s){
 	return -1;
 }
 
+extern void* arvore;
 
 
-#line 80 "parser.tab.c" /* yacc.c:339  */
+#line 81 "parser.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -162,11 +163,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 17 "parser.y" /* yacc.c:355  */
+#line 18 "parser.y" /* yacc.c:355  */
 
 	struct lexval* valor_lexico;
 
-#line 170 "parser.tab.c" /* yacc.c:355  */
+#line 171 "parser.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -183,7 +184,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 187 "parser.tab.c" /* yacc.c:358  */
+#line 188 "parser.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -485,25 +486,25 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    68,    68,    68,    70,    71,    73,    74,    79,    80,
-      81,    82,    85,    86,    90,    90,    90,    90,    91,    91,
-      91,    91,    91,    92,    92,    93,    93,    94,    94,    95,
-      95,    95,    95,    95,    95,    98,    99,   100,   100,   101,
-     104,   107,   107,   108,   108,   109,   110,   117,   119,   120,
-     122,   123,   127,   128,   129,   130,   131,   135,   136,   137,
-     138,   139,   140,   141,   142,   143,   144,   145,   146,   147,
-     150,   152,   153,   155,   158,   161,   163,   167,   168,   170,
-     171,   174,   176,   181,   182,   183,   184,   185,   186,   187,
-     188,   190,   191,   192,   193,   194,   195,   196,   197,   199,
-     200,   201,   202,   203,   204,   205,   206,   209,   210,   211,
-     212,   215,   216,   217,   218,   219,   220,   224,   225,   226,
-     227,   230,   233,   234,   235,   235,   238,   239,   241,   242,
-     244,   245,   247,   247,   248,   249,   250,   251,   254,   258,
-     259,   260,   261,   263,   264,   266,   267,   268,   269,   272,
-     273,   274,   275,   276,   277,   278,   279,   281,   282,   283,
-     284,   285,   286,   287,   288,   289,   290,   291,   292,   294,
-     295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
-     305,   306,   307,   308,   309
+       0,    70,    70,    71,    73,    74,    76,    77,    82,    83,
+      84,    85,    88,    89,    94,    95,    96,    97,    99,   100,
+     101,   102,   103,   105,   106,   108,   109,   111,   112,   114,
+     115,   116,   117,   118,   119,   123,   125,   127,   128,   130,
+     134,   138,   139,   141,   142,   144,   146,   153,   155,   156,
+     158,   159,   163,   164,   165,   166,   167,   171,   172,   173,
+     174,   175,   176,   177,   178,   179,   180,   181,   182,   183,
+     186,   188,   189,   191,   194,   197,   199,   203,   204,   206,
+     207,   210,   212,   217,   218,   219,   220,   221,   222,   223,
+     224,   226,   227,   228,   229,   230,   231,   232,   233,   235,
+     236,   237,   238,   239,   240,   241,   242,   245,   246,   247,
+     248,   251,   252,   253,   254,   255,   256,   260,   261,   262,
+     263,   266,   269,   270,   272,   273,   276,   277,   279,   280,
+     282,   283,   286,   287,   289,   290,   291,   292,   295,   299,
+     300,   301,   302,   304,   305,   307,   308,   309,   310,   313,
+     314,   315,   316,   317,   318,   319,   320,   322,   323,   324,
+     325,   326,   327,   328,   329,   330,   331,   332,   333,   335,
+     336,   337,   338,   339,   340,   341,   342,   343,   344,   345,
+     346,   347,   348,   349,   350
 };
 #endif
 
@@ -1529,7 +1530,7 @@ yyreduce:
   switch (yyn)
     {
       
-#line 1533 "parser.tab.c" /* yacc.c:1646  */
+#line 1534 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1757,15 +1758,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 311 "parser.y" /* yacc.c:1906  */
+#line 352 "parser.y" /* yacc.c:1906  */
 
 
-
-void descompila (void *arvore)
-{
-	//DEFINIDA PARA O MAIN.C TER REFERÊNCIA
-}
-void libera (void *arvore){
-	//DEFINIDA PARA O MAIN.C TER REFERÊNCIA
-}
 
