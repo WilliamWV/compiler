@@ -1,13 +1,7 @@
 #include "lexVal.h"
+#include "tree.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct node{
-	struct lexval* token;
-	int kidsNumber;
-	struct node **kids; // lista de ponteiros
-} Node;
-
 
 Node* criaNodo(struct lexval* token){
 	Node *node = malloc(sizeof(Node));
@@ -24,11 +18,35 @@ void adicionaFilho(Node *pai, Node *kid){
 	pai->kids[pai->kidsNumber - 1] = kid; // acessa o ponteiro recém alocado e guarda nele um ponteiro de Node
 }
 
+void imprimeToken(union Value value, int tokenType, int literType){
+	switch(tokenType)
+	{
+		case KEYWORD: printf("%s ", value.str); break;
+		case SPEC_CHAR: printf("%c ", value.c); break;
+		case COMP_OPER: printf("%s ", value.str); break;
+		case IDS: printf("%s ", value.str); break;
+		case LITERAL:
+			switch(literType)
+			{
+				case INT: printf("%d ", value.i); break;
+				case FLOAT: printf("%f ", value.f); break;
+				case CHAR: printf("\'%c\' ", value.c); break;
+				case BOOL: 
+					if(value.b == TRUE)
+						printf("true ");
+					else printf("false ");
+					break;
+				case STRING: printf("\"%s\" ", value.str);		
+			}
+			break;
+	}		
+}
+
 void descompila(void *voidNode){
 	Node *n = (Node*) voidNode;
 	int i = 0;
 	if(n->kidsNumber == 0){ 	// o print vai depender do tipo (PRECISO IMPLEMENTAR ISSO) e só será executado se for um nodo folha
-		printf("%d\n", n->token->value.i);
+		imprimeToken(n->token->value, n->token->tokenType, n->token->literType);
 	}
 	else while(i < n->kidsNumber){ // enquanto houver filhos, os explora
 			descompila(n->kids[i]);

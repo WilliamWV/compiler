@@ -90,9 +90,17 @@ protected { configLexValueNonLiteral(KEYWORD); return TK_PR_PROTECTED; }
 "%>%" { configLexValueNonLiteral(COMP_OPER); return TK_OC_FORWARD_PIPE; }
 "%|%" { configLexValueNonLiteral(COMP_OPER); return TK_OC_BASH_PIPE; }
 
-{SPECIALCHAR} {	configLexValueNonLiteral(SPEC_CHAR); return *yytext; }
+{SPECIALCHAR} {
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
+	yylval.valor_lexico->lineNumber = num_lines;
+	yylval.valor_lexico->tokenType = SPEC_CHAR;
+	yylval.valor_lexico->literType = NONE;
+	yylval.valor_lexico->value.c = yytext[0];//um caractere
+	return *yytext;
+}
 
-false { 	
+false { 
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));	
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
@@ -100,6 +108,7 @@ false {
 	return TK_LIT_FALSE; 
 }
 true { 
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
@@ -110,6 +119,7 @@ true {
 {ALPHABETIC}{ALPHANUMERIC}* { configLexValueNonLiteral(IDS); return TK_IDENTIFICADOR; }
 
 {INTLIT} { 
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = INT;
@@ -117,6 +127,7 @@ true {
 	return TK_LIT_INT; 
 }
 {FLOATLIT} { 
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
@@ -124,6 +135,7 @@ true {
 	return TK_LIT_FLOAT; 
 }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { // notacao cientifica
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
@@ -131,13 +143,15 @@ true {
 	return TK_LIT_FLOAT; 
 } 
 '({ASCIIALPHABET}|{CONTROLCHAR})' { 
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = CHAR;
-	yylval.valor_lexico->value.c = yytext[0];//um caractere
+	yylval.valor_lexico->value.c = yytext[1];//um caractere que esta entre duas aspas simples
 	return TK_LIT_CHAR; 
 }
 \"[^\"\n]*\" {
+	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = STRING;

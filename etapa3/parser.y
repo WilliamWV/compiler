@@ -163,8 +163,7 @@ parameters :
 parameter: 
 	tipoConst TK_IDENTIFICADOR;
 argsAndCommands : 
-	'(' args ')' blocoComandos 		//{$$ = }
-;
+	'(' args ')' blocoComandos;
 //Bloco de comandos
 /**
 	Observações gerais sobre comandos:
