@@ -92,14 +92,14 @@ protected { configLexValueNonLiteral(KEYWORD); return TK_PR_PROTECTED; }
 
 false { 	
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
 	yylval.valor_lexico->value.b = FALSE;
 	return TK_LIT_FALSE; 
 }
 true { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
 	yylval.valor_lexico->value.b = TRUE;
 	return TK_LIT_TRUE; 
@@ -109,35 +109,35 @@ true {
 
 {INTLIT} { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = INT;
 	yylval.valor_lexico->value.i = atoi(yytext);
 	return TK_LIT_INT; 
 }
 {FLOATLIT} { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
 	yylval.valor_lexico->value.f = atof(yytext);
 	return TK_LIT_FLOAT; 
 }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { // notacao cientifica
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
 	yylval.valor_lexico->value.f = atof(yytext);
 	return TK_LIT_FLOAT; 
 } 
 '({ASCIIALPHABET}|{CONTROLCHAR})' { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = CHAR;
 	yylval.valor_lexico->value.c = yytext[0];//um caractere
 	return TK_LIT_CHAR; 
 }
 \"[^\"\n]*\" {
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = STRING;
 	yylval.valor_lexico->value.str = strdup(yytext);
 	return TK_LIT_STRING;

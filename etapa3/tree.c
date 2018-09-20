@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 typedef struct node{
-	struct lexval token;
+	struct lexval* token;
 	int kidsNumber;
 	struct node **kids; // lista de ponteiros
 } Node;
@@ -14,7 +14,7 @@ typedef struct node{
 //****************************************************************************************************************************
 //****************************************************************************************************************************
 
-Node* criaNodo(struct lexval token){
+Node* criaNodo(struct lexval* token){
 	Node *node = malloc(sizeof(Node));
 	node->token = token;
 	node->kidsNumber = 0;
@@ -32,7 +32,7 @@ void adicionaFilho(Node *pai, Node *kid){
 void descompila(Node *n){
 	int i = 0;
 	if(n->kidsNumber == 0){ 	// o print vai depender do tipo (PRECISO IMPLEMENTAR ISSO) e só será executado se for um nodo folha
-		printf("%d\n", n->token.value.i);
+		printf("%d\n", n->token->value.i);
 	}
 	else while(i < n->kidsNumber){ // enquanto houver filhos, os explora
 			descompila(n->kids[i]);
@@ -75,80 +75,80 @@ int main(){
     token4.tokenType = 19999;
     token4.value.i = 4;
 
-    Node *primeiroNodo = criaNodo(token);
+    Node *primeiroNodo = criaNodo(&token);
 
     printf("Valores do primeiro nodo:\n");
-    printf("Line number: %d\n", primeiroNodo->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->token.literType);
-    printf("Token type: %d\n", primeiroNodo->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->token->literType);
+    printf("Token type: %d\n", primeiroNodo->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kidsNumber);
     printf("Fim dos valores do primeiro nodo:\n\n");
 
     printf("Adiciona filho:\n");
-    Node *primeiroFilho = criaNodo(token2);
+    Node *primeiroFilho = criaNodo(&token2);
     adicionaFilho(primeiroNodo, primeiroFilho);
     printf("Valores do primeiro nodo apos adicionar o primeiro filho (devem ser iguais, exceto o nro de filhos):\n");
-    printf("Line number: %d\n", primeiroNodo->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->token.literType);
-    printf("Token type: %d\n", primeiroNodo->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->token->literType);
+    printf("Token type: %d\n", primeiroNodo->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kidsNumber);
     printf("Valores do primeiro filho:\n");
-    printf("Line number: %d\n", primeiroNodo->kids[0]->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->kids[0]->token.literType);
-    printf("Token type: %d\n", primeiroNodo->kids[0]->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->kids[0]->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->kids[0]->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->kids[0]->token->literType);
+    printf("Token type: %d\n", primeiroNodo->kids[0]->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->kids[0]->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kids[0]->kidsNumber);
     printf("Fim dos valores do primeiro filho\n\n");
 
-    Node *segundoFilho = criaNodo(token3);
+    Node *segundoFilho = criaNodo(&token3);
     adicionaFilho(primeiroNodo, segundoFilho);
     printf("Valores do primeiro nodo apos adicionar o segundo filho (devem ser iguais, exceto o nro de filhos):\n");
-    printf("Line number: %d\n", primeiroNodo->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->token.literType);
-    printf("Token type: %d\n", primeiroNodo->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->token->literType);
+    printf("Token type: %d\n", primeiroNodo->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kidsNumber);
     printf("Valores do primeiro filho apos adicionar o segundo filho (devem ser iguais):\n");
-    printf("Line number: %d\n", primeiroNodo->kids[0]->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->kids[0]->token.literType);
-    printf("Token type: %d\n", primeiroNodo->kids[0]->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->kids[0]->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->kids[0]->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->kids[0]->token->literType);
+    printf("Token type: %d\n", primeiroNodo->kids[0]->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->kids[0]->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kids[0]->kidsNumber);
     printf("Valores do segundo filho:\n");
-    printf("Line number: %d\n", primeiroNodo->kids[1]->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->kids[1]->token.literType);
-    printf("Token type: %d\n", primeiroNodo->kids[1]->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->kids[1]->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->kids[1]->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->kids[1]->token->literType);
+    printf("Token type: %d\n", primeiroNodo->kids[1]->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->kids[1]->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kids[1]->kidsNumber);
     printf("Fim dos valores do segundo filho\n\n");
 
-    Node *filhoDoSegundoFilho = criaNodo(token4);
+    Node *filhoDoSegundoFilho = criaNodo(&token4);
     adicionaFilho(segundoFilho, filhoDoSegundoFilho);
     printf("Valores do primeiro nodo apos adicionar filho ao segundo filho (devem ser iguais, exceto o nro de filhos):\n");
-    printf("Line number: %d\n", primeiroNodo->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->token.literType);
-    printf("Token type: %d\n", primeiroNodo->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->token->literType);
+    printf("Token type: %d\n", primeiroNodo->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kidsNumber);
     printf("Valores do primeiro filho apos adicionar filho ao segundo filho (devem ser iguais):\n");
-    printf("Line number: %d\n", primeiroNodo->kids[0]->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->kids[0]->token.literType);
-    printf("Token type: %d\n", primeiroNodo->kids[0]->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->kids[0]->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->kids[0]->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->kids[0]->token->literType);
+    printf("Token type: %d\n", primeiroNodo->kids[0]->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->kids[0]->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kids[0]->kidsNumber);
     printf("Valores do segundo filho apos dar a ele um filho (devem ser iguais, exceto o nro de filhos):\n");
-    printf("Line number: %d\n", primeiroNodo->kids[1]->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->kids[1]->token.literType);
-    printf("Token type: %d\n", primeiroNodo->kids[1]->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->kids[1]->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->kids[1]->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->kids[1]->token->literType);
+    printf("Token type: %d\n", primeiroNodo->kids[1]->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->kids[1]->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kids[1]->kidsNumber);
     printf("Valores do filho do segundo filho:\n");
-    printf("Line number: %d\n", primeiroNodo->kids[1]->kids[0]->token.lineNumber);
-    printf("Literal type: %d\n", primeiroNodo->kids[1]->kids[0]->token.literType);
-    printf("Token type: %d\n", primeiroNodo->kids[1]->kids[0]->token.tokenType);
-    printf("Token value: %d\n", primeiroNodo->kids[1]->kids[0]->token.value.i);
+    printf("Line number: %d\n", primeiroNodo->kids[1]->kids[0]->token->lineNumber);
+    printf("Literal type: %d\n", primeiroNodo->kids[1]->kids[0]->token->literType);
+    printf("Token type: %d\n", primeiroNodo->kids[1]->kids[0]->token->tokenType);
+    printf("Token value: %d\n", primeiroNodo->kids[1]->kids[0]->token->value.i);
     printf("Number of kids: %d\n", primeiroNodo->kids[1]->kids[0]->kidsNumber);
     printf("Fim dos valores do filho do segundo filho\n\n");
 

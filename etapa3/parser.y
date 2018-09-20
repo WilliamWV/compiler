@@ -68,7 +68,7 @@ extern void* arvore;
 
 programa: 
 	%empty 
-	| componente programa; //{arvore = $$;}; // assinala a estrutura árvore a AST final
+	| componente programa //{arvore = $$;}; // assinala a estrutura árvore a AST final
 componente:
 	  novoTipo
 	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos

@@ -16,7 +16,7 @@
 #define SPEC_CHAR 0x1
 #define COMP_OPER 0x2
 #define IDS 0x3
-#define LITERALS 0x4
+#define LITERAL 0x4
 /*******TIPOS DE LITERAIS*****/
 #define INT 0X8
 #define FLOAT 0x9

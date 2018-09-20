@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 typedef struct node{
-	struct lexval token;
+	struct lexval* token;
 	int kidsNumber;
 	struct node **kids; // lista de ponteiros
 } Node;
@@ -14,7 +14,7 @@ typedef struct node{
 //****************************************************************************************************************************
 //****************************************************************************************************************************
 
-Node* criaNodo(struct lexval token){
+Node* criaNodo(struct lexval* token){
 	Node *node = malloc(sizeof(Node));
 	node->token = token;
 	node->kidsNumber = 0;
@@ -32,7 +32,7 @@ void adicionaFilho(Node *pai, Node *kid){
 void descompila(Node *n){
 	int i = 0;
 	if(n->kidsNumber == 0){ 	// o print vai depender do tipo (PRECISO IMPLEMENTAR ISSO) e só será executado se for um nodo folha
-		printf("%d\n", n->token.value.i);
+		printf("%d\n", n->token->value.i);
 	}
 	else while(i < n->kidsNumber){ // enquanto houver filhos, os explora
 			descompila(n->kids[i]);

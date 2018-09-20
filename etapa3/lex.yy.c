@@ -1078,7 +1078,7 @@ YY_RULE_SETUP
 #line 93 "scanner.l"
 { 	
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
 	yylval.valor_lexico->value.b = FALSE;
 	return TK_LIT_FALSE; 
@@ -1089,7 +1089,7 @@ YY_RULE_SETUP
 #line 100 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
 	yylval.valor_lexico->value.b = TRUE;
 	return TK_LIT_TRUE; 
@@ -1105,7 +1105,7 @@ YY_RULE_SETUP
 #line 110 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = INT;
 	yylval.valor_lexico->value.i = atoi(yytext);
 	return TK_LIT_INT; 
@@ -1116,7 +1116,7 @@ YY_RULE_SETUP
 #line 117 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
 	yylval.valor_lexico->value.f = atof(yytext);
 	return TK_LIT_FLOAT; 
@@ -1127,7 +1127,7 @@ YY_RULE_SETUP
 #line 124 "scanner.l"
 { // notacao cientifica
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
 	yylval.valor_lexico->value.f = atof(yytext);
 	return TK_LIT_FLOAT; 
@@ -1138,7 +1138,7 @@ YY_RULE_SETUP
 #line 131 "scanner.l"
 { 
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = CHAR;
 	yylval.valor_lexico->value.c = yytext[0];//um caractere
 	return TK_LIT_CHAR; 
@@ -1149,7 +1149,7 @@ YY_RULE_SETUP
 #line 138 "scanner.l"
 {
 	yylval.valor_lexico->lineNumber = num_lines;
-	yylval.valor_lexico->tokenType = LITERALS;
+	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = STRING;
 	yylval.valor_lexico->value.str = strdup(yytext);
 	return TK_LIT_STRING;
