@@ -132,18 +132,43 @@ programa:
 ;
 componente:
 	  novoTipo							{$$ = $1;}
-	| TK_IDENTIFICADOR depoisDeIdent 	{$$ = criaNodo($1); adicionaFilho($$, $2);}// Regra introduzida para resolver conflitos
+	| TK_IDENTIFICADOR depoisDeIdent { // Regra introduzida para resolver conflitos
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
 	// Funções
-	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands		{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
-	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, $4);}
-
+	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands {
+		$$ = $1; adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
+	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, $4);
+	}
 ;
 
 depoisDeIdent:
-	  tamanhoVetor static tipo ';'		{$$ = $1; adicionaFilho($$, $2); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4));}
-	| TK_PR_STATIC tipo ';'				{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3));}
-	| tiposPrimitivos ';'				{$$ = $1; adicionaFilho($$, criaNodo($2));}
-	| TK_IDENTIFICADOR fechaVarOuFunc	{$$ = criaNodo($1); adicionaFilho($$, $2);}
+	 tamanhoVetor static tipo ';' {
+		$$ = $1; 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4));
+	}
+	| TK_PR_STATIC tipo ';'	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3));
+	}
+	| tiposPrimitivos ';' {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2));
+	}
+	| TK_IDENTIFICADOR fechaVarOuFunc {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
 ;
 fechaVarOuFunc:
 	  ';'				{$$ = criaNodo($1);}
@@ -187,36 +212,66 @@ literais:
 
 //Novos tipos
 novoTipo: 
-	TK_PR_CLASS TK_IDENTIFICADOR listaCampos ';' 	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4));};
+	TK_PR_CLASS TK_IDENTIFICADOR listaCampos ';' {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4));
+	};
 listaCampos: 
-	'[' list ']'	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3));}
+	'[' list ']'{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3));
+	}
 ;
 list: 
 	campo 				{$$ = $1;}
-	| campo ':' list	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
+	| campo ':' list{
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
 ;
 campo: 
-	encapsulamento tiposPrimitivos TK_IDENTIFICADOR	{$$ = $1; adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3));}
+	encapsulamento tiposPrimitivos TK_IDENTIFICADOR	{
+		$$ = $1; 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3));
+	}
 ;
 
 //Variáveis globais
 tamanhoVetor: 
-	'[' TK_LIT_INT ']'	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3));};
-
+	'[' TK_LIT_INT ']'	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3));
+	}
+;
 //Funções
 args: 
 	%empty 				{$$ = criaNodo(NULL);}
 	| parameters		{$$ = $1;}
 ;		
 parameters : 
-	parameter ',' parameters	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
+	parameter ',' parameters {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
 	| parameter					{$$ = $1;}
 ;
 parameter: 
 	tipoConst TK_IDENTIFICADOR	{$$ = $1; adicionaFilho($$, criaNodo($2));}
 ;
 argsAndCommands : 
-	'(' args ')' blocoComandos	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, $4);}
+	'(' args ')' blocoComandos {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, $4);
+	}
 ;
 //Bloco de comandos
 /**
@@ -224,7 +279,11 @@ argsAndCommands :
 		* Precisei alterar as regras para comandos pois na especificação existem várias excessões de comandos que podem ou não podem ser aplicados em determinado lugar, separei o case dos comandos simples por não ter ';' e separei os que tem vírgula dos que não tem, pois somente os que não tem vírgula podem aparecer nas listas de comando do for
 */
 blocoComandos:
-	'{' comandos '}'		{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3));}
+	'{' comandos '}' {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3));
+	}
 ;
 comando:
 	comandoSimples ';'		{$$ = $1; adicionaFilho($$, criaNodo($2));}
@@ -262,146 +321,385 @@ comandosSemVirgula: //comandos que são permitidos dentro das listas do for
 ;
 
 ifThenElse:
-	TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, $6); adicionaFilho($$, $7);}
+	TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, $6); 
+		adicionaFilho($$, $7);
+	}
 ;
 optElse:
 	%empty							{$$ = criaNodo(NULL);}
 	| TK_PR_ELSE blocoComandos		{$$ = criaNodo($1); adicionaFilho($$, $2);}
 ;
 foreach:
-	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5); adicionaFilho($$, criaNodo($6)); adicionaFilho($$, $7);}
+	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5); 
+		adicionaFilho($$, criaNodo($6)); 
+		adicionaFilho($$, $7);
+	}
 ;
 
 for:
-	TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5); adicionaFilho($$, criaNodo($6)); adicionaFilho($$, $7); adicionaFilho($$, criaNodo($8)); adicionaFilho($$, $9);}
+	TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5); 
+		adicionaFilho($$, criaNodo($6)); 
+		adicionaFilho($$, $7); 
+		adicionaFilho($$, criaNodo($8)); 
+		adicionaFilho($$, $9);
+	}
 ;
 
 while_do:
-	TK_PR_WHILE '(' expression ')' TK_PR_DO blocoComandos 	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, $6);}
+	TK_PR_WHILE '(' expression ')' TK_PR_DO blocoComandos {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, $6);
+	}
 ;
 do_while:
-	TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')'	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5); adicionaFilho($$, criaNodo($6));}
+	TK_PR_DO blocoComandos TK_PR_WHILE '(' expression ')' {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5); 
+		adicionaFilho($$, criaNodo($6));
+	}
 ;
 
 
 foreachList:
 	expression						{$$ = $1;}
-	| foreachList ',' expression 	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
+	| foreachList ',' expression {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
 ;
 forList:
 	comandosSemVirgula					{$$ = $1;}
-	| forList ',' comandosSemVirgula 	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
+	| forList ',' comandosSemVirgula {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
 ;
 
 switch:
-	TK_PR_SWITCH '(' expression ')' blocoComandos	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
+	TK_PR_SWITCH '(' expression ')' blocoComandos {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
 ;
 case:
-	TK_PR_CASE TK_LIT_INT ':'	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3));}
+	TK_PR_CASE TK_LIT_INT ':' {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3));
+	}
 ;
 
 
 /*Definição de Variáveis*/
 localVarDefinition:
-	TK_PR_STATIC TK_IDENTIFICADOR TK_IDENTIFICADOR					
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3));}
-	| TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR					
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3));}
-	| TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR	
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4));}
-	| TK_IDENTIFICADOR TK_IDENTIFICADOR								
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));}
-	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR					
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3));}
-	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR					
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3));}
-	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR		
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4));}
-	| tiposPrimitivos TK_IDENTIFICADOR								
-	{$$ = $1; adicionaFilho($$, criaNodo($2));}
+	TK_PR_STATIC TK_IDENTIFICADOR TK_IDENTIFICADOR {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3));
+	}
+	| TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3));
+	}
+	| TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4));
+	}
+	| TK_IDENTIFICADOR TK_IDENTIFICADOR	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+	}
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3));
+	}
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3));
+	}
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4));
+	}
+	| tiposPrimitivos TK_IDENTIFICADOR {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2));
+	}
 
-	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR	
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5));}
-	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier	
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
-	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR	
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5));}
-	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier	
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
-	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR	
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, criaNodo($6));}
-	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier 	
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, $6);}
-	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR	
-	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4));}
-	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier	
-	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, $4);}
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5));
+	}
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5));
+	}
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, criaNodo($6));
+	}
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, $6);
+	}
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4));
+	}
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, $4);
+	}
 
-	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais	
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, $6);}
-	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, $6);}
-	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
-	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
-	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
-	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
-	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais
-	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, $4);}
-	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral
-	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, $4);}
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, $6);
+	}
+	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, $6);
+	}
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
+	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
+	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, $4);
+	}
+	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, $4);
+	}
 ;
 negativeOrPositiveIdentifier:
-	'-' negativeOrPositiveIdentifier	{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '-' TK_IDENTIFICADOR				{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));}
-	| '+' negativeOrPositiveIdentifier	{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '+' TK_IDENTIFICADOR				{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));}
+	'-' negativeOrPositiveIdentifier {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
+	| '-' TK_IDENTIFICADOR	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+	}
+	| '+' negativeOrPositiveIdentifier {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
+	| '+' TK_IDENTIFICADOR{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+	}
 ;
 
 negativeOrPositiveLiteral:
-	'-' negativeOrPositiveLiteral 		{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '-' TK_LIT_INT					{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));}
-	| '-' TK_LIT_FLOAT					{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));}
-	| '+' negativeOrPositiveLiteral		{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '+' TK_LIT_INT					{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));}
-	| '+' TK_LIT_FLOAT					{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));}
+	'-' negativeOrPositiveLiteral {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
+	| '-' TK_LIT_INT {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+	}
+	| '-' TK_LIT_FLOAT {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+	}
+	| '+' negativeOrPositiveLiteral {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
+	| '+' TK_LIT_INT {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+	}
+	| '+' TK_LIT_FLOAT {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+	}
 ;
 
 
 assignment:
-	TK_IDENTIFICADOR '=' expression		
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
-	| TK_IDENTIFICADOR '[' expression ']' '=' expression
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, $6);}
-	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3)); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5);}
-	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, criaNodo($6)); adicionaFilho($$, criaNodo($7)); adicionaFilho($$, $8);}
-	
+	TK_IDENTIFICADOR '=' expression	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
+	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, $6);
+	}
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+	}
+	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, criaNodo($6)); 
+		adicionaFilho($$, criaNodo($7)); 
+		adicionaFilho($$, $8);
+	}	
 ;
-
 input:
 	TK_PR_INPUT expression		{$$ = criaNodo($1); adicionaFilho($$, $2);}
 ;
 
 output:
-	TK_PR_OUTPUT expression continueOutput	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, $3);}
-	| TK_PR_OUTPUT expression				{$$ = criaNodo($1); adicionaFilho($$, $2);}
+	TK_PR_OUTPUT expression continueOutput {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, $3);
+	}
+	| TK_PR_OUTPUT expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
 ;
 continueOutput: 
-	',' expression 						{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| ',' expression continueOutput		{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, $3);}
+	',' expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2);
+	}
+	| ',' expression continueOutput	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, $3);
+	}
 ;
 funcCall:
-	TK_IDENTIFICADOR '(' argsCall ')'	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4));}
-	| TK_IDENTIFICADOR '(' ')'			{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3));}
+	TK_IDENTIFICADOR '(' argsCall ')'{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4));
+	}
+	| TK_IDENTIFICADOR '(' ')' {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3));
+	}
 ;
 argsCall:
-	argCall						{$$ = $1;}
-	| argsCall ',' argCall		{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
+	argCall					{$$ = $1;}
+	| argsCall ',' argCall {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
 ;
 argCall:
 	expression			{$$ = $1;}
@@ -411,39 +709,89 @@ shiftOp:
 	TK_OC_SL 			{$$ = criaNodo($1);}
 	| TK_OC_SR			{$$ = criaNodo($1);};
 shift: 
-	TK_IDENTIFICADOR shiftOp expression
-	{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, $3);}
-	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));adicionaFilho($$, criaNodo($3)); adicionaFilho($$, $4); adicionaFilho($$, $5);}
-	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression 	
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, $5); adicionaFilho($$, $6);}
-	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression	
-	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2));adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, criaNodo($6)); adicionaFilho($$, $7); adicionaFilho($$, $8);}
+	TK_IDENTIFICADOR shiftOp expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, $3);
+	}
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, $4); 
+		adicionaFilho($$, $5);
+	}
+	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, $5);
+		adicionaFilho($$, $6);
+	}
+	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2));
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, criaNodo($6)); 
+		adicionaFilho($$, $7); 
+		adicionaFilho($$, $8);
+	}
 ;
 
 return:
-	TK_PR_RETURN expression					{$$ = criaNodo($1); adicionaFilho($$, $2);}
+	TK_PR_RETURN expression		{$$ = criaNodo($1); adicionaFilho($$, $2);}
 ;
 
 expression:
-	parenthesisOrOperand operators expression		{$$ = $1; adicionaFilho($$, $2); adicionaFilho($$, $3);}
-	| infiniteQuestionMarks operators expression	{$$ = $1; adicionaFilho($$, $2); adicionaFilho($$, $3);}
-	| parenthesisOrOperand							{$$ = $1;}
-	| infiniteQuestionMarks							{$$ = $1;}
+	parenthesisOrOperand operators expression {
+		$$ = $1; 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, $3);
+	}
+	| infiniteQuestionMarks operators expression {
+		$$ = $1; 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, $3);
+	}
+	| parenthesisOrOperand			{$$ = $1;}
+	| infiniteQuestionMarks			{$$ = $1;}
 ;
 infiniteQuestionMarks:
-	parenthesisOrOperand '?'				{$$ = $1; adicionaFilho($$, criaNodo($2));}
-	| infiniteQuestionMarks '?'				{$$ = $1; adicionaFilho($$, criaNodo($2));}
+	parenthesisOrOperand '?'		{$$ = $1; adicionaFilho($$, criaNodo($2));}
+	| infiniteQuestionMarks '?'		{$$ = $1; adicionaFilho($$, criaNodo($2));}
 ;
 pipe:
-	funcCall TK_OC_FORWARD_PIPE funcCall	{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
- 	|pipe TK_OC_FORWARD_PIPE funcCall		{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
-	|funcCall TK_OC_BASH_PIPE funcCall		{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
-	|pipe TK_OC_BASH_PIPE funcCall			{$$ = $1; adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3);}
+	funcCall TK_OC_FORWARD_PIPE funcCall {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
+ 	|pipe TK_OC_FORWARD_PIPE funcCall {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
+	|funcCall TK_OC_BASH_PIPE funcCall {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
+	|pipe TK_OC_BASH_PIPE funcCall {
+		$$ = $1; 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3);
+	}
 ;
 
 parenthesisOrOperand:
-	'(' expression ')'			{$$ = criaNodo($1); adicionaFilho($$, $2); adicionaFilho($$, criaNodo($3));}
+	'(' expression ')' {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, criaNodo($3));
+	}
 	| operands					{$$ = $1;}
 	| '-' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
 	| '+' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
@@ -453,10 +801,26 @@ parenthesisOrOperand:
 	| '#' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
 ;
 operands:
-	TK_IDENTIFICADOR '[' expression ']'		{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4));}
-	| TK_IDENTIFICADOR						{$$ = criaNodo($1);}
-	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR						{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, criaNodo($3));}
-	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR	{$$ = criaNodo($1); adicionaFilho($$, criaNodo($2)); adicionaFilho($$, $3); adicionaFilho($$, criaNodo($4)); adicionaFilho($$, criaNodo($5)); adicionaFilho($$, criaNodo($6));}
+	TK_IDENTIFICADOR '[' expression ']' {
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4));
+	}
+	| TK_IDENTIFICADOR							{$$ = criaNodo($1);}
+	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR		{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($3));
+	}
+	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR	{
+		$$ = criaNodo($1); 
+		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4)); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, criaNodo($6));
+	}
 	| TK_LIT_INT		{$$ = criaNodo($1);}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1);}
 	| TK_LIT_TRUE		{$$ = criaNodo($1);}
