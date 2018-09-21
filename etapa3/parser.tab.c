@@ -487,25 +487,25 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   129,   129,   130,   132,   133,   135,   136,   141,   142,
-     143,   144,   147,   148,   153,   154,   155,   156,   159,   160,
-     161,   162,   163,   166,   167,   170,   171,   174,   175,   178,
-     179,   180,   181,   182,   183,   188,   190,   192,   193,   195,
-     199,   203,   204,   207,   208,   211,   213,   220,   222,   223,
-     226,   227,   231,   232,   233,   234,   235,   240,   241,   242,
-     243,   244,   245,   246,   247,   248,   249,   250,   251,   252,
-     256,   258,   259,   261,   264,   267,   269,   273,   274,   276,
-     277,   280,   282,   287,   288,   289,   290,   291,   292,   293,
-     294,   296,   297,   298,   299,   300,   301,   302,   303,   305,
-     306,   307,   308,   309,   310,   311,   312,   315,   316,   317,
-     318,   321,   322,   323,   324,   325,   326,   330,   331,   332,
-     333,   336,   339,   340,   342,   343,   346,   347,   349,   350,
-     352,   353,   356,   357,   359,   360,   361,   362,   365,   369,
-     370,   371,   372,   375,   376,   378,   379,   380,   381,   384,
-     385,   386,   387,   388,   389,   390,   391,   393,   394,   395,
-     396,   397,   398,   399,   400,   401,   402,   403,   404,   407,
-     408,   409,   410,   411,   412,   413,   414,   415,   416,   417,
-     418,   419,   420,   421,   422
+       0,   130,   130,   131,   134,   135,   137,   138,   143,   144,
+     145,   146,   149,   150,   155,   156,   157,   158,   161,   162,
+     163,   164,   165,   168,   169,   172,   173,   176,   177,   180,
+     181,   182,   183,   184,   185,   190,   192,   195,   196,   199,
+     204,   208,   209,   212,   213,   216,   219,   227,   230,   231,
+     234,   235,   240,   241,   242,   243,   244,   249,   250,   251,
+     252,   253,   254,   255,   256,   257,   258,   259,   260,   261,
+     265,   268,   269,   272,   276,   280,   283,   288,   289,   292,
+     293,   297,   300,   306,   308,   310,   312,   314,   316,   318,
+     320,   323,   325,   327,   329,   331,   333,   335,   337,   340,
+     342,   344,   346,   348,   350,   352,   354,   358,   359,   360,
+     361,   365,   366,   367,   368,   369,   370,   375,   377,   379,
+     381,   387,   391,   392,   395,   396,   399,   400,   403,   404,
+     407,   408,   411,   412,   414,   416,   418,   420,   425,   429,
+     430,   431,   432,   435,   436,   439,   440,   441,   442,   446,
+     447,   448,   449,   450,   451,   452,   453,   456,   457,   458,
+     459,   460,   461,   462,   463,   464,   465,   466,   467,   470,
+     471,   472,   473,   474,   475,   476,   477,   478,   479,   480,
+     481,   482,   483,   484,   485
 };
 #endif
 
@@ -1531,511 +1531,1105 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 129 "parser.y" /* yacc.c:1646  */
+#line 130 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo(NULL);}
 #line 1537 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 4:
-#line 132 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 3:
+#line 131 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1543 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 12:
-#line 147 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 4:
+#line 134 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1549 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 13:
-#line 148 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 5:
+#line 135 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1555 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 14:
-#line 153 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = NULL;}
+  case 6:
+#line 137 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1561 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 15:
-#line 154 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 7:
+#line 138 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-3].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-2].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1567 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 16:
-#line 155 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 8:
+#line 143 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-3].ast); adicionaFilho((yyval.ast), (yyvsp[-2].ast)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1573 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 17:
-#line 156 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 9:
+#line 144 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1579 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 18:
-#line 159 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 10:
+#line 145 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1585 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 19:
-#line 160 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 11:
+#line 146 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1591 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 161 "parser.y" /* yacc.c:1646  */
+  case 12:
+#line 149 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1597 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 21:
-#line 162 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 13:
+#line 150 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1603 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 163 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 14:
+#line 155 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = NULL;}
 #line 1609 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 166 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 15:
+#line 156 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1615 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 167 "parser.y" /* yacc.c:1646  */
+  case 16:
+#line 157 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1621 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 170 "parser.y" /* yacc.c:1646  */
+  case 17:
+#line 158 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1627 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 26:
-#line 171 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = NULL;}
+  case 18:
+#line 161 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1633 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 28:
-#line 175 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 19:
+#line 162 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1639 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 29:
-#line 178 "parser.y" /* yacc.c:1646  */
+  case 20:
+#line 163 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1645 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 30:
-#line 179 "parser.y" /* yacc.c:1646  */
+  case 21:
+#line 164 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1651 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 31:
-#line 180 "parser.y" /* yacc.c:1646  */
+  case 22:
+#line 165 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1657 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 32:
-#line 181 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 23:
+#line 168 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1663 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 33:
-#line 182 "parser.y" /* yacc.c:1646  */
+  case 24:
+#line 169 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1669 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 34:
-#line 183 "parser.y" /* yacc.c:1646  */
+  case 25:
+#line 172 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1675 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 37:
-#line 192 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 26:
+#line 173 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = NULL;}
 #line 1681 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 41:
-#line 203 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo(NULL);}
+  case 27:
+#line 176 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1687 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 42:
-#line 204 "parser.y" /* yacc.c:1646  */
+  case 28:
+#line 177 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1693 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 44:
-#line 208 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 29:
+#line 180 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1699 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 49:
-#line 223 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 30:
+#line 181 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1705 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 50:
-#line 226 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo(NULL);}
+  case 31:
+#line 182 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1711 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 52:
-#line 231 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 32:
+#line 183 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1717 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 53:
-#line 232 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 33:
+#line 184 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1723 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 54:
-#line 233 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 34:
+#line 185 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1729 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 55:
-#line 234 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 35:
+#line 190 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-3].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1735 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 56:
-#line 235 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 36:
+#line 192 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1741 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 57:
-#line 240 "parser.y" /* yacc.c:1646  */
+  case 37:
+#line 195 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1747 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 58:
-#line 241 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 38:
+#line 196 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1753 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 59:
-#line 242 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 39:
+#line 199 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1759 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 60:
-#line 243 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 40:
+#line 204 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1765 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 61:
-#line 244 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 41:
+#line 208 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo(NULL);}
 #line 1771 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 62:
-#line 245 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 42:
+#line 209 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1777 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 63:
-#line 246 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 43:
+#line 212 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1783 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 64:
-#line 247 "parser.y" /* yacc.c:1646  */
+  case 44:
+#line 213 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1789 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 65:
-#line 248 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 45:
+#line 216 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1795 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 66:
-#line 249 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 46:
+#line 219 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-3].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-2].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1801 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 67:
-#line 250 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 47:
+#line 227 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1807 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 68:
-#line 251 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 48:
+#line 230 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1813 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 69:
-#line 252 "parser.y" /* yacc.c:1646  */
+  case 49:
+#line 231 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1819 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 71:
-#line 258 "parser.y" /* yacc.c:1646  */
+  case 50:
+#line 234 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo(NULL);}
 #line 1825 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 77:
-#line 273 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = (yyvsp[0].ast);}
+  case 51:
+#line 235 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1831 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 79:
-#line 276 "parser.y" /* yacc.c:1646  */
+  case 52:
+#line 240 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1837 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 128:
-#line 349 "parser.y" /* yacc.c:1646  */
+  case 53:
+#line 241 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1843 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 130:
-#line 352 "parser.y" /* yacc.c:1646  */
+  case 54:
+#line 242 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1849 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 131:
-#line 353 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 55:
+#line 243 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1855 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 132:
-#line 356 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 56:
+#line 244 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1861 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 133:
-#line 357 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 57:
+#line 249 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1867 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 141:
-#line 371 "parser.y" /* yacc.c:1646  */
+  case 58:
+#line 250 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1873 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 142:
-#line 372 "parser.y" /* yacc.c:1646  */
+  case 59:
+#line 251 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1879 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 150:
-#line 385 "parser.y" /* yacc.c:1646  */
+  case 60:
+#line 252 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1885 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 158:
-#line 394 "parser.y" /* yacc.c:1646  */
+  case 61:
+#line 253 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1891 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 161:
-#line 397 "parser.y" /* yacc.c:1646  */
+  case 62:
+#line 254 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
 #line 1897 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 162:
-#line 398 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 63:
+#line 255 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1903 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 163:
-#line 399 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 64:
+#line 256 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1909 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 164:
-#line 400 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 65:
+#line 257 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1915 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 165:
-#line 401 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 66:
+#line 258 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1921 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 166:
-#line 402 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 67:
+#line 259 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1927 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 167:
-#line 403 "parser.y" /* yacc.c:1646  */
+  case 68:
+#line 260 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1933 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 168:
-#line 404 "parser.y" /* yacc.c:1646  */
+  case 69:
+#line 261 "parser.y" /* yacc.c:1646  */
     {(yyval.ast) = (yyvsp[0].ast);}
 #line 1939 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 169:
-#line 407 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 70:
+#line 265 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-6].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-5].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-4].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1945 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 170:
-#line 408 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 71:
+#line 268 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo(NULL);}
 #line 1951 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 171:
-#line 409 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 72:
+#line 269 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1957 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 172:
-#line 410 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 73:
+#line 272 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-6].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-5].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-2].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1963 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 173:
-#line 411 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 74:
+#line 276 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-8].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-7].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-6].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-5].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-4].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-2].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1969 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 174:
-#line 412 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 75:
+#line 280 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1975 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 175:
-#line 413 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 76:
+#line 283 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-4].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 1981 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 176:
-#line 414 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 77:
+#line 288 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1987 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 177:
-#line 415 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 78:
+#line 289 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 1993 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 178:
-#line 416 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 79:
+#line 292 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
 #line 1999 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 179:
-#line 417 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 80:
+#line 293 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 2005 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 180:
-#line 418 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 81:
+#line 297 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-2].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
 #line 2011 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 181:
-#line 419 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 82:
+#line 300 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 2017 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 182:
-#line 420 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 83:
+#line 307 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 2023 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 183:
-#line 421 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 84:
+#line 309 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 2029 "parser.tab.c" /* yacc.c:1646  */
     break;
 
-  case 184:
-#line 422 "parser.y" /* yacc.c:1646  */
-    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+  case 85:
+#line 311 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-3].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
 #line 2035 "parser.tab.c" /* yacc.c:1646  */
     break;
 
+  case 86:
+#line 313 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2041 "parser.tab.c" /* yacc.c:1646  */
+    break;
 
-#line 2039 "parser.tab.c" /* yacc.c:1646  */
+  case 87:
+#line 315 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2047 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 88:
+#line 317 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2053 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 89:
+#line 319 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-3].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2059 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 90:
+#line 321 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2065 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 91:
+#line 324 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2071 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 92:
+#line 326 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2077 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 93:
+#line 328 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2083 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 94:
+#line 330 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2089 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 95:
+#line 332 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2095 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 96:
+#line 334 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2101 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 97:
+#line 336 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-3].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2107 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 98:
+#line 338 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-3].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2113 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 99:
+#line 341 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2119 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 100:
+#line 343 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2125 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 101:
+#line 345 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2131 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 102:
+#line 347 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2137 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 103:
+#line 349 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2143 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 104:
+#line 351 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2149 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 105:
+#line 353 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-3].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2155 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 106:
+#line 355 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-3].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2161 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 107:
+#line 358 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2167 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 108:
+#line 359 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2173 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 109:
+#line 360 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2179 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 110:
+#line 361 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2185 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 111:
+#line 365 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2191 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 112:
+#line 366 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2197 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 113:
+#line 367 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2203 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 114:
+#line 368 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2209 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 115:
+#line 369 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2215 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 116:
+#line 370 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2221 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 117:
+#line 376 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2227 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 118:
+#line 378 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2233 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 119:
+#line 380 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2239 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 120:
+#line 382 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-7].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-6].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-5].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2245 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 121:
+#line 387 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2251 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 122:
+#line 391 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2257 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 123:
+#line 392 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2263 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 124:
+#line 395 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2269 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 125:
+#line 396 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2275 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 126:
+#line 399 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-3].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2281 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 127:
+#line 400 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2287 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 128:
+#line 403 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
+#line 2293 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 129:
+#line 404 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2299 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 130:
+#line 407 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
+#line 2305 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 131:
+#line 408 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2311 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 132:
+#line 411 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2317 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 133:
+#line 412 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2323 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 134:
+#line 415 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2329 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 135:
+#line 417 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-4].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico)));adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2335 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 136:
+#line 419 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico)));adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2341 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 137:
+#line 421 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-7].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-6].valor_lexico)));adicionaFilho((yyval.ast), (yyvsp[-5].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-3].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2347 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 138:
+#line 425 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2353 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 139:
+#line 429 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2359 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 140:
+#line 430 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2365 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 141:
+#line 431 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
+#line 2371 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 142:
+#line 432 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
+#line 2377 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 143:
+#line 435 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2383 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 144:
+#line 436 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-1].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2389 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 145:
+#line 439 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2395 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 146:
+#line 440 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2401 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 147:
+#line 441 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2407 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 148:
+#line 442 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[-2].ast); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2413 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 149:
+#line 446 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2419 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 150:
+#line 447 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
+#line 2425 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 151:
+#line 448 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2431 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 152:
+#line 449 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2437 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 153:
+#line 450 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2443 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 154:
+#line 451 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2449 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 155:
+#line 452 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2455 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 156:
+#line 453 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-1].valor_lexico)); adicionaFilho((yyval.ast), (yyvsp[0].ast));}
+#line 2461 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 157:
+#line 456 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-3].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-1].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2467 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 158:
+#line 457 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2473 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 159:
+#line 458 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-2].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2479 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 160:
+#line 459 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[-5].valor_lexico)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-4].valor_lexico))); adicionaFilho((yyval.ast), (yyvsp[-3].ast)); adicionaFilho((yyval.ast), criaNodo((yyvsp[-2].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[-1].valor_lexico))); adicionaFilho((yyval.ast), criaNodo((yyvsp[0].valor_lexico)));}
+#line 2485 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 161:
+#line 460 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2491 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 162:
+#line 461 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2497 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 163:
+#line 462 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2503 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 164:
+#line 463 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2509 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 165:
+#line 464 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2515 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 166:
+#line 465 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2521 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 167:
+#line 466 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
+#line 2527 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 168:
+#line 467 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = (yyvsp[0].ast);}
+#line 2533 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 169:
+#line 470 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2539 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 170:
+#line 471 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2545 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 171:
+#line 472 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2551 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 172:
+#line 473 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2557 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 173:
+#line 474 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2563 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 174:
+#line 475 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2569 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 175:
+#line 476 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2575 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 176:
+#line 477 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2581 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 177:
+#line 478 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2587 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 178:
+#line 479 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2593 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 179:
+#line 480 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2599 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 180:
+#line 481 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2605 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 181:
+#line 482 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2611 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 182:
+#line 483 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2617 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 183:
+#line 484 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2623 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 184:
+#line 485 "parser.y" /* yacc.c:1646  */
+    {(yyval.ast) = criaNodo((yyvsp[0].valor_lexico));}
+#line 2629 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 2633 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2263,7 +2857,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 425 "parser.y" /* yacc.c:1906  */
+#line 488 "parser.y" /* yacc.c:1906  */
 
 
 
