@@ -65,26 +65,71 @@ extern void* arvore;
 %token <valor_lexico> TK_IDENTIFICADOR
 %token <valor_lexico> TOKEN_ERRO
 //tokens para caracteres especiais, declarados para poder usar seu valor semântico atribuido no scanner
-%token <valor_lexico> ';' ','
+%token <valor_lexico> ',' ';' ':' '(' ')' '[' ']' '{' '}' '+' '-' '|' '?' '*' '/' '<' '>' '=' '!' '&' '%' '#' '^' '.' '$'
 %start programa
 
-//Regras cujo tipo será ast, ou seja, seu valor semântico é representado como uma árvore
-%type <ast> tiposPrimitivos
-%type <ast> tipo
-%type <ast> static
-%type <ast> literais
-%type <ast> tipoConst
-%type <ast> encapsulamento
-%type <ast> fechaVarOuFunc
-%type <ast> argsAndCommands
+//Regras, em ordem alfabética, cujo tipo será ast, ou seja, seu valor semântico é representado como uma árvore
 
+%type <ast> assignment
+%type <ast> args
+%type <ast> argsAndCommands
+%type <ast> argCall
+%type <ast> argsCall
+%type <ast> blocoComandos
+%type <ast> case
+%type <ast> campo
+%type <ast> comando
+%type <ast> comandos
+%type <ast> comandoSimples
+%type <ast> comandosSemVirgula
+%type <ast> componente
+%type <ast> continueOutput
+%type <ast> depoisDeIdent
+%type <ast> do_while
+%type <ast> encapsulamento
+%type <ast> expression
+%type <ast> fechaVarOuFunc
+%type <ast> for
+%type <ast> foreach
+%type <ast> foreachList
+%type <ast> forList
+%type <ast> funcCall
+%type <ast> ifThenElse
+%type <ast> infiniteQuestionMarks
+%type <ast> input
+%type <ast> list
+%type <ast> listaCampos
+%type <ast> literais
+%type <ast> localVarDefinition
+%type <ast> negativeOrPositiveIdentifier
+%type <ast> negativeOrPositiveLiteral
+%type <ast> novoTipo
+%type <ast> operands
+%type <ast> operators
+%type <ast> optElse
+%type <ast> output
+%type <ast> parameter
+%type <ast> parameters
+%type <ast> parenthesisOrOperand
+%type <ast> pipe
+%type <ast> programa
+%type <ast> return
+%type <ast> shift
+%type <ast> shiftOp
+%type <ast> static
+%type <ast> switch
+%type <ast> tamanhoVetor
+%type <ast> tipo
+%type <ast> tipoConst
+%type <ast> tiposPrimitivos
+%type <ast> while_do
 %%
 
 programa: 
-	%empty 
+	%empty 					{$$ = criaNodo(NULL);}
 	| componente programa //{arvore = $$;}; // assinala a estrutura árvore a AST final
 componente:
-	  novoTipo
+	  novoTipo				{$$ = $1;}
 	| TK_IDENTIFICADOR depoisDeIdent // Regra introduzida para resolver conflitos
 	// Funções
 	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands
@@ -126,7 +171,7 @@ static:
 	| %empty			{$$ = NULL;} 
 ;
 tipoConst: 
-	TK_PR_CONST tipo 	{$$ = criaNodo($1); adicionaFilho((Node*)$1, (Node*)$2);} // cria uma subárvore com um nodo para CONST tendo como filho no nodo referente ao tipo
+	TK_PR_CONST tipo 	//{$$ = criaNodo();} 
 	| tipo				{$$ = $1;}
 ;
 literais: 
@@ -144,7 +189,7 @@ novoTipo:
 listaCampos: 
 	'[' list ']';
 list: 
-	campo 
+	campo 				{$$ = $1;}
 	| campo ':' list;
 campo: 
 	encapsulamento tiposPrimitivos TK_IDENTIFICADOR;
@@ -155,11 +200,13 @@ tamanhoVetor:
 
 //Funções
 args: 
-	%empty 
-	| parameters;
+	%empty 				{$$ = criaNodo(NULL);}
+	| parameters		{$$ = $1;}
+;		
 parameters : 
 	parameter ',' parameters
-	| parameter;
+	| parameter			{$$ = $1;}
+;
 parameter: 
 	tipoConst TK_IDENTIFICADOR;
 argsAndCommands : 
@@ -173,39 +220,42 @@ blocoComandos:
 	'{' comandos '}';
 comando:
 	comandoSimples ';'
-	| case; //Coloquei a regra do case aqui pois na especificação ele não está atrelado ao switch, mas apenas como marcador de lugar além disso não possui ';' no final e não pode ser usado no for
+	| case					{$$ = $1;}
+; //Coloquei a regra do case aqui pois na especificação ele não está atrelado ao switch, mas apenas como marcador de lugar além disso não possui ';' no final e não pode ser usado no for
 comandos :
-	%empty
+	%empty					{$$ = criaNodo(NULL);}
 	| comando comandos;
 
 
 comandoSimples:
-	comandosSemVirgula
-	| output
-	| funcCall
-	| foreach
-	| for;
+	comandosSemVirgula		{$$ = $1;}
+	| output				{$$ = $1;}
+	| funcCall				{$$ = $1;}
+	| foreach				{$$ = $1;}
+	| for					{$$ = $1;}
+;
 
 
 comandosSemVirgula: //comandos que são permitidos dentro das listas do for
-	localVarDefinition
-	| assignment
-	| input
-	| shift
-	| TK_PR_BREAK
-	| TK_PR_CONTINUE
-	| return
-	| ifThenElse
-	| while_do
-	| do_while
-	| switch
-	| pipe
-	| blocoComandos;
+	localVarDefinition		{$$ = $1;}
+	| assignment			{$$ = $1;}
+	| input					{$$ = $1;}
+	| shift					{$$ = $1;}
+	| TK_PR_BREAK			{$$ = criaNodo($1);}
+	| TK_PR_CONTINUE		{$$ = criaNodo($1);}
+	| return				{$$ = $1;}
+	| ifThenElse			{$$ = $1;}
+	| while_do				{$$ = $1;}
+	| do_while				{$$ = $1;}
+	| switch				{$$ = $1;}
+	| pipe					{$$ = $1;}
+	| blocoComandos			{$$ = $1;}
+;
 
 ifThenElse:
 	TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse;
 optElse:
-	%empty
+	%empty					{$$ = criaNodo(NULL);}
 	| TK_PR_ELSE blocoComandos;
 foreach:
 	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos;
@@ -220,10 +270,10 @@ do_while:
 
 
 foreachList:
-	expression
+	expression				{$$ = $1;}
 	| foreachList ',' expression ;
 forList:
-	comandosSemVirgula
+	comandosSemVirgula		{$$ = $1;}
 	| forList ',' comandosSemVirgula ;
 
 switch:
@@ -296,15 +346,15 @@ funcCall:
 	TK_IDENTIFICADOR '(' argsCall ')'
 	| TK_IDENTIFICADOR '(' ')';
 argsCall:
-	argCall
+	argCall				{$$ = $1;}
 	| argsCall ',' argCall;
 argCall:
-	expression
-	| '.';
+	expression			{$$ = $1;}
+	| '.'				{$$ = criaNodo($1);};
 
 shiftOp: 
-	TK_OC_SL 
-	| TK_OC_SR;
+	TK_OC_SL 			{$$ = criaNodo($1);}
+	| TK_OC_SR			{$$ = criaNodo($1);};
 shift: 
 	TK_IDENTIFICADOR shiftOp expression
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression
@@ -318,8 +368,9 @@ return:
 expression:
 	parenthesisOrOperand operators expression
 	| infiniteQuestionMarks operators expression
-	| parenthesisOrOperand
-	| infiniteQuestionMarks;
+	| parenthesisOrOperand		{$$ = $1;}
+	| infiniteQuestionMarks		{$$ = $1;}
+;
 infiniteQuestionMarks:
 	parenthesisOrOperand '?'
 	| infiniteQuestionMarks '?';
@@ -331,7 +382,7 @@ pipe:
 
 parenthesisOrOperand:
 	'(' expression ')'
-	| operands
+	| operands			{$$ = $1;}
 	| '-' parenthesisOrOperand
 	| '+' parenthesisOrOperand
 	| '!' parenthesisOrOperand
@@ -340,34 +391,36 @@ parenthesisOrOperand:
 	| '#' parenthesisOrOperand;
 operands:
 	TK_IDENTIFICADOR '[' expression ']'
-	|TK_IDENTIFICADOR
+	| TK_IDENTIFICADOR	{$$ = criaNodo($1);}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR
-	| TK_LIT_INT
-	| TK_LIT_FLOAT
-	| TK_LIT_TRUE
-	| TK_LIT_FALSE
-	| TK_LIT_CHAR
-	| TK_LIT_STRING
-	| funcCall
-	| pipe;
+	| TK_LIT_INT		{$$ = criaNodo($1);}
+	| TK_LIT_FLOAT		{$$ = criaNodo($1);}
+	| TK_LIT_TRUE		{$$ = criaNodo($1);}
+	| TK_LIT_FALSE		{$$ = criaNodo($1);}
+	| TK_LIT_CHAR		{$$ = criaNodo($1);}		
+	| TK_LIT_STRING		{$$ = criaNodo($1);}
+	| funcCall			{$$ = $1;}
+	| pipe				{$$ = $1;}
+;	
 operators:
-	'+'
-	| '-'
-	| '*'
-	| '/'
-	| '%'
-	| '^'
-	| TK_OC_AND
-	| TK_OC_OR
-	| '|'
-	| '&'
-	| TK_OC_EQ
-	| TK_OC_NE
-	|	TK_OC_GE
-	| TK_OC_LE
-	| '<'
-	| '>';
+	'+'				{$$ = criaNodo($1);}
+	| '-'			{$$ = criaNodo($1);}
+	| '*'			{$$ = criaNodo($1);}
+	| '/'			{$$ = criaNodo($1);}
+	| '%'			{$$ = criaNodo($1);}
+	| '^'			{$$ = criaNodo($1);}
+	| TK_OC_AND		{$$ = criaNodo($1);}
+	| TK_OC_OR		{$$ = criaNodo($1);}
+	| '|'			{$$ = criaNodo($1);}
+	| '&'			{$$ = criaNodo($1);}
+	| TK_OC_EQ		{$$ = criaNodo($1);}
+	| TK_OC_NE		{$$ = criaNodo($1);}
+	| TK_OC_GE		{$$ = criaNodo($1);}
+	| TK_OC_LE		{$$ = criaNodo($1);}
+	| '<'			{$$ = criaNodo($1);}
+	| '>'			{$$ = criaNodo($1);}
+;
 
 %%
 
