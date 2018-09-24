@@ -22,7 +22,16 @@ void imprimeToken(union Value value, int tokenType, int literType){
 	switch(tokenType)
 	{
 		case KEYWORD: printf("%s ", value.str); break;
-		case SPEC_CHAR: printf("%c ", value.c); break;
+		case SPEC_CHAR: 
+			switch(value.c)
+			{
+				case ';': printf("%c\n", value.c); break;
+				case '{': printf("%c\n", value.c); break;
+
+				case '}': printf("%c", value.c); break;
+				default: printf("%c ", value.c); break;
+			}
+			break;
 		case COMP_OPER: printf("%s ", value.str); break;
 		case IDS: printf("%s ", value.str); break;
 		case LITERAL:
@@ -36,7 +45,7 @@ void imprimeToken(union Value value, int tokenType, int literType){
 						printf("true ");
 					else printf("false ");
 					break;
-				case STRING: printf("\"%s\" ", value.str);		
+				case STRING: printf("%s ", value.str); break;		
 			}
 			break;
 	}		
@@ -45,13 +54,12 @@ void imprimeToken(union Value value, int tokenType, int literType){
 void descompila(void *voidNode){
 	Node *n = (Node*) voidNode;
 	int i = 0;
-	if(n->kidsNumber == 0){ 	// o print vai depender do tipo (PRECISO IMPLEMENTAR ISSO) e só será executado se for um nodo folha
+	if(n->token != NULL)
 		imprimeToken(n->token->value, n->token->tokenType, n->token->literType);
-	}
-	else while(i < n->kidsNumber){ // enquanto houver filhos, os explora
+	while(i < n->kidsNumber){ // enquanto houver filhos, os explora
 			descompila(n->kids[i]);
 			i++;
-		}
+	}
 }
 
 void libera(void *voidNode){ //recebe ponteiro de Node

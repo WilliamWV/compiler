@@ -127,8 +127,8 @@ extern void* arvore;
 %%
 
 programa: 
-	%empty 					{$$ = criaNodo(NULL);}
-	| componente programa 	{$$ = $1; adicionaFilho($$, $2);}
+	%empty 					{$$ = criaNodo(NULL); arvore = $$;}
+	| componente programa 	{$$ = $1; adicionaFilho($$, $2); arvore = $$;}
 ;
 componente:
 	  novoTipo							{$$ = $1;}
@@ -177,7 +177,7 @@ fechaVarOuFunc:
 
 //Regras gerais
 encapsulamento: 
-	%empty 				{$$ = NULL;}
+	%empty 				{$$ = criaNodo(NULL);}
 	| TK_PR_PRIVATE 	{$$ = criaNodo($1);}
 	| TK_PR_PUBLIC 		{$$ = criaNodo($1);}
 	| TK_PR_PROTECTED	{$$ = criaNodo($1);}
@@ -195,7 +195,7 @@ tipo :
 ; 
 static: 
 	TK_PR_STATIC 		{$$ = criaNodo($1);}
-	| %empty			{$$ = NULL;} 
+	| %empty			{$$ = criaNodo(NULL);} 
 ;
 tipoConst: 
 	TK_PR_CONST tipo 	{$$ = criaNodo($1); adicionaFilho($$, $2);} 
