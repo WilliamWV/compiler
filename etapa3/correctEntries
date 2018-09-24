@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////
+/// ARQUIVO DE TESTES USADO NA ETAPA 2 PARA TESTAR CÓDIGO SINTATICAMENTE     ///
+/// CORRETO E NA ETAPA 3 PARA TESTAR CONSTRUÇÃO DA AST.                      ///
+//////////////////////////////////////////////////////////////////////////////// 
+
 //Tipos de usuário
 class pessoa [int idade : string nome];
 class animal [protected string name : private int eyes];

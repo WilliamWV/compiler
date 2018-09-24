@@ -24,7 +24,7 @@
 #define BOOL 0XB
 #define STRING 0XC
 
-/*Usado quando token não é literal no campo correspondente ao tipo do literal*/
+/*Valor NONE é usado no campo para tipo do literal quando o token não é literal*/
 #define NONE 0xF
 
 
@@ -34,7 +34,7 @@
 //Definição de bool baseado em int para funcionar em versões mais antigas do C
 typedef int bool;
 
-
+//Definição da union que representa o valor dos tokens
 union Value{
 	int i;
 	float f;
@@ -42,7 +42,7 @@ union Value{
 	bool b;
 	char* str; 
 };
-
+// Estrutura usada para associar valor ao token
 struct lexval{
 	int lineNumber; 
 	int tokenType; 
@@ -50,6 +50,4 @@ struct lexval{
 	union Value value; //um dos campos da union acima
 };
 
-struct lexval* createLexVal(int line, int tkType, int ltType, void* val);
-
-#endif //LEXVA_H
+#endif //LEXVAL_H

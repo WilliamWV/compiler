@@ -1,7 +1,7 @@
 %{
 
 #include "parser.tab.h"
-#include <string.h> //para strdup
+#include <string.h> //strdup
 #include <stdlib.h> //atoi, atof
 #include "lexVal.h"
 #include "tree.h"
@@ -18,7 +18,7 @@ int get_line_number(void){
 
 /**
 	Função usada para associar o valor léxico de um token
-	não literal ao yylval, recebe o tipo do token
+	não literal ao yylval
 */
 void configLexValueNonLiteral(int tkType){
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
