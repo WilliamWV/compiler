@@ -19,11 +19,11 @@ void adicionaFilho(Node *pai, Node *kid){
 }
 
 void imprimeToken(union Value value, int tokenType, int literType){
-	switch(tokenType)
+	switch(tokenType) // impressao especifica para cada token
 	{
 		case KEYWORD: printf("%s ", value.str); break;
 		case SPEC_CHAR: 
-			switch(value.c)
+			switch(value.c) // deixa a descompila um pouco mais formatada
 			{
 				case ';': printf("%c\n", value.c); break;
 				case '{': printf("%c\n", value.c); break;
@@ -54,21 +54,21 @@ void imprimeToken(union Value value, int tokenType, int literType){
 void descompila(void *voidNode){
 	Node *n = (Node*) voidNode;
 	int i = 0;
-	if(n->token != NULL)
-		imprimeToken(n->token->value, n->token->tokenType, n->token->literType);
-	while(i < n->kidsNumber){ // enquanto houver filhos, os explora
-			descompila(n->kids[i]);
-			i++;
+	if(n->token != NULL) // token eh um ponteiro NULL quando foi criado a partir de uma regra empty; nesse caso nao deve ser impresso
+		imprimeToken(n->token->value, n->token->tokenType, n->token->literType); // primeiro imprimimos pai, depois os filhos na ordem em que foram adicionados
+	while(i < n->kidsNumber){ // enquanto houver filhos, os explora e os imprime
+		descompila(n->kids[i]);
+		i++;
 	}
 }
 
-void libera(void *voidNode){ //recebe ponteiro de Node
+void libera(void *voidNode){ //recebe ponteiro de Node como ponteiro void devido a especificacao, depois faz o cast
 	Node *n = (Node*) voidNode;
-	int i = 0; // talvez dê problema por eu tentar liberar sempre o primeiro ponteiro
-	while(i < n->kidsNumber){ // enquanto houver filhos, os explora
-		libera(n->kids[i]);
+	int i = 0;
+	while(i < n->kidsNumber){ // enquanto houver filhos, os explora...
+		libera(n->kids[i]); // ... e os libera
 		i++;
 	}
-	free(n->kids);
-	free(n);
+	free(n->kids);	// libera ponteiro para ponteiro de nodos (os ponteiros de nodos foram liberados no while acima, por meio de free(n))
+	free(n);	// libera o nodo
 }
