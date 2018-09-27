@@ -53,21 +53,29 @@ void imprimeToken(union Value value, int tokenType, int literType){
 void descompila(void *voidNode){
 	Node *n = (Node*) voidNode;
 	int i = 0;
-	if(n->token != NULL) // token eh um ponteiro NULL quando foi criado a partir de uma regra empty; nesse caso nao deve ser impresso
-		imprimeToken(n->token->value, n->token->tokenType, n->token->literType); // primeiro imprimimos pai, depois os filhos na ordem em que foram adicionados
-	while(i < n->kidsNumber){ // enquanto houver filhos, os explora e os imprime
-		descompila(n->kids[i]);
-		i++;
+	if(n!=NULL){
+		if(n->token != NULL) // token eh um ponteiro NULL quando foi criado a partir de uma regra empty; nesse caso nao deve ser impresso
+			imprimeToken(n->token->value, n->token->tokenType, n->token->literType); // primeiro imprimimos pai, depois os filhos na ordem em que foram adicionados
+		while(i < n->kidsNumber){ // enquanto houver filhos, os explora e os imprime
+			descompila(n->kids[i]);
+			i++;
+		}
 	}
 }
 
 void libera(void *voidNode){ //recebe ponteiro de Node como ponteiro void devido a especificacao, depois faz o cast
 	Node *n = (Node*) voidNode;
 	int i = 0;
-	while(i < n->kidsNumber){ // enquanto houver filhos, os explora...
-		libera(n->kids[i]); // ... e os libera
-		i++;
+	if(n!=NULL){
+		while(i < n->kidsNumber){ // enquanto houver filhos, os explora...
+			libera(n->kids[i]); // ... e os libera
+			i++;
+		}
+		free(n->kids);	// libera ponteiro para ponteiro de nodos (os ponteiros de nodos foram liberados no while acima, por meio de free(n))
+		if(n->token != NULL)
+			if(n->token->tokenType == KEYWORD || n->token->tokenType == COMP_OPER || n->token->tokenType == IDS || (n->token->tokenType == LITERAL && n->token->literType == STRING))
+			free(n->token->value.str);
+		free(n->token);
+		free(n);	// libera o nodo
 	}
-	free(n->kids);	// libera ponteiro para ponteiro de nodos (os ponteiros de nodos foram liberados no while acima, por meio de free(n))
-	free(n);	// libera o nodo
 }

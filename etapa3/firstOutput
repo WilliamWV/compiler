@@ -1,0 +1,347 @@
+class pessoa [ int idade : string nome ] ;
+class animal [ protected string name : private int eyes ] ;
+class fake [ public string fals : private string tru ] ;
+class oneArg [ int o ] ;
+g1 int ;
+g2 static string ;
+v1 [ 34 ] static float ;
+g3 float ;
+v4 [ 20 ] char ;
+v5 [ 21 ] static pessoa ;
+int main ( ) {
+}static pessoa someone ( int idade , const string name , float alura ) {
+}float Double ( float a ) {
+}static int foo ( int a , int b ) {
+}int main ( ) {
+{
+};
+}int main ( ) {
+{
+int var ;
+};
+}int main ( ) {
+{
+static int var ;
+};
+}int main ( ) {
+{
+const int var ;
+};
+}int main ( ) {
+{
+static const int var ;
+};
+}int main ( ) {
+{
+};
+}int main ( ) {
+{
+int var <= var2 ;
+};
+}int main ( ) {
+{
+int var <= 12 ;
+int var <= 22 ;
+int var <= 12.200000 ;
+static const int var <= - - - - + + + + - 12 ;
+static const int var <= - + - + - + - + - + - + + + + + - - - + zorzo ;
+static const int var <= 12 ;
+static const int var <= 12 ;
+static const int var <= 12 ;
+int var <= 'w' ;
+int var <= false ;
+int var <= true ;
+int var <= "stringzinha bem nice" ;
+};
+}int main ( ) {
+{
+tipo_usuario var ;
+};
+}int main ( ) {
+{
+};
+}int main ( ) {
+{
+var = - 1 ;
+};
+}int main ( ) {
+{
+var = + 1 ;
+};
+}int main ( ) {
+{
+var = 1 ;
+};
+}int main ( ) {
+{
+var [ - 1 ] = - 1 ;
+};
+}int main ( ) {
+{
+var $ campo = - 1 ;
+};
+}int main ( ) {
+{
+var [ - 1 ] $ campo = - 1 ;
+};
+}int main ( ) {
+{
+var = - 1 ;
+};
+}int main ( ) {
+{
+var = - 1.100000 ;
+};
+}int main ( ) {
+{
+var = - algumidentificador ;
+};
+}int main ( ) {
+{
+var = - vetor [ - 1 ] ;
+};
+}int main ( ) {
+{
+var = + vetor [ + 1 ] ;
+};
+}int main ( ) {
+{
+var = - vetor [ + 1 ] ;
+};
+}int main ( ) {
+{
+var = + vetor [ - 1 ] ;
+};
+}int main ( ) {
+{
+var = 1 ;
+var = 1.200000 ;
+var = algumidentificador ;
+var = 1 ;
+var = vetor [ identificadorqualquer ] ;
+};
+}int main ( ) {
+{
+var = 1 / - 2 ;
+var = 1.500000 * - 2 ;
+};
+}int main ( ) {
+{
+resultado = ( 1 * 2 + 3 - 4 / 5 ^ 6 ) ;
+resultado = 1 * 2 + 3 - 4 / ( 5 ^ 6 ) ;
+resultado = ( 1 * 2 + 3 - 4 ) / 5 ^ 6 ;
+resultado = - ( 1 * 2 + 3 - 4 ) / 5 ^ 6 ;
+resultado = + ( 1 * 2 + 3 - 4 / 5 ^ 6 ) ;
+resultado = - ( 1 ) ;
+resultado = + ( 7.200000 ) ;
+};
+}int main ( ) {
+{
+resultado = 1 * 2 + 3 - 4 / 5 ^ 6 ;
+resultado = 2 * - - 1 ;
+resultado = 1 - - 1 ;
+resultado = 1 - - - 1 ;
+resultado = 1 * * 1 ;
+resultado = 1 * - 1 ;
+};
+}int main ( ) {
+{
+input 1 * - 1 ;
+};
+}int main ( ) {
+{
+output 1 * - 1 , 1 * - 1 ;
+};
+}int main ( ) {
+{
+};
+}int main ( ) {
+{
+output 1 * - 1 , 2 , 3 ;
+};
+}int main ( ) {
+{
+output 1 * - 1 ;
+};
+}int main ( ) {
+{
+func ( arg1 , arg2 , ( 2 * 3 * ( 7 - 4 ) / 2 ) ) ;
+};
+}int main ( ) {
+{
+func ( arg1 , arg2 , . , ( 2 * 3 * ( 7 - 4 ) / 2 ) ) ;
+};
+}int main ( ) {
+{
+var << var2 ;
+var << 12 ;
+var << 17.070000 ;
+var << - 17.070000 ;
+var << + 17.070000 ;
+var << vetor [ + 7 ] ;
+var << ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+var $ algumcampo << ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+var [ 17 - var2 / - ( - 5 ) ] << ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+var [ 17 - var2 / - ( - 5 ) ] $ algumcampo << ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+var << - 1 ;
+var >> var2 ;
+var >> 12 ;
+var >> 17.070000 ;
+var >> - 17.070000 ;
+var >> + 17.070000 ;
+var >> vetor [ + 7 ] ;
+var >> ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+var $ algumcampo >> ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+var [ 17 - var2 / - ( - 5 ) ] >> ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+var [ 17 - var2 / - ( - 5 ) ] $ algumcampo >> ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+};
+}int main ( ) {
+{
+return var ( arg1 , arg2 , . , ( 2 * 3 * ( 7 - 4 ) / 2 ) ) ;
+return - var ( arg1 , arg2 , . , ( 2 * 3 * ( 7 - 4 ) / 2 ) ) ;
+return + var ( arg1 , arg2 , . , ( 2 * 3 * ( 7 - 4 ) / 2 ) ) ;
+return - ( - var ( arg1 , arg2 , . , ( 2 * 3 * ( 7 - 4 ) / 2 ) ) ) ;
+return + ( var ( arg1 , arg2 , . , ( 2 * 3 * ( 7 - 4 ) / 2 ) ) ) ;
+return var2 ;
+return 12 ;
+return 17.070000 ;
+return - 17.070000 ;
+return + 17.070000 ;
+return vetor [ + 7 ] ;
+return ( 2 * 3 * ( 7 - 4 ) / 2 ) ;
+return - ( - var ) ;
+return + ( + var ) ;
+return - var ;
+continue ;
+break ;
+};
+}int main ( ) {
+{
+var = ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! var ;
+var = var && var ;
+var = var || var ;
+var = var & var ;
+var = var | var ;
+var = 1 == 2 == 3 == 4 + 7 && true - false == 12 | var2 & john ;
+var = 1 && true ;
+var = * * * * * * * ptr ;
+var = * ptr ;
+var = 12 * val ;
+var = # hashtable ;
+var = 1 ? + 2 && true ;
+var = 1 ? ? ? ? ? + 2 && true ;
+var = ( 1 + 2 && true ) ? ;
+var = ( 1 + 2 && true ) ? ? ? ? ? + z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ? ? ? ? ? ? ? ;
+var = 1 ? ? ? ? + - 7.700000 ;
+var = 1 ? + - 7.289850 ;
+var = 1 + ops ? ;
+var = 1 + ops ? ? ? ;
+var = - - - ! + & # * * * ( * ptr ) + ops ? ? ? ;
+var = ( ( teste ? ) ? ) ? ;
+var = ( ( ( teste ? ) ? ) ? ) ;
+var = & var1 && & var2 ? ? ? ;
+var = & var1 ? && & var2 ? ? ? ;
+};
+}int main ( ) {
+{
+var = z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+func ( arg1 , arg2 , z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ) ;
+output 1 * - 1 , z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) , 1 * - 1 ;
+input z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+resultado = z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+var = - vetor [ z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ] ;
+var = 2 + - - - - - 3 / - - - - + + + - - - vetor [ z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ] ;
+var = z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+var [ z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ] >> z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+var [ z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ] $ algumcampo >> z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+};
+}int main ( ) {
+int x <= 12 ;
+float y <= 3.140000 ;
+const string z <= "zorzo" ;
+const string w <= "will" ;
+if ( x > y ) then {
+x = y ;
+if ( 2 + 3 * 4 ^ 9 - 91 ) then {
+foreach ( i : 1 , 2 , 3 , 5 , a < b , true && false ) {
+output 1 , 2 , 3 , 4 ^ ( 5 - 5 ) + 3 ;
+};
+for ( int i <= 12 , float j <= 900 , x = 3 : true && false || true : i = j ^ ( 1 / 2 ) , j = i + 94 * x , x = i * 13 ) {
+int var ;
+input var ;
+continue ;
+};
+}else {
+while ( true ) do {
+v = sleep ( 987 ) ;
+switch ( v ) {
+case 2 : case 3 : output 12 ;
+break ;
+};
+};
+do {
+string goto <= "Pq não tem goto?" ;
+}while ( x == y ) ;
+};
+};
+}int main ( ) {
+static int x <= "abc" ;
+var4 [ 4 ] = 'a' ;
+var [ 'c' && 1 + "will e zorzo estiveram aqui" ] = "stringzinha bem nice pro pai" ;
+var = "tropecei no teclado" ;
+var = 1 / "stringdivisora" && true || 'c' + 'b' ;
+endereco = & var ;
+endereco = & ( var ) ;
+}int main ( ) {
+identificador [ 1 + "expressao" ] $ campo = identificador [ 1 + "expressao" ] $ campo ;
+identificador $ campo = identificador [ 1 + "expressao" ] $ campo ;
+resultado = identificador [ 1 + "expressao" ] $ campo - identificador [ 1 + "expressao" ] $ campo ;
+resultado = identificador $ campo && identificador [ 1 + "expressao" ] $ campo ;
+}int main ( ) {
+bitwise = var1 & var2 ;
+endereco = & var ;
+endereco = - ! + & x ;
+endereco = & ( var ) ;
+endereco = & ( & var2 ) ;
+val = var1 && & var2 ;
+val = & var1 && & var2 ;
+val = & var1 && & & var2 ;
+val = & var1 && & ( & var2 ) ;
+val = & var1 && & ( & ( & ( & var2 ) ) ) ;
+var = * * * * * * * ptr ;
+var = * ptr ;
+var = 12 * val ;
+var = 12 * * 12 ;
+var = 12 * * identificador ;
+var = 12 + ( * ptr - 7 ) ;
+var = ( * * * * * * ptr ) ;
+var = ( ( ( * * * * * ptr ) ) ) ;
+var = * * * * ( * ( * * * * * ptr ) ) ;
+var = * * * * ( * ( ( * * * * * ptr ) ) ) ;
+var = * * * * * - 17.500000 ;
+var = # # # # # # # zorzo + # # # # # # # # # # - - - - + - + - - - - & zorzo ;
+var = ! ! ! ! ! ! ! ! ! ! ! ! ! * * * * ( * ( ( * * * * * ptr ) ) ) % - - - + + ! ! - # # # # # # # zorzo + # # # # # # # # # # - - - - + - + - - - - & zorzo ;
+}int main ( ) {
+identificador = 1 + true && zorzo || z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ;
+identificador = 1 + true && zorzo || ( ( ( ( ( z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ) ) ) ) ) ;
+identificador = 1 + true && zorzo || * ! ! # & * * * * * ( ( * ( ( ( z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ) ) ) ) ) ;
+identificador = 1 + true && zorzo || * ! ! # & ( & * * * * * ( ( * ( ( ( z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ) ) ) ) ) ) ;
+identificador [ 1 + "expressao" - * ! ! # & * * * * * ( ( * ( ( ( z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ) ) ) ) ) ] $ campo = identificador [ 1 + "expressao" % * ! ! # & * * * * * ( ( * ( ( ( z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ) ) ) ) ) ] $ campo || * ! ! # & * * * * * ( ( * ( ( ( z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) %|% w ( ) %>% last ( func ) ) ) ) ) ) ;
+identificador $ campo = identificador [ 1 + "expressao" - - z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) ] $ campo / z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) * z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) ;
+resultado = identificador [ 1 + "expressao" + # # # ( * z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) ) ] $ campo - identificador [ 1 + "expressao" ] $ campo ;
+resultado = identificador $ campo && identificador [ 1 + "expressao" ] $ campo + 'c' + "string" + z ( . ) %>% w ( arg1 , arg2 , . , atg4 ) + - - - 12.700000 ;
+}int main ( ) {
+for ( i = 0 , j = 9 , k = 20 , if ( true ) then {
+output "will" , 3 ;
+}: 2 * 3 + true ^ 4 / false : {
+for ( s = 9 , t = s + 3 : true : s = s + t ) {
+};
+}) {
+input a ;
+output a , a * a , a * a * a ;
+id = f ( ) %>% g ( . ) + 2 ;
+id = f ( ) %>% g ( . ) || h ( z ) ;
+};
+return 0 ;
+}
