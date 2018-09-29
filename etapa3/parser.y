@@ -87,6 +87,7 @@ extern Node *danglingNodes;
 %type <ast> comandoSimples
 %type <ast> comandosSemVirgula
 %type <ast> componente
+%type <ast> componentes
 %type <ast> continueOutput
 %type <ast> depoisDeIdent
 %type <ast> do_while
@@ -161,8 +162,12 @@ extern Node *danglingNodes;
 ////////////////////////////////////////////////////////////////////////////////
 
 programa: 
-	%empty 					{$$ = criaNodo(NULL); arvore = $$; parsingSucceded = TRUE;}
-	| componente programa 	{ $$ = $1; adicionaFilho($$, $2); arvore = $$; parsingSucceded = TRUE;}
+	componentes					{$$ = $1; arvore = $$; parsingSucceded = TRUE;}
+;
+
+componentes: 
+	%empty 						{$$ = criaNodo(NULL);}
+	| componente componentes 	{ $$ = $1; adicionaFilho($$, $2);}
 ;
 componente:
 	  novoTipo							{$$ = $1;}
