@@ -11,6 +11,8 @@ typedef struct node{
 
 Node* criaNodo(struct lexval* token);
 
+Node* criaNodoDangling(struct lexval* token);
+
 void adicionaFilho(Node *pai, Node *kid);
 
 void imprimeToken(union Value value, int tokenType, int literType);
@@ -18,6 +20,13 @@ void imprimeToken(union Value value, int tokenType, int literType);
 void descompila(void *voidNode);
 
 void libera(void *voidNode);
+
+void liberaDanglingScanner(Node *n);
+
+void liberaDanglingParser(Node *n);
+
+void nullifyPointer(struct lexval* token, Node *n);
+
 
 
 #endif /* TREE_H */

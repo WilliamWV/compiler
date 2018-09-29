@@ -11,6 +11,9 @@ int yyerror (char const *s){
 
 extern void* arvore;
 
+int parsingSucceded = FALSE;
+extern Node *danglingNodes;
+
 %}
 %define parse.error verbose
 %verbose
@@ -124,6 +127,20 @@ extern void* arvore;
 %type <ast> tipoConst
 %type <ast> tiposPrimitivos
 %type <ast> while_do
+%destructor { /* Nao podemos desalocar os tokens aqui, precisamos apenas da liberaDanglingScanner();
+		Se tentarmos fazer algo aqui, acabamos tentando desalocar alguns tokens mais de uma vez.
+		Minha conclusao eh de que o token, apesar de ter ocorrido erro no parsing, eh posto em um nodo
+		por alguma das acoes que foram finalizadas antes de se achar o erro. Com isso, acabariamos
+		tentando desalocar o mesmo token tanto aqui quanto no destrutor de <ast>.
+		OBS.: liberaDanglingParser() desaloca os nodos criados no parser que nao sao adicionados
+		      à arvore, assim como os tokens presentes nesses nodos. Ai que mora o problema de
+		      tentar liberar o mesmo token mais de uma vez se fizessemos algo no destrutor atual.
+	  */} <valor_lexico>
+%destructor {
+	if(parsingSucceded == FALSE){
+		liberaDanglingParser($$);
+	}
+} <ast>
 %%
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,8 +161,8 @@ extern void* arvore;
 ////////////////////////////////////////////////////////////////////////////////
 
 programa: 
-	%empty 					{$$ = criaNodo(NULL); arvore = $$;}
-	| componente programa 	{$$ = $1; adicionaFilho($$, $2); arvore = $$;}
+	%empty 					{parsingSucceded = TRUE; $$ = criaNodo(NULL); arvore = $$;}
+	| componente programa 	{parsingSucceded = TRUE; $$ = $1; adicionaFilho($$, $2); arvore = $$;}
 ;
 componente:
 	  novoTipo							{$$ = $1;}

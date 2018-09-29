@@ -9,24 +9,40 @@
 
 int num_lines = 1;
 
-int get_line_number(void){
-	return num_lines;
+Node *danglingNodes;
 
+extern int contaTokens;
+
+int danglingInitialized = FALSE;
+
+void inicializaDanglingNodes(){
+	if(danglingInitialized == FALSE){
+		danglingNodes = criaNodoDangling(NULL);
+		danglingInitialized = TRUE;
+	}
 }
 
 
+int get_line_number(void){
+	return num_lines;
+}
 
 /**
 	Função usada para associar o valor léxico de um token
 	não literal ao yylval
 */
 void configLexValueNonLiteral(int tkType){
+	contaTokens++;
+	inicializaDanglingNodes();
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines; 
 	yylval.valor_lexico->tokenType = tkType;
 	yylval.valor_lexico->literType = NONE;
+	yylval.valor_lexico->tokenInAst = FALSE;
 	yylval.valor_lexico->value.str = strdup(yytext); //usa str pois o valor retornado por strdup também é uma cadeia de caracteres
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 }
+
 
 %}
 
@@ -91,71 +107,103 @@ protected { configLexValueNonLiteral(KEYWORD); return TK_PR_PROTECTED; }
 "%|%" { configLexValueNonLiteral(COMP_OPER); return TK_OC_BASH_PIPE; }
 
 {SPECIALCHAR} {
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = SPEC_CHAR;
 	yylval.valor_lexico->literType = NONE;
 	yylval.valor_lexico->value.c = yytext[0];//um caractere
+	yylval.valor_lexico->tokenInAst = FALSE;
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return *yytext;
 }
 
 false { 
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));	
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
 	yylval.valor_lexico->value.b = FALSE;
+	yylval.valor_lexico->tokenInAst = FALSE;
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_FALSE; 
 }
 true { 
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = BOOL;
 	yylval.valor_lexico->value.b = TRUE;
+	yylval.valor_lexico->tokenInAst = FALSE;
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_TRUE; 
 }
 
 {ALPHABETIC}{ALPHANUMERIC}* { configLexValueNonLiteral(IDS); return TK_IDENTIFICADOR; }
 
 {INTLIT} { 
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = INT;
 	yylval.valor_lexico->value.i = atoi(yytext);
+	yylval.valor_lexico->tokenInAst = FALSE;
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_INT; 
 }
 {FLOATLIT} { 
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
 	yylval.valor_lexico->value.f = atof(yytext);
+	yylval.valor_lexico->tokenInAst = FALSE;
+	//adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_FLOAT; 
 }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { // notacao cientifica
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = FLOAT;
 	yylval.valor_lexico->value.f = atof(yytext);
+	yylval.valor_lexico->tokenInAst = FALSE;
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_FLOAT; 
 } 
 '({ASCIIALPHABET}|{CONTROLCHAR})' { 
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = CHAR;
 	yylval.valor_lexico->value.c = yytext[1];//um caractere que esta entre duas aspas simples
+	yylval.valor_lexico->tokenInAst = FALSE;
+	//adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_CHAR; 
 }
 \"[^\"\n]*\" {
+	inicializaDanglingNodes();
+	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
 	yylval.valor_lexico->literType = STRING;
 	yylval.valor_lexico->value.str = strdup(yytext);
+	yylval.valor_lexico->tokenInAst = FALSE;
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_STRING;
 }
 

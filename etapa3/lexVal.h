@@ -44,6 +44,7 @@ union Value{
 };
 // Estrutura usada para associar valor ao token
 struct lexval{
+	int tokenInAst;
 	int lineNumber; 
 	int tokenType; 
 	int literType;

@@ -10,6 +10,7 @@ Este arquivo não pode ser modificado.
 void *arvore = NULL;
 void descompila (void *arvore);
 void libera (void *arvore);
+int contaTokens = 0;
 
 int main (int argc, char **argv)
 {
