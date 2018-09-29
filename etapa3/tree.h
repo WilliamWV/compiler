@@ -27,6 +27,7 @@ void liberaDanglingParser(Node *n);
 
 void nullifyPointer(struct lexval* token, Node *n);
 
+void contaNodosNaRaiz(Node *n);
 
 
 #endif /* TREE_H */

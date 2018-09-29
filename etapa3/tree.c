@@ -3,6 +3,10 @@
 #include <stdlib.h>
 
 int liberaDanglingUsed = FALSE;
+
+int nodosCriados = 0;
+int contaNodosRaiz = 0;
+
 extern Node *danglingNodes;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -12,6 +16,7 @@ extern Node *danglingNodes;
 /// token da entrada capturado pelo scanner.l e analisado pelo parser.y      ///
 ////////////////////////////////////////////////////////////////////////////////
 Node* criaNodo(struct lexval* token){
+	nodosCriados++;
 	if(token != NULL)
 		token->tokenInAst = TRUE;
 	Node *node = malloc(sizeof(Node));
@@ -219,5 +224,16 @@ void nullifyPointer(struct lexval* token, Node *n){
 		}
 		if(n->token == token)
 			n->token = NULL;
+	}
+}
+
+void contaNodosNaRaiz(Node *n){
+	int i =0;
+	if(n!=NULL){
+		while(i < n->kidsNumber){ // enquanto houver filhos, os explora...
+				contaNodosNaRaiz(n->kids[i]);
+				i++;				
+		}
+		contaNodosRaiz++;
 	}
 }
