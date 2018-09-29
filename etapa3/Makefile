@@ -27,7 +27,7 @@ clean:
 	rm -rf $(BISON_H)
 	rm -rf *.o
 	rm -rf $(REPORT_FILE)
-	
+	rm -rf $(EXEC)
 #Regra para gerar arquivo com descrição da gramática
 verb: $(BISON_SRC)
 	bison -d $(BISON_SRC) --report-file=report

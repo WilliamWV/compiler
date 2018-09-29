@@ -11,8 +11,6 @@ int num_lines = 1;
 
 Node *danglingNodes;
 
-extern int contaTokens;
-
 int danglingInitialized = FALSE;
 
 void inicializaDanglingNodes(){
@@ -32,7 +30,6 @@ int get_line_number(void){
 	não literal ao yylval
 */
 void configLexValueNonLiteral(int tkType){
-	contaTokens++;
 	inicializaDanglingNodes();
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines; 
@@ -108,7 +105,6 @@ protected { configLexValueNonLiteral(KEYWORD); return TK_PR_PROTECTED; }
 
 {SPECIALCHAR} {
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = SPEC_CHAR;
@@ -121,7 +117,6 @@ protected { configLexValueNonLiteral(KEYWORD); return TK_PR_PROTECTED; }
 
 false { 
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));	
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
@@ -133,7 +128,6 @@ false {
 }
 true { 
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
@@ -148,7 +142,6 @@ true {
 
 {INTLIT} { 
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
@@ -160,7 +153,6 @@ true {
 }
 {FLOATLIT} { 
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
@@ -172,7 +164,6 @@ true {
 }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { // notacao cientifica
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
@@ -184,7 +175,6 @@ true {
 } 
 '({ASCIIALPHABET}|{CONTROLCHAR})' { 
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;
@@ -196,7 +186,6 @@ true {
 }
 \"[^\"\n]*\" {
 	inicializaDanglingNodes();
-	contaTokens++;
 	yylval.valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	yylval.valor_lexico->lineNumber = num_lines;
 	yylval.valor_lexico->tokenType = LITERAL;

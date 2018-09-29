@@ -1,1 +1,3 @@
-int main(){ char zorzo =}
+int main(){
+	char c <= 'abc';
+}

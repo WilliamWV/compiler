@@ -1,8 +1,4 @@
-/*
-Função principal para realização da E3.
 
-Este arquivo não pode ser modificado.
-*/
 #include <stdio.h>
 #include "parser.tab.h" //arquivo gerado com bison -d parser.y
 #include "tree.h"
@@ -10,13 +6,15 @@ Este arquivo não pode ser modificado.
 void *arvore = NULL;
 void descompila (void *arvore);
 void libera (void *arvore);
-int contaTokens = 0;
+//função definida em lex.yy.c para desalocar memória usada pelo flex
+extern int yylex_destroy  (void); 
 
 int main (int argc, char **argv)
 {
-  int ret = yyparse(); 
-  descompila (arvore);
-  libera(arvore);
-  arvore = NULL;
-  return ret;
+	int ret = yyparse(); 
+	descompila (arvore);
+	libera(arvore);
+	yylex_destroy();
+	arvore = NULL;
+	return ret;
 }

@@ -4,8 +4,13 @@
 
 int liberaDanglingUsed = FALSE;
 extern Node *danglingNodes;
-extern int contaCriacaoDeNodos;
 
+////////////////////////////////////////////////////////////////////////////////
+/// Node* criaNodo(struct lexval* token)                                     ///
+/// função chamada pelas ações do bison definidas em parser.y seu objetivo é ///
+/// construir um nodo da AST a partir de uma estrutura que represente um     ///
+/// token da entrada capturado pelo scanner.l e analisado pelo parser.y      ///
+////////////////////////////////////////////////////////////////////////////////
 Node* criaNodo(struct lexval* token){
 	if(token != NULL)
 		token->tokenInAst = TRUE;
@@ -17,21 +22,47 @@ Node* criaNodo(struct lexval* token){
 	return node;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// Node* criaNodoDangling(struct lexval* token)                             ///
+/// função chamada pelo scanner.l logo após criar um token, seu objetivo se  ///
+/// relaciona a manter registro de todos os tokens alocados o quanto antes   ///
+/// para que se possa liberar memória correspondente a esses tokens em caso  ///
+/// de erro no parse que faça que um nodo da AST correspondente a esse token ///
+/// não seja criado.                                                         ///
+///                                                                          ///
+/// Portanto essa função é útil quando a criaNodo acaba não sendo chamada    ///
+/// devido a situações de erro no parse. O tratamento, realizado em          ///
+/// scanner.l acaba sendo feito criando uma segunda árvore com nodos de      ///
+/// mesma estrutura da AST que não possui a mesma ordem lógica e cujos nodos ///
+/// não ficam órfãos em caso de erro. Em situação normal, ou seja, sem erros,///
+/// essa segunda árvore vai acabar sendo desalocada pela libera pois todos   ///
+/// seus ponteiros também estarão na AST do programa.                        ///
+////////////////////////////////////////////////////////////////////////////////
 Node* criaNodoDangling(struct lexval* token){
 	Node *node = malloc(sizeof(Node));
 	node->token = token;
 	node->kidsNumber = 0;
-	node->kids = (Node**)malloc(sizeof(Node**)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
+	node->kids = (Node**)malloc(sizeof(Node**));
 
 	return node;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+/// void adicionaFilho(Node *pai, Node *kid)                                 ///
+/// função chamada pelas ações do bison definidas em parser.y seu objetivo é ///
+/// adicionar um nodo já criado como filho de outro nodo, isso é feito       ///
+/// seguindo a ordem explicada na observação 6 das ações em parser.y         ///
+////////////////////////////////////////////////////////////////////////////////
 void adicionaFilho(Node *pai, Node *kid){
 	pai->kidsNumber = pai->kidsNumber + 1;
 	pai->kids = (Node**)realloc(pai->kids, pai->kidsNumber * sizeof(Node**)); // aloca espaço para mais um ponteiro para um ponteiro de Node
 	pai->kids[pai->kidsNumber - 1] = kid; // acessa o ponteiro recém alocado e guarda nele um ponteiro de Node
 }
-
+////////////////////////////////////////////////////////////////////////////////
+/// void imprimeToken(union Value value, int tokenType, int literType)       ///
+/// função chamada pela descompila com resposábilidade de imprimir um token  ///
+/// considerando seu valor, o tipo do token e, se o token é um literal, o    ///
+/// tipo do literal                                                          ///
+////////////////////////////////////////////////////////////////////////////////
 void imprimeToken(union Value value, int tokenType, int literType){
 	switch(tokenType) // impressao especifica para cada token
 	{
@@ -64,7 +95,12 @@ void imprimeToken(union Value value, int tokenType, int literType){
 			break;
 	}		
 }
-
+////////////////////////////////////////////////////////////////////////////////
+/// void descompila(void *voidNode)                                          ///
+/// função segue a especficicação do trabalho percorrendo a árvore a partir  ///
+/// da raiz. Gera um programa semanticamente equivalente ao programa entrado ///
+/// que gerou a AST.                                                         ///
+////////////////////////////////////////////////////////////////////////////////
 void descompila(void *voidNode){
 	Node *n = (Node*) voidNode;
 	int i = 0;
@@ -78,6 +114,15 @@ void descompila(void *voidNode){
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/// void libera(void *voidNode)                                              ///
+/// função segue a especficicação do trabalho e libera a memória alocada no  ///
+/// processo de construção da AST, inicialmente são liberados os nodos que   ///
+/// não foram adicionados à AST final devido a erro, mas que estão na árvore ///
+/// auxiliar, em seguida vai percorrendo a AST de forma recursiva liberando  ///
+/// os nodos correspondentes aos filhos até que todos os nodos tenham sido   ///
+/// desalocados                                                              ///
+////////////////////////////////////////////////////////////////////////////////
 void libera(void *voidNode){ //recebe ponteiro de Node como ponteiro void devido a especificacao, depois faz o cast
 	if(liberaDanglingUsed == FALSE){ // desaloca danglingNodes e seus possiveis tokens nunca utilizados no parser.
 		liberaDanglingUsed = TRUE;
@@ -91,6 +136,7 @@ void libera(void *voidNode){ //recebe ponteiro de Node como ponteiro void devido
 			i++;
 		}
 		free(n->kids);	// libera ponteiro para ponteiro de nodos (os ponteiros de nodos foram liberados no while acima, por meio de free(n))
+		//libera memória alocada para string se foi usado strdup
 		if(n->token != NULL)
 			if(n->token->tokenType == KEYWORD || n->token->tokenType == COMP_OPER || n->token->tokenType == IDS || (n->token->tokenType == LITERAL && n->token->literType == STRING))
 			free(n->token->value.str);
@@ -99,7 +145,14 @@ void libera(void *voidNode){ //recebe ponteiro de Node como ponteiro void devido
 	}
 }
 
-// Libera nodos criados no scanner. Tais nodos sao criados para armazenar todos os tokens criados. Isso eh necessario pois o scanner pode alocar tokens que nunca serao postos em um nodo pelo parser (pode-se verificar com a entrada "zor z@r;" de wrongEntry2). Tais tokens terao tokenInAst == FALSE, e serao desalocados nessa funcao.
+////////////////////////////////////////////////////////////////////////////////
+/// void liberaDanglingScanner(Node *n)                                      ///
+/// Libera nodos criados no scanner. Tais nodos sao criados para armazenar   ///
+/// todos os tokens encontrados. Isso eh necessario pois o scanner pode      ///
+/// alocar tokens que nunca serao postos em um nodo pelo parser (pode-se     ///
+/// verificar com a entrada "zor z@r;" de wrongEntry2). Tais tokens terao    ///
+/// tokenInAst == FALSE, e serao desalocados nessa funcao.                   ///
+////////////////////////////////////////////////////////////////////////////////
 void liberaDanglingScanner(Node *n){ //recebe ponteiro de Node como ponteiro void devido a especificacao, depois faz o cast
 	int i = 0;
 	if(n!=NULL){
@@ -108,7 +161,7 @@ void liberaDanglingScanner(Node *n){ //recebe ponteiro de Node como ponteiro voi
 			i++;
 		}
 		free(n->kids);	// libera ponteiro para ponteiro de nodos (os ponteiros de nodos foram liberados no while acima, por meio de free(n))
-		
+		//libera memória alocada para string se foi usado strdup
 		if(n->token != NULL){
 			if(n->token->tokenInAst == FALSE){
 				if(n->token->tokenType == KEYWORD || n->token->tokenType == COMP_OPER || n->token->tokenType == IDS || (n->token->tokenType == LITERAL && n->token->literType == STRING))
@@ -120,8 +173,12 @@ void liberaDanglingScanner(Node *n){ //recebe ponteiro de Node como ponteiro voi
 	}
 }
 
-
-// Libera nodos "soltos" criados no parser quando ha erro; esses nodos terao tokenInAst == TRUE, ja que sao criados com criaNodo(). Funcao eh chamada pelo destrutor de <ast>.
+////////////////////////////////////////////////////////////////////////////////
+/// void liberaDanglingParser(Node *n)                                       ///
+/// Libera nodos "soltos" criados no parser quando ha erro; esses nodos      ///
+/// terao tokenInAst == TRUE, ja que sao criados com criaNodo(). Funcao eh   /// 
+/// chamada pelo destrutor de <ast>.                                         ///
+////////////////////////////////////////////////////////////////////////////////
 void liberaDanglingParser(Node *n){ //recebe ponteiro de Node como ponteiro void devido a especificacao, depois faz o cast
 	int i = 0;
 	if(n!=NULL){
@@ -131,7 +188,7 @@ void liberaDanglingParser(Node *n){ //recebe ponteiro de Node como ponteiro void
 			i++;
 		}
 		free(n->kids);	// libera ponteiro para ponteiro de nodos (os ponteiros de nodos foram liberados no while acima, por meio de free(n))
-		
+		//libera memória alocada para string se foi usado strdup
 		if(n->token != NULL){
 				if(n->token->tokenType == KEYWORD || n->token->tokenType == COMP_OPER || n->token->tokenType == IDS || (n->token->tokenType == LITERAL && n->token->literType == STRING))
 					free(n->token->value.str);
@@ -141,7 +198,18 @@ void liberaDanglingParser(Node *n){ //recebe ponteiro de Node como ponteiro void
 	}
 }
 
-// Quando o parser vai liberar um nodo+token, eh necessario checar se o ponteiro para o token que vai ser desalocado esta em danglingNodes. Se estiver, devemos fazer com que o ponteiro, em danglingNodes, para tal token aponte para NULL. Isso se faz necessario pois, apesar de em liberaDanglingScanner(Node *n) apenas os tokens com tokenInAst == FALSE serem desalocados, acabamos percorrendo todos os tokens criados pelo scanner; logo, se nao apontarmos o ponteiro para NULL, tentaremos acessar um ponteiro que ja foi liberado.
+////////////////////////////////////////////////////////////////////////////////
+/// void nullifyPointer(struct lexval* token, Node *n)                       ///
+/// Quando o parser vai liberar um nodo+token, eh necessario checar se o     ///
+/// ponteiro para o token que vai ser desalocado esta em danglingNodes. Se   ///
+/// estiver, devemos fazer com que o ponteiro, em danglingNodes, para tal    ///
+/// token aponte para NULL. Isso se faz necessario pois, apesar de em        ///
+/// liberaDanglingScanner(Node *n) apenas os tokens com tokenInAst == FALSE  ///
+/// serem desalocados, acabamos percorrendo todos os tokens criados pelo     ///
+/// scanner; logo, se nao apontarmos o ponteiro para NULL, tentaremos        ///
+/// acessar um ponteiro que ja foi liberado.                                 ///
+////////////////////////////////////////////////////////////////////////////////
+
 void nullifyPointer(struct lexval* token, Node *n){
 	int i = 0;
 	if(n!=NULL){

@@ -5,7 +5,6 @@ cat firstOutput | ./etapa3 > secondOutput
 diff firstOutput secondOutput
 
 ##### Remoção de arquivos temporários #####
-make clean > dump
 rm -rf dump
 rm -rf firstOutput
 rm -rf secondOutput
