@@ -159,7 +159,7 @@ true {
 	yylval.valor_lexico->literType = FLOAT;
 	yylval.valor_lexico->value.f = atof(yytext);
 	yylval.valor_lexico->tokenInAst = FALSE;
-	//adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_FLOAT; 
 }
 ({FLOATLIT}|{INTLIT})(E|e){INTLIT} { // notacao cientifica
@@ -181,7 +181,7 @@ true {
 	yylval.valor_lexico->literType = CHAR;
 	yylval.valor_lexico->value.c = yytext[1];//um caractere que esta entre duas aspas simples
 	yylval.valor_lexico->tokenInAst = FALSE;
-	//adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
+	adicionaFilho(danglingNodes, criaNodoDangling(yylval.valor_lexico));
 	return TK_LIT_CHAR; 
 }
 \"[^\"\n]*\" {
