@@ -161,8 +161,8 @@ extern Node *danglingNodes;
 ////////////////////////////////////////////////////////////////////////////////
 
 programa: 
-	%empty 					{parsingSucceded = TRUE; $$ = criaNodo(NULL); arvore = $$;}
-	| componente programa 	{parsingSucceded = TRUE; $$ = $1; adicionaFilho($$, $2); arvore = $$;}
+	%empty 					{$$ = criaNodo(NULL); arvore = $$; parsingSucceded = TRUE;}
+	| componente programa 	{ $$ = $1; adicionaFilho($$, $2); arvore = $$; parsingSucceded = TRUE;}
 ;
 componente:
 	  novoTipo							{$$ = $1;}
