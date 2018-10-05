@@ -52,24 +52,17 @@ typedef struct hashContent{
 	int size;                     // tamanho do símbolo derivado do tipo
 	FuncArg* args;                // argumentos e seus tipos, se for função
 	UserTypeField* userFields;    // campos e seus tipos, se for tipo de usuário
-	struct lexval;                // valores associados ao yylval do símbolo
-}HashContent;
+	struct lexval valor_lexico;   // valores associados ao yylval do símbolo
+}Hash;
 
+Hash* Table;
 
-////////////////////////////////////////////////////////////////////////////////
-/// Hash                                                                     ///
-/// Estrutura usada para representar uma tabela de símbolos, possui o        ///
-/// conteúdo da tabela de símbolos além de algumas variáveis para controle   ///
-/// do seu tamanho                                                           ///
-////////////////////////////////////////////////////////////////////////////////
-typedef struct hash{
-	HashContent* content;  // conteúdo da hash
-	long size;             // quantidade de símbolos da hash
-	long allocatedSize;    // tamanho alocado para a hash, essa variável pode 
-                           // ser usada no caso de desejarmos reduzir o overhead
-                           // alocando a memória em blocos ao invés de uma vez a
-                           // a cada símbolo
-}Hash
+long createSymbol(struct lexval valor_lexico, int nature, int type);
 
-long newKey = 0;  // chave que vai ser usada na tabela de símbolos
+void addFuncArg(long symbolKey, FuncArg* arg);
+
+void addField(long symbolKey, UserTypeField* utf);
+
+Hash getSymbol(long symbolKey);
+
 
