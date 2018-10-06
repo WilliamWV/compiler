@@ -1,5 +1,7 @@
 #include "lexVal.h"
 
+
+#define HASH_SIZE 40009
 /* Reusa tipos de literais definidos em lexVal.h
 #define INT 0X8
 #define FLOAT 0x9
@@ -8,6 +10,7 @@
 #define STRING 0XC
 */
 #define USER 0xD //adiciona tipo de usuário
+#define VEC 0xE  //adiciona tipo vetor
 ////////////////////////////////////////////////////////////////////////////////
 /// FuncArg                                                                  ///
 /// Estrutura usada para armazenar informações de um argumento de função, é  ///
@@ -50,19 +53,48 @@ typedef struct hashContent{
 	int nature;                   // natureza, como definido em natureza.h
 	int type;                     // tipo de dado do símbolo
 	int size;                     // tamanho do símbolo derivado do tipo
-	FuncArg* args;                // argumentos e seus tipos, se for função
-	UserTypeField* userFields;    // campos e seus tipos, se for tipo de usuário
-	struct lexval valor_lexico;   // valores associados ao yylval do símbolo
+	int argsNum;	              // quantidade de argumentos na função
+	FuncArg** args;               // argumentos e seus tipos, se for função
+	int fieldsNum;                // quantidade de campos no tipo de usuário
+	UserTypeField** fields;   // campos e seus tipos, se for tipo de usuário
+	struct lexval* valor_lexico;  // valores associados ao yylval do símbolo
 }Hash;
 
-Hash* Table;
+////////////////////////////////////////////////////////////////////////////////
+/// HashStack                                                                ///
+/// pilha de tabela de símbolos, implementada como uma lista simplesmente    ///
+/// encadeada de tabelas de símbolos.                                        ///
+////////////////////////////////////////////////////////////////////////////////
 
-long createSymbol(struct lexval valor_lexico, int nature, int type);
+typedef struct hashStack{
+	Hash** currentTable;
+	struct hashStack* next;
+}HashStack;
 
-void addFuncArg(long symbolKey, FuncArg* arg);
+//adiciona nova tabela de símbolos ao topo da pilha, útil quando se inicializa 
+//um novo escopo.                                               
+void initTable();
 
-void addField(long symbolKey, UserTypeField* utf);
+//remove uma tabela do tipo da pilha, útil quando um escopo está sendo fechado.
+void closeTable();
 
-Hash getSymbol(long symbolKey);
+
+//adiciona um novo símbolo à tabela de símbolos do topo da pilha, será recebido 
+//o valor léxico do símbolo, a sua natureza e o seu tipo. A linha está presente
+//no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
+//função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
+//de usuário, os campos devem ser adicionados usando addField.
+void addSymbol(struct lexval* valor_lexico, int nature, int type);
+
+//adiciona um argumento a um símbolo
+void addFuncArg(char* symbol, FuncArg* arg);
+
+//adiciona um tipo de usuário a um símbolo
+void addField(char* symbol, UserTypeField* utf);
+
+//busca um determinado símbolo em toda a pilha de tabelas de símbolos, começando
+//pela tabela do escopo atual, subindo até o escopo global
+Hash* getSymbol(char* symbol);
+
 
 

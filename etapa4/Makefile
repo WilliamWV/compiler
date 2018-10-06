@@ -38,7 +38,7 @@ clean:
 	rm -rf $(BISON_C)
 	rm -rf $(FLEX_C)
 	rm -rf $(BISON_H)
-	rm -rf $(ODIR)/*
+	rm -rf obj/*
 	rm -rf $(REPORT_FILE)
 	rm -rf $(EXEC)
 #Regra para gerar arquivo com descrição da gramática
