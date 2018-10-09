@@ -12,25 +12,39 @@
 	  * Hash* getSymbol(char* symbol);
 */
 
+struct lexval* temp;
 void multiTableTest(){
 	printf("Inicializando tabela global...\n");
 	initTable();
 	
-	addSymbol(createLexval(1, IDS, NONE, "var1", TRUE), NATUREZA_IDENTIFICADOR, INT);
+	 
+	temp = createLexval(1, IDS, NONE, "var1", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT);
 	printf("Inseriu \"int var1;\"\n");
+	free(temp);
+	temp = NULL;
 	
-	addSymbol(createLexval(12, IDS, NONE, "var3", TRUE), NATUREZA_IDENTIFICADOR, STRING);
+	temp = createLexval(12, IDS, NONE, "var3", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
 	printf("Inseriu \"string var3;\"\n");
+	free(temp);
+	temp = NULL;
 
 	printf("Inicializando tabela local...\n");
 	initTable();
-
-	addSymbol(createLexval(17, IDS, NONE, "var2", TRUE), NATUREZA_IDENTIFICADOR, FLOAT);
+	
+	temp = createLexval(17, IDS, NONE, "var2", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT);
 	printf("Inseriu \"float var2;\"\n");
+	free(temp);
+	temp = NULL;
 
 	//símbolo deve ocultar o símbolo var1 global	
-	addSymbol(createLexval(21, IDS, NONE, "var1", TRUE), NATUREZA_IDENTIFICADOR, STRING);
+	temp = createLexval(21, IDS, NONE, "var1", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
 	printf("Inseriu \"string var1;\"\n");
+	free(temp);
+	temp = NULL;
 
 	Hash* v1= getSymbol("var1");
 	if(v1 != NULL){
@@ -62,7 +76,6 @@ void multiTableTest(){
 	printf("Fechando tabela global...\n");
 	closeTable();
 
-
 }
 void oneTableTest(){
 	printf("Inicializando tabela...\n");
@@ -71,33 +84,51 @@ void oneTableTest(){
 	printf("Inserindo símbolos ...\n");
 	
 	//int var1;
-	addSymbol(createLexval(1, IDS, NONE, "var1", TRUE), NATUREZA_IDENTIFICADOR, INT);
+	temp = createLexval(1, IDS, NONE, "var1", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT);
 	printf("Inseriu \"int var1;\"\n");
+	free(temp);
+	temp = NULL;
 	
-	//float var2;	
-	addSymbol(createLexval(7, IDS, NONE, "var2", TRUE), NATUREZA_IDENTIFICADOR, FLOAT);
+	//float var2;
+	temp = createLexval(7, IDS, NONE, "var2", TRUE);	
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT);
 	printf("Inseriu \"float var2;\"\n");
+	free(temp);
+	temp = NULL;
 	
 	//string var3;
-	addSymbol(createLexval(12, IDS, NONE, "var3", TRUE), NATUREZA_IDENTIFICADOR, STRING);
+	temp = createLexval(12, IDS, NONE, "var3", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
 	printf("Inseriu \"string var3;\"\n");
+	free(temp);
+	temp = NULL;
 	
 	//int foo(int a, const float b);
-	addSymbol(createLexval(16, IDS, NONE, "foo", TRUE), NATUREZA_IDENTIFICADOR, INT);
+	temp = createLexval(16, IDS, NONE, "foo", TRUE);	
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT);
 	addFuncArg("foo", createFuncArg(INT, NULL, "a", FALSE));
 	addFuncArg("foo", createFuncArg(FLOAT, NULL, "b", TRUE));
 	printf("Inseriu \"int foo(int a, const float b);\"\n");
+	free(temp);
+	temp = NULL;
 	
 	//class animal [protected string name : private int eyes];
-	addSymbol(createLexval(21, IDS, NONE, "animal", TRUE), NATUREZA_IDENTIFICADOR, USER);
+	temp = createLexval(21, IDS, NONE, "animal", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER);
 	addField("animal", createUserTypeField(PROTECTED_ENCAPS, STRING, "name"));
 	addField("animal", createUserTypeField(PRIVATE_ENCAPS, INT, "eyes"));
-	printf("Inseriu \"class animal [protected string name : private int eyes];\"\n");
+	printf("Inseriu \"class animal [protected string name : private int eyes];\"\n");	
+	free(temp);
+	temp = NULL;	
 	
 	//string foo2(userType s)
-	addSymbol(createLexval(26, IDS, NONE, "foo2", TRUE), NATUREZA_IDENTIFICADOR, STRING);
+	temp = createLexval(26, IDS, NONE, "foo2", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
 	addFuncArg("foo", createFuncArg(USER, "userType", "s", FALSE));
-	printf("Inseriu \"string foo2(userType s)\"\n");
+	printf("Inseriu \"string foo2(userType s)\"\n");	
+	free(temp);
+	temp = NULL;
 
 	printf("Buscando símbolos\n");
 	

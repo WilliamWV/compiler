@@ -37,6 +37,30 @@ void initTable(){
 
 }
 
+//libera possíveis campos de argumentos de função
+void liberaArgs(int index){
+	if (tabelas->currentTable[index]->args!=NULL){
+		int i; 
+		for(i = 0; i < tabelas->currentTable[index]->argsNum; i++){
+			free(tabelas->currentTable[index]->args[i]);
+			tabelas->currentTable[index]->args[i] = NULL;
+		}
+		free(tabelas->currentTable[index]->args);
+		tabelas->currentTable[index]->args = NULL;
+	}
+}
+
+void liberaFields(int index){
+	if (tabelas->currentTable[index]->fields!=NULL){
+		int i; 
+		for(i = 0; i < tabelas->currentTable[index]->fieldsNum; i++){
+			free(tabelas->currentTable[index]->fields[i]);
+			tabelas->currentTable[index]->fields[i] = NULL;
+		}
+		free(tabelas->currentTable[index]->fields);
+		tabelas->currentTable[index]->fields = NULL;
+	}
+}
 //libera memória de todos os símbolos presentes na tabela do topo da pilha
 void freeTable(){
 	
@@ -45,7 +69,14 @@ void freeTable(){
 		int tableIndex;
 		for(tableIndex = 0; tableIndex<HASH_SIZE; tableIndex++){
 			if(tabelas->currentTable[tableIndex]!=NULL){
+				if (tabelas->currentTable[tableIndex]->valor_lexico!= NULL){
+					liberaArgs(tableIndex);
+					liberaFields(tableIndex);
+					free(tabelas->currentTable[tableIndex]->valor_lexico);
+					tabelas->currentTable[tableIndex]->valor_lexico = NULL;
+				}
 				free(tabelas->currentTable[tableIndex]);
+				tabelas->currentTable[tableIndex] = NULL;
 			}
 		}
 
