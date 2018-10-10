@@ -13,19 +13,105 @@
 */
 
 struct lexval* temp;
+
+/**
+	Testa se tabela única funciona adequadamente
+*/
+void oneTableTest(){
+	printf("\n\nTESTE DE UMA ÚNICA TABELA\n");
+	printf("Inicializando tabela...\n");
+	initTable();
+	
+	printf("Inserindo símbolos ...\n");
+	
+	//int var1;
+	temp = createLexval(1, IDS, NONE, "var1", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
+	printf("Inseriu \"int var1;\"\n");
+	free(temp);
+	temp = NULL;
+	
+	//float var2;
+	temp = createLexval(7, IDS, NONE, "var2", TRUE);	
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0);
+	printf("Inseriu \"float var2;\"\n");
+	free(temp);
+	temp = NULL;
+	
+	//string var3;
+	temp = createLexval(12, IDS, NONE, "var3", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
+	printf("Inseriu \"string var3;\"\n");
+	free(temp);
+	temp = NULL;
+	
+	//int foo(int a, const float b);
+	temp = createLexval(16, IDS, NONE, "foo", TRUE);	
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
+	addFuncArg("foo", createFuncArg(INT, NULL, "a", FALSE));
+	addFuncArg("foo", createFuncArg(FLOAT, NULL, "b", TRUE));
+	printf("Inseriu \"int foo(int a, const float b);\"\n");
+	free(temp);
+	temp = NULL;
+	
+	//class animal [protected string name : private int eyes];
+	temp = createLexval(21, IDS, NONE, "animal", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER, 0);
+	addField("animal", createUserTypeField(PROTECTED_ENCAPS, STRING, "name"));
+	addField("animal", createUserTypeField(PRIVATE_ENCAPS, INT, "eyes"));
+	printf("Inseriu \"class animal [protected string name : private int eyes];\"\n");	
+	free(temp);
+	temp = NULL;	
+	
+	//string foo2(userType s)
+	temp = createLexval(26, IDS, NONE, "foo2", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
+	addFuncArg("foo", createFuncArg(USER, "userType", "s", FALSE));
+	printf("Inseriu \"string foo2(userType s)\"\n");	
+	free(temp);
+	temp = NULL;
+
+	printf("Buscando símbolos\n");
+	
+	if(getSymbol("var1") != NULL){printf("Encontrou var1\n");}
+	else {printf("não encontrou var1\n");}
+	if(getSymbol("var2") != NULL){printf("Encontrou var2\n");}
+	else {printf("não encontrou var2\n");}
+	if(getSymbol("var3") != NULL){printf("Encontrou var3\n");}
+	else {printf("não encontrou var3\n");}
+	if(getSymbol("foo") != NULL){printf("Encontrou foo\n");}
+	else {printf("não encontrou foo\n");}
+	if(getSymbol("animal") != NULL){printf("Encontrou animal\n");}
+	else {printf("não encontrou animal\n");}
+	if(getSymbol("foo2") != NULL){printf("Encontrou foo2\n");}
+	else {printf("não encontrou foo2\n");}
+	if(getSymbol("var4") != NULL){printf("Encontrou var4 - Não deveria ter achado\n");}
+	else {printf("não encontrou var4 - Como esperado\n");}
+	
+	printf("Fechando tabela ...\n");
+	closeTable();
+
+}
+
+
+/**
+	Testa se pilha de tabelas está funcionando adequadamente
+*/
 void multiTableTest(){
+	printf("\n\nTESTE DA PILHA DE TABELAS\n");
+
 	printf("Inicializando tabela global...\n");
 	initTable();
 	
 	 
 	temp = createLexval(1, IDS, NONE, "var1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
 	printf("Inseriu \"int var1;\"\n");
 	free(temp);
 	temp = NULL;
 	
 	temp = createLexval(12, IDS, NONE, "var3", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
 	printf("Inseriu \"string var3;\"\n");
 	free(temp);
 	temp = NULL;
@@ -34,14 +120,14 @@ void multiTableTest(){
 	initTable();
 	
 	temp = createLexval(17, IDS, NONE, "var2", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0);
 	printf("Inseriu \"float var2;\"\n");
 	free(temp);
 	temp = NULL;
 
 	//símbolo deve ocultar o símbolo var1 global	
 	temp = createLexval(21, IDS, NONE, "var1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
 	printf("Inseriu \"string var1;\"\n");
 	free(temp);
 	temp = NULL;
@@ -77,84 +163,159 @@ void multiTableTest(){
 	closeTable();
 
 }
-void oneTableTest(){
-	printf("Inicializando tabela...\n");
+
+/**
+	Testa vetores na tabela de símbolos
+*/
+void vecTableTest(){
+
+	printf("\n\nTESTE DE VETORES NA TABELA\n");
+
+	printf("Inicializando tabela ...\n");	
 	initTable();
-	
-	printf("Inserindo símbolos ...\n");
-	
-	//int var1;
-	temp = createLexval(1, IDS, NONE, "var1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT);
-	printf("Inseriu \"int var1;\"\n");
-	free(temp);
-	temp = NULL;
-	
-	//float var2;
-	temp = createLexval(7, IDS, NONE, "var2", TRUE);	
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT);
-	printf("Inseriu \"float var2;\"\n");
-	free(temp);
-	temp = NULL;
-	
-	//string var3;
-	temp = createLexval(12, IDS, NONE, "var3", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
-	printf("Inseriu \"string var3;\"\n");
-	free(temp);
-	temp = NULL;
-	
-	//int foo(int a, const float b);
-	temp = createLexval(16, IDS, NONE, "foo", TRUE);	
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT);
-	addFuncArg("foo", createFuncArg(INT, NULL, "a", FALSE));
-	addFuncArg("foo", createFuncArg(FLOAT, NULL, "b", TRUE));
-	printf("Inseriu \"int foo(int a, const float b);\"\n");
-	free(temp);
-	temp = NULL;
-	
-	//class animal [protected string name : private int eyes];
-	temp = createLexval(21, IDS, NONE, "animal", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER);
-	addField("animal", createUserTypeField(PROTECTED_ENCAPS, STRING, "name"));
-	addField("animal", createUserTypeField(PRIVATE_ENCAPS, INT, "eyes"));
-	printf("Inseriu \"class animal [protected string name : private int eyes];\"\n");	
-	free(temp);
-	temp = NULL;	
-	
-	//string foo2(userType s)
-	temp = createLexval(26, IDS, NONE, "foo2", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING);
-	addFuncArg("foo", createFuncArg(USER, "userType", "s", FALSE));
-	printf("Inseriu \"string foo2(userType s)\"\n");	
+
+	temp = createLexval(21, IDS, NONE, "vec1", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 12);
+	printf("Inseriu \"vec1[12] int;\"\n");
 	free(temp);
 	temp = NULL;
 
-	printf("Buscando símbolos\n");
-	
-	if(getSymbol("var1") != NULL){printf("Encontrou var1\n");}
-	else {printf("não encontrou var1\n");}
-	if(getSymbol("var2") != NULL){printf("Encontrou var2\n");}
-	else {printf("não encontrou var2\n");}
-	if(getSymbol("var3") != NULL){printf("Encontrou var3\n");}
-	else {printf("não encontrou var3\n");}
-	if(getSymbol("foo") != NULL){printf("Encontrou foo\n");}
-	else {printf("não encontrou foo\n");}
-	if(getSymbol("animal") != NULL){printf("Encontrou animal\n");}
-	else {printf("não encontrou animal\n");}
-	if(getSymbol("foo2") != NULL){printf("Encontrou foo2\n");}
-	else {printf("não encontrou foo2\n");}
-	if(getSymbol("var4") != NULL){printf("Encontrou var4 - Não deveria ter achado\n");}
-	else {printf("não encontrou var4 - Como esperado\n");}
-	
-	printf("Fechando tabela ...\n");
-	void closeTable();
+	temp = createLexval(21, IDS, NONE, "vec2", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 1000);
+	printf("Inseriu \"vec2[1000] float;\"\n");
+	free(temp);
+	temp = NULL;
 
+	temp = createLexval(21, IDS, NONE, "vec3", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, CHAR, 3);
+	printf("Inseriu \"vec3[3] char;\"\n");
+	free(temp);
+	temp = NULL;
+
+	Hash* vec1 = getSymbol("vec1");
+	if(vec1 != NULL){
+		printf("Encontrou vec1\n");
+		printf("vec1 tem tamanho = %d contendo %d elementos\n", vec1->size, vec1->vecSize);
+	}else{
+		printf("Não encontrou vec1\n");
+	}
+
+	Hash* vec2 = getSymbol("vec2");
+	if(vec2 != NULL){
+		printf("Encontrou vec2\n");
+		printf("vec2 tem tamanho = %d contendo %d elementos\n", vec2->size, vec2->vecSize);
+	}else{
+		printf("Não encontrou vec2\n");
+	}
+
+	Hash* vec3 = getSymbol("vec3");
+	if(vec3 != NULL){
+		printf("Encontrou vec3\n");
+		printf("vec3 tem tamanho = %d contendo %d elementos\n", vec3->size, vec3->vecSize);
+	}else{
+		printf("Não encontrou vec3\n");
+	}	
+	printf("Fechando tabela...\n");
+	closeTable();
 }
 
+/**
+	Testa tipos de usuário na tabela de símbolos
+*/
+void userTypeTableTest(){
+	printf("\n\nTESTE DE TIPOS DE USUÁRIO NA TABELA\n");
+	printf("Inicializando tabela ...\n");
+	initTable();
+	
+	temp = createLexval(21, IDS, NONE, "ut1", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER, 0);
+	addField("ut1", createUserTypeField(PROTECTED_ENCAPS, FLOAT, "f"));
+	addField("ut1", createUserTypeField(PUBLIC_ENCAPS, INT, "tel"));
+	
+	printf("Inseriu \"class ut1 [protected float f : int tel];\"\n");	
+	free(temp);
+	temp = NULL;	
+
+	Hash* ut1 = getSymbol("ut1");
+	if(ut1 !=NULL){
+		printf("Encontrou ut1\n");
+		printf("ut1 tem %d campos, seu tamanho é %d\n", ut1->fieldsNum, ut1->size);
+		int i;
+		printf("ut1 tem os seguintes campos:\n");		
+		for(i = 0; i<ut1->fieldsNum; i++){
+			switch(ut1->fields[i]->fieldEncaps){
+				case PUBLIC_ENCAPS: printf("\tpublic "); break;
+				case PROTECTED_ENCAPS: printf("\tprotected "); break;
+				case PRIVATE_ENCAPS: printf("\tprivate "); break;
+			}
+			switch(ut1->fields[i]->fieldType){
+				case CHAR: printf("char "); break;
+				case STRING: printf("string "); break; 
+				case INT: printf("int "); break;
+				case FLOAT: printf("float "); break;
+				case BOOL: printf("bool "); break;
+			}
+			printf("%s\n", ut1->fields[i]->fieldName);
+		}
+	}
+	else{
+		printf("Não encontrou ut1\n");
+	}
+	printf("Fechando tabela ...\n");
+	closeTable();
+}
+
+/**
+	Testa funções na tabela de símbolos
+*/
+void funTableTest(){
+	printf("\n\nTESTE DE FUNÇÕES NA TABELA\n");
+
+	printf("Inicializando tabela ...\n");
+	initTable();	
+	
+	temp = createLexval(16, IDS, NONE, "foo", TRUE);	
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
+	addFuncArg("foo", createFuncArg(INT, NULL, "a", FALSE));
+	addFuncArg("foo", createFuncArg(FLOAT, NULL, "b", TRUE));
+	addFuncArg("foo", createFuncArg(USER, "tipoDoWill", "tdw", TRUE));
+	printf("Inseriu \"int foo(int a, const float b, const tipoDoWill tdw);\"\n");
+	free(temp);
+	temp = NULL;
+
+	Hash* foo = getSymbol("foo");
+	if(foo !=NULL){
+		printf("Encontrou foo\n");
+		printf("foo tem %d argumentos\n", foo->argsNum);
+		int i;
+		printf("foo tem os seguintes argumentos:\n");		
+		for(i = 0; i<foo->argsNum; i++){
+			if (foo->args[i]->isConst) printf("const ");
+			switch(foo->args[i]->argType){
+				case CHAR: printf("char "); break;
+				case STRING: printf("string "); break; 
+				case INT: printf("int "); break;
+				case FLOAT: printf("float "); break;
+				case BOOL: printf("bool "); break;
+				case USER: printf("%s ", foo->args[i]->userType);
+			}
+			printf("%s\n", foo->args[i]->argName);
+		}
+	}
+	else{
+		printf("Não encontrou ut1\n");
+	}
+
+	printf("Fechando tabela ...\n");
+	closeTable();
+	
+}
 int main(){
 	oneTableTest();
 	multiTableTest();
+	vecTableTest();
+	userTypeTableTest();
+	funTableTest();
 }
 
 

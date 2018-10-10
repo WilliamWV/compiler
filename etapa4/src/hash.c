@@ -2,15 +2,16 @@
 
 HashStack* tabelas = NULL;
 
-int sizeOfType(int type){
+int sizeOfType(int type, int vecSize){
+	int temp = vecSize;
+	if(vecSize == 0) temp = 1;	
 	switch(type){
-		case CHAR: return 1; break;
-		case STRING: return 1; break; //1 para cada caractere
-		case INT: return 4; break;
-		case FLOAT: return 8; break;
-		case BOOL: return 1; break;
+		case CHAR: return 1 * temp; break;
+		case STRING: return 1 * temp; break; //1 para cada caractere, precisa ser mudado quadno conteúdo muda
+		case INT: return 4 * temp; break;
+		case FLOAT: return 8 * temp; break;
+		case BOOL: return 1 * temp; break;
 		case USER: return 0; break; // deve ser somado ao valor de cada campo conforme os campos são adicionados
-		//TODO: precisa adicionar suporte a vetor
 	}
 }
 
@@ -100,14 +101,15 @@ void closeTable(){
 //no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
 //função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
 //de usuário, os campos devem ser adicionados usando addField.
-void addSymbol(struct lexval* valor_lexico, int nature, int type){
+void addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize){
 	
 	int hashIndex = hashFunction(valor_lexico->value.str);
 	tabelas->currentTable[hashIndex] = (Hash*)malloc(sizeof(Hash));
 	tabelas->currentTable[hashIndex]->line = valor_lexico->lineNumber;
 	tabelas->currentTable[hashIndex]->nature = nature;
 	tabelas->currentTable[hashIndex]->type = type;
-	tabelas->currentTable[hashIndex]->size = sizeOfType(type);
+	tabelas->currentTable[hashIndex]->size = sizeOfType(type, vecSize);
+	tabelas->currentTable[hashIndex]->vecSize = vecSize;
 	tabelas->currentTable[hashIndex]->argsNum = 0;
 	tabelas->currentTable[hashIndex]->fieldsNum = 0;
 	tabelas->currentTable[hashIndex]->args = (FuncArg**)malloc(sizeof(FuncArg*));
@@ -143,7 +145,8 @@ void addField(char* symbol, UserTypeField* utf)
 			symbolContent->fieldsNum * sizeof(UserTypeField**)
 		);
 		symbolContent->fields[symbolContent->fieldsNum - 1] = utf;
-		symbolContent->size = symbolContent->size + sizeOfType(utf->fieldType);
+		//tamanho do tipo de usuário
+		symbolContent->size = symbolContent->size + sizeOfType(utf->fieldType, 0);
 	}
 }
 //busca um determinado símbolo em toda a pilha de tabelas de símbolos, começando

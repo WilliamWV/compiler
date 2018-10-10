@@ -53,10 +53,14 @@ typedef struct hashContent{
 	int nature;                   // natureza, como definido em natureza.h
 	int type;                     // tipo de dado do símbolo
 	int size;                     // tamanho do símbolo derivado do tipo
+	int vecSize;				  // valor que será 0 se o símbolo não for um
+                                  // vetor e o tamanho do vetor caso contrário
+                                  // OBS: foi escolhido não usar 1 para poder
+                                  // diferenciar de um vetor com 1 elemento
 	int argsNum;	              // quantidade de argumentos na função
 	FuncArg** args;               // argumentos e seus tipos, se for função
 	int fieldsNum;                // quantidade de campos no tipo de usuário
-	UserTypeField** fields;   // campos e seus tipos, se for tipo de usuário
+	UserTypeField** fields;       // campos e seus tipos, se for tipo de usuário
 	struct lexval* valor_lexico;  // valores associados ao yylval do símbolo
 }Hash;
 
@@ -84,7 +88,7 @@ void closeTable();
 //no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
 //função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
 //de usuário, os campos devem ser adicionados usando addField.
-void addSymbol(struct lexval* valor_lexico, int nature, int type);
+void addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize);
 
 //adiciona um argumento a um símbolo
 void addFuncArg(char* symbol, FuncArg* arg);
