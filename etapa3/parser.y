@@ -190,7 +190,7 @@ componente:
 
 depoisDeIdent:
 	 tamanhoVetor static tipo ';' {
-		$$ = $1; 
+		$$ = $1;
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
