@@ -22,7 +22,7 @@ Node* criaNodo(struct lexval* token){
 	Node *node = malloc(sizeof(Node));
 	node->token = token;
 	node->kidsNumber = 0;
-	node->kids = (Node**)malloc(sizeof(Node**)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
+	node->kids = (Node**)malloc(sizeof(Node*)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
 
 	return node;
 }
@@ -47,7 +47,7 @@ Node* criaNodoDangling(struct lexval* token){
 	Node *node = malloc(sizeof(Node));
 	node->token = token;
 	node->kidsNumber = 0;
-	node->kids = (Node**)malloc(sizeof(Node**));
+	node->kids = (Node**)malloc(sizeof(Node*));
 
 	return node;
 }
@@ -59,7 +59,7 @@ Node* criaNodoDangling(struct lexval* token){
 ////////////////////////////////////////////////////////////////////////////////
 void adicionaFilho(Node *pai, Node *kid){
 	pai->kidsNumber = pai->kidsNumber + 1;
-	pai->kids = (Node**)realloc(pai->kids, pai->kidsNumber * sizeof(Node**)); // aloca espaço para mais um ponteiro para um ponteiro de Node
+	pai->kids = (Node**)realloc(pai->kids, pai->kidsNumber * sizeof(Node*)); // aloca espaço para mais um ponteiro para um ponteiro de Node
 	pai->kids[pai->kidsNumber - 1] = kid; // acessa o ponteiro recém alocado e guarda nele um ponteiro de Node
 }
 ////////////////////////////////////////////////////////////////////////////////

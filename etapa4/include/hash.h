@@ -52,6 +52,7 @@ typedef struct hashContent{
 	int line;                     // linha do símbolo
 	int nature;                   // natureza, como definido em natureza.h
 	int type;                     // tipo de dado do símbolo
+	int isFunction;
 	int size;                     // tamanho do símbolo derivado do tipo
 	int vecSize;				  // valor que será 0 se o símbolo não for um
                                   // vetor e o tamanho do vetor caso contrário
@@ -99,6 +100,15 @@ void addField(char* symbol, UserTypeField* utf);
 //busca um determinado símbolo em toda a pilha de tabelas de símbolos, começando
 //pela tabela do escopo atual, subindo até o escopo global
 Hash* getSymbol(char* symbol);
+
+
+int isVariable(char *symbol);
+
+int isVector(char *symbol);
+
+int isFunction(char *symbol);
+
+int isDefined(char *symbol);
 
 
 

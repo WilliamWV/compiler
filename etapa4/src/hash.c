@@ -101,13 +101,14 @@ void closeTable(){
 //no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
 //função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
 //de usuário, os campos devem ser adicionados usando addField.
-void addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize){
+void addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, int isFunction){
 	
 	int hashIndex = hashFunction(valor_lexico->value.str);
 	tabelas->currentTable[hashIndex] = (Hash*)malloc(sizeof(Hash));
 	tabelas->currentTable[hashIndex]->line = valor_lexico->lineNumber;
 	tabelas->currentTable[hashIndex]->nature = nature;
 	tabelas->currentTable[hashIndex]->type = type;
+	tabelas->currentTable[hashIndex]->isFunction = isFunction;
 	tabelas->currentTable[hashIndex]->size = sizeOfType(type, vecSize);
 	tabelas->currentTable[hashIndex]->vecSize = vecSize;
 	tabelas->currentTable[hashIndex]->argsNum = 0;
@@ -161,4 +162,44 @@ Hash* getSymbol(char* symbol)
 		aux = aux->next;
 	}while(symbolContent == NULL && aux != NULL);
 	return symbolContent; // vai ser NULL se não existir
+}
+
+int isDefined(char *symbol){
+	Hash *symbolContent = getSymbol(symbol);
+	if(symbolContent == NULL)
+		return ERR_UNDECLARED;
+	else return 0;
+}
+
+int isFunction(char *symbol){
+	int isDefined = isDefined(symbol);
+	if (isDefined == 0){
+		Hash *symbolContent = getSymbol(symbol);
+		if(symbolContent->isFunction == TRUE)
+			return TRUE;
+		else return ERR_VECTOR;
+	}
+	else return isDefined;
+}
+
+int isVector(char *symbol){
+	int isDefined = isDefined(symbol);
+	if (isDefined == 0){
+		Hash *symbolContent = getSymbol(symbol);
+		if(symbolContent->vecSize > 0)
+			return TRUE;
+		else return ERR_VARIABLE;
+	}
+	else return isDefined;
+}
+
+int isVariable(char *symbol){
+	int isDefined = isDefined(symbol);
+	if (isDefined == 0){
+		Hash *symbolContent = getSymbol(symbol);
+		if(isVector(symbol) == FALSE && isFunction(symbol) == FALSE)
+			return TRUE;
+		else return ERR_VARIABLE;
+	}
+	else return isDefined;
 }
