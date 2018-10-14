@@ -1,6 +1,7 @@
 //TODO: precisa determinar um jeito de testar se um símbolo deveria ser usado como
 // tipo de usuário para gerar o erro ERR_USER
 #include "../include/hash.h"
+#include <stdio.h>
 
 HashStack* tabelas = NULL;
 
@@ -59,11 +60,22 @@ void liberaFields(int index){
 	if (tabelas->currentTable[index]->fields!=NULL){
 		int i; 
 		for(i = 0; i < tabelas->currentTable[index]->fieldsNum; i++){
+			free(tabelas->currentTable[index]->fields[i]->fieldName);
 			free(tabelas->currentTable[index]->fields[i]);
 			tabelas->currentTable[index]->fields[i] = NULL;
 		}
 		free(tabelas->currentTable[index]->fields);
 		tabelas->currentTable[index]->fields = NULL;
+	}
+}
+
+void printFields(char *symbol){
+	int index = hashFunction(symbol);
+	if (tabelas->currentTable[index]->fields!=NULL){
+		int i; 
+		for(i = 0; i < tabelas->currentTable[index]->fieldsNum; i++){
+			printf("%s\n", tabelas->currentTable[index]->fields[i]->fieldName);
+		}
 	}
 }
 //libera memória de todos os símbolos presentes na tabela do topo da pilha

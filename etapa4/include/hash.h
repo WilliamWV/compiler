@@ -25,10 +25,6 @@ typedef struct arg{
 	bool isConst;     // argumento possui modificador const ou não
 }FuncArg;
 
-//Definição dos modificadores de encapsulamento
-#define PUBLIC_ENCAPS     0x10
-#define PRIVATE_ENCAPS    0x11
-#define PROTECTED_ENCAPS  0X12
 ////////////////////////////////////////////////////////////////////////////////
 /// UserTypeField                                                            ///
 /// Estrutura usada para armazenar informações dos campos de um tipo de      ///
@@ -113,5 +109,5 @@ int isFunction(char *symbol);
 
 int isDefined(char *symbol);
 
-
+void printFields(char *symbol);
 

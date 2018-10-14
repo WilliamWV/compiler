@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "../include/tree.h"
 #include "../include/lexVal.h"
+#include "../include/userTypeField.h"
+#include "../include/natureza.h"
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
@@ -10,6 +12,8 @@ int yyerror (char const *s){
 }
 
 extern void* arvore;
+
+extern Fields *currentFields;
 
 int parsingSucceded = FALSE;
 extern Node *danglingNodes;
@@ -138,6 +142,7 @@ extern Node *danglingNodes;
 		      tentar liberar o mesmo token mais de uma vez se fizessemos algo no destrutor atual.
 	  */} <valor_lexico>
 %destructor {
+	//printFields("zorzo");
 	if(parsingSucceded == FALSE){
 		liberaDanglingParser($$);
 	}
@@ -256,6 +261,17 @@ novoTipo:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
+
+
+		/*printf("currentFields: %d %d %s; simbolo: %s \n", currentFields->field->fieldType, currentFields->field->fieldEncaps, currentFields->field->fieldName, $2->value.str);
+
+		printf("currentFields: %d %d %s; simbolo: %s \n", currentFields->next->field->fieldType, currentFields->next->field->fieldEncaps, currentFields->next->field->fieldName, $2->value.str);
+
+printf("currentFields: %d %d %s; simbolo: %s \n", currentFields->next->next->field->fieldType, currentFields->next->next->field->fieldEncaps, currentFields->next->next->field->fieldName, $2->value.str);*/
+
+		//addSymbol($2, NATUREZA_IDENTIFICADOR, USER, 0, FALSE);
+		//addFieldsToSymbol($2->value.str, currentFields);
+		clearCurrentFields();
 	};
 listaCampos: 
 	'[' list ']'{
@@ -265,8 +281,10 @@ listaCampos:
 	}
 ;
 list: 
-	campo 				{$$ = $1;}
-	| campo ':' list{
+	campo 				{adicionaCampo(criaCampo($1)); $$ = $1;}
+	| campo ':' list{		
+		adicionaCampo(criaCampo($1));
+
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
