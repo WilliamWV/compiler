@@ -1,3 +1,5 @@
+//TODO: precisa determinar um jeito de testar se um símbolo deveria ser usado como
+// tipo de usuário para gerar o erro ERR_USER
 #include "../include/hash.h"
 
 HashStack* tabelas = NULL;
@@ -32,6 +34,8 @@ int hashFunction(char* symbol){
 void initTable(){
 	HashStack* aux = (HashStack*)malloc(sizeof(HashStack));
 	aux->currentTable = (Hash**) malloc(sizeof(Hash*) * HASH_SIZE);
+	for(int i = 0; i<HASH_SIZE; i++)
+		aux->currentTable[i] = NULL;
 	aux->next = tabelas;
 	tabelas = aux;
 	aux = NULL; // evita duas referências a mesma posição
@@ -73,6 +77,7 @@ void freeTable(){
 				if (tabelas->currentTable[tableIndex]->valor_lexico!= NULL){
 					liberaArgs(tableIndex);
 					liberaFields(tableIndex);
+					free(tabelas->currentTable[tableIndex]->symbol);
 					free(tabelas->currentTable[tableIndex]->valor_lexico);
 					tabelas->currentTable[tableIndex]->valor_lexico = NULL;
 				}
@@ -101,10 +106,24 @@ void closeTable(){
 //no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
 //função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
 //de usuário, os campos devem ser adicionados usando addField.
-void addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, int isFunction){
+//Retornará 0 se adicionou corretamente, ou um valor diferente se ocorreu um erro
+//O erro que pode ocorrer é o símbolo já estar definido no escopo atual
+int addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, int isFunction){
 	
 	int hashIndex = hashFunction(valor_lexico->value.str);
+	while (tabelas->currentTable[hashIndex]!=NULL){
+		if(strcmp(tabelas->currentTable[hashIndex]->symbol, valor_lexico->value.str) == 0){
+			//símbolo já declarado
+			return ERR_DECLARED;
+		}
+		//precisamos procurar outra posição para o símbolo, a pesquisa será
+		//realizada de forma linear até que se ache uma posição livre na tabela
+		hashIndex = (hashIndex + 1)%HASH_SIZE;
+		
+	}
 	tabelas->currentTable[hashIndex] = (Hash*)malloc(sizeof(Hash));
+	tabelas->currentTable[hashIndex]->symbol = (char*) malloc(sizeof(char) * (strlen(valor_lexico->value.str) + 1));
+	strcpy(tabelas->currentTable[hashIndex]->symbol, valor_lexico->value.str);
 	tabelas->currentTable[hashIndex]->line = valor_lexico->lineNumber;
 	tabelas->currentTable[hashIndex]->nature = nature;
 	tabelas->currentTable[hashIndex]->type = type;
@@ -117,6 +136,7 @@ void addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, i
 	tabelas->currentTable[hashIndex]->fields = (UserTypeField**)malloc(sizeof(UserTypeField*));
 	tabelas->currentTable[hashIndex]->valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	*(tabelas->currentTable[hashIndex]->valor_lexico) = *(valor_lexico);
+	return 0;
 }
 //adiciona um argumento a um símbolo
 void addFuncArg(char* symbol, FuncArg* arg)
@@ -155,13 +175,25 @@ void addField(char* symbol, UserTypeField* utf)
 Hash* getSymbol(char* symbol)
 {
 	int hashIndex = hashFunction(symbol);
+	int tempIndex = hashIndex; // será usado se for necessário buscar símbolo em caso
+                               // de colisão
 	Hash* symbolContent;
 	HashStack* aux = tabelas;
 	do{	
 		symbolContent = aux->currentTable[hashIndex];
+		while(symbolContent != NULL){	
+			if(strcmp(symbolContent->symbol, symbol) == 0)
+				return symbolContent;
+			else{
+				tempIndex++;
+				symbolContent = aux->currentTable[tempIndex];
+			}
+		}
 		aux = aux->next;
-	}while(symbolContent == NULL && aux != NULL);
-	return symbolContent; // vai ser NULL se não existir
+		tempIndex = hashIndex;
+	}while(aux!=NULL);
+
+	return NULL; // vai ser NULL se não existir
 }
 
 int isDefined(char *symbol){
@@ -172,34 +204,34 @@ int isDefined(char *symbol){
 }
 
 int isFunction(char *symbol){
-	int isDefined = isDefined(symbol);
-	if (isDefined == 0){
+	int defined = isDefined(symbol);
+	if (defined == 0){
 		Hash *symbolContent = getSymbol(symbol);
 		if(symbolContent->isFunction == TRUE)
 			return TRUE;
-		else return ERR_VECTOR;
+		else return ERR_FUNCTION;
 	}
-	else return isDefined;
+	else return defined;
 }
 
 int isVector(char *symbol){
-	int isDefined = isDefined(symbol);
-	if (isDefined == 0){
+	int defined = isDefined(symbol);
+	if (defined == 0){
 		Hash *symbolContent = getSymbol(symbol);
 		if(symbolContent->vecSize > 0)
 			return TRUE;
-		else return ERR_VARIABLE;
+		else return ERR_VECTOR;
 	}
-	else return isDefined;
+	else return defined;
 }
 
 int isVariable(char *symbol){
-	int isDefined = isDefined(symbol);
-	if (isDefined == 0){
+	int defined = isDefined(symbol);
+	if (defined == 0){
 		Hash *symbolContent = getSymbol(symbol);
-		if(isVector(symbol) == FALSE && isFunction(symbol) == FALSE)
+		if(isVector(symbol) != TRUE && isFunction(symbol) != TRUE)
 			return TRUE;
 		else return ERR_VARIABLE;
 	}
-	else return isDefined;
+	else return defined;
 }

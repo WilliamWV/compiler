@@ -26,28 +26,28 @@ void oneTableTest(){
 	
 	//int var1;
 	temp = createLexval(1, IDS, NONE, "var1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0, FALSE);
 	printf("Inseriu \"int var1;\"\n");
 	free(temp);
 	temp = NULL;
 	
 	//float var2;
 	temp = createLexval(7, IDS, NONE, "var2", TRUE);	
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0, FALSE);
 	printf("Inseriu \"float var2;\"\n");
 	free(temp);
 	temp = NULL;
 	
 	//string var3;
 	temp = createLexval(12, IDS, NONE, "var3", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0, FALSE);
 	printf("Inseriu \"string var3;\"\n");
 	free(temp);
 	temp = NULL;
 	
 	//int foo(int a, const float b);
 	temp = createLexval(16, IDS, NONE, "foo", TRUE);	
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0, TRUE);
 	addFuncArg("foo", createFuncArg(INT, NULL, "a", FALSE));
 	addFuncArg("foo", createFuncArg(FLOAT, NULL, "b", TRUE));
 	printf("Inseriu \"int foo(int a, const float b);\"\n");
@@ -56,7 +56,7 @@ void oneTableTest(){
 	
 	//class animal [protected string name : private int eyes];
 	temp = createLexval(21, IDS, NONE, "animal", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER, 0, FALSE);
 	addField("animal", createUserTypeField(PROTECTED_ENCAPS, STRING, "name"));
 	addField("animal", createUserTypeField(PRIVATE_ENCAPS, INT, "eyes"));
 	printf("Inseriu \"class animal [protected string name : private int eyes];\"\n");	
@@ -65,7 +65,7 @@ void oneTableTest(){
 	
 	//string foo2(userType s)
 	temp = createLexval(26, IDS, NONE, "foo2", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0, TRUE);
 	addFuncArg("foo", createFuncArg(USER, "userType", "s", FALSE));
 	printf("Inseriu \"string foo2(userType s)\"\n");	
 	free(temp);
@@ -105,13 +105,13 @@ void multiTableTest(){
 	
 	 
 	temp = createLexval(1, IDS, NONE, "var1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0, FALSE);
 	printf("Inseriu \"int var1;\"\n");
 	free(temp);
 	temp = NULL;
 	
 	temp = createLexval(12, IDS, NONE, "var3", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0, FALSE);
 	printf("Inseriu \"string var3;\"\n");
 	free(temp);
 	temp = NULL;
@@ -120,14 +120,14 @@ void multiTableTest(){
 	initTable();
 	
 	temp = createLexval(17, IDS, NONE, "var2", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0, FALSE);
 	printf("Inseriu \"float var2;\"\n");
 	free(temp);
 	temp = NULL;
 
 	//símbolo deve ocultar o símbolo var1 global	
 	temp = createLexval(21, IDS, NONE, "var1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, STRING, 0, FALSE);
 	printf("Inseriu \"string var1;\"\n");
 	free(temp);
 	temp = NULL;
@@ -175,19 +175,19 @@ void vecTableTest(){
 	initTable();
 
 	temp = createLexval(21, IDS, NONE, "vec1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 12);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 12, FALSE);
 	printf("Inseriu \"vec1[12] int;\"\n");
 	free(temp);
 	temp = NULL;
 
 	temp = createLexval(21, IDS, NONE, "vec2", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 1000);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 1000, FALSE);
 	printf("Inseriu \"vec2[1000] float;\"\n");
 	free(temp);
 	temp = NULL;
 
 	temp = createLexval(21, IDS, NONE, "vec3", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, CHAR, 3);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, CHAR, 3, FALSE);
 	printf("Inseriu \"vec3[3] char;\"\n");
 	free(temp);
 	temp = NULL;
@@ -228,7 +228,7 @@ void userTypeTableTest(){
 	initTable();
 	
 	temp = createLexval(21, IDS, NONE, "ut1", TRUE);
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, USER, 0, FALSE);
 	addField("ut1", createUserTypeField(PROTECTED_ENCAPS, FLOAT, "f"));
 	addField("ut1", createUserTypeField(PUBLIC_ENCAPS, INT, "tel"));
 	
@@ -275,7 +275,7 @@ void funTableTest(){
 	initTable();	
 	
 	temp = createLexval(16, IDS, NONE, "foo", TRUE);	
-	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0, TRUE);
 	addFuncArg("foo", createFuncArg(INT, NULL, "a", FALSE));
 	addFuncArg("foo", createFuncArg(FLOAT, NULL, "b", TRUE));
 	addFuncArg("foo", createFuncArg(USER, "tipoDoWill", "tdw", TRUE));
@@ -310,12 +310,88 @@ void funTableTest(){
 	closeTable();
 	
 }
+
+void errorsTest(){
+	printf("\n\nTESTE DE ERROS NA TABELA\n");
+	printf("Inicializando tabela ...\n");
+	initTable();
+	printf("Testando erro de dupla declaração -> 101:\n");
+	temp = createLexval(21, IDS, NONE, "var1", TRUE);
+	if(!addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0, FALSE)){
+		printf("Inseriu \"int var1;\"\n");
+	}
+	free(temp);
+	temp = NULL;
+
+	temp = createLexval(27, IDS, NONE, "var1", TRUE);
+	if(!addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0, TRUE)){
+		printf("Inseriu \"float var1();\"\n");
+	}
+	else{
+		printf("Não conseguiu inserir float var1(); ERRO = %d\n", addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 0, TRUE));
+	} 
+	free(temp);
+
+	temp = createLexval(16, IDS, NONE, "foo", TRUE);	
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, INT, 0, TRUE);
+	addFuncArg("foo", createFuncArg(INT, NULL, "a", FALSE));
+	addFuncArg("foo", createFuncArg(FLOAT, NULL, "b", TRUE));
+	addFuncArg("foo", createFuncArg(USER, "tipoDoWill", "tdw", TRUE));
+	free(temp);
+	
+	temp = createLexval(21, IDS, NONE, "vec2", TRUE);
+	addSymbol(temp, NATUREZA_IDENTIFICADOR, FLOAT, 1000, FALSE);
+	free(temp);
+	temp = NULL;
+
+	printf("Testando erro de símbolo não declarado -> 100:\n");
+	if(isDefined("undeclared")){
+		printf("Não encontrou símbolo \"undeclared\"; Erro = %d\n", isDefined("undeclared"));
+	}
+	printf("Testando erro de símbolo não ser usado como variável -> 200:\n");
+	if(isVariable("foo")!=TRUE){
+		printf("Símbolo \"foo\" não é uma variável; Erro = %d\n", isVariable("foo"));	
+	}
+	if(isVariable("vec2")!=TRUE){
+		printf("Símbolo \"vec2\" não é uma variável; Erro = %d\n", isVariable("vec2"));	
+	}
+	if(isVariable("var1") == TRUE){
+		printf("Símbolo \"var1\" é variável\n");
+	}
+
+	printf("Testando erro de símbolo não ser usado como vetor -> 201:\n");
+	if(isVector("foo")!=TRUE){
+		printf("Símbolo \"foo\" não é um vetor; Erro = %d\n", isVector("foo"));	
+	}
+	if(isVector("vec2")==TRUE){
+		printf("Símbolo \"vec2\" é um vetor\n");	
+	}
+	if(isVector("var1") != TRUE){
+		printf("Símbolo \"var1\" não é um vetor; Erro = %d\n", isVector("var1"));
+	}
+	
+	printf("Testando erro de símbolo não ser usado como função -> 202:\n");
+	if(isFunction("foo")==TRUE){
+		printf("Símbolo \"foo\" é uma função\n");	
+	}
+	if(isFunction("vec2")!=TRUE){
+		printf("Símbolo \"vec2\" não é uma função; Erro = %d\n", isFunction("vec2"));	
+	}
+	if(isFunction("var1") != TRUE){
+		printf("Símbolo \"var1\" não é uma função; Erro = %d\n", isFunction("var1"));
+	}
+	
+	printf("Fechando tabela ...\n");
+	closeTable();
+	
+}
 int main(){
 	oneTableTest();
 	multiTableTest();
 	vecTableTest();
 	userTypeTableTest();
 	funTableTest();
+	errorsTest();
 }
 
 

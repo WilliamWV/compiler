@@ -1,5 +1,5 @@
 #include "lexVal.h"
-
+#include "errors.h"
 
 #define HASH_SIZE 40009
 /* Reusa tipos de literais definidos em lexVal.h
@@ -49,6 +49,9 @@ typedef struct utf{
 /// dessa estrutura associado a si.                                          ///
 ////////////////////////////////////////////////////////////////////////////////
 typedef struct hashContent{
+	char* symbol;                 // string que identifica o símbolo, útil para
+                                  // determinar se é o símbolo desejado ou outro
+                                  // com mesmo valor na hash
 	int line;                     // linha do símbolo
 	int nature;                   // natureza, como definido em natureza.h
 	int type;                     // tipo de dado do símbolo
@@ -89,7 +92,7 @@ void closeTable();
 //no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
 //função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
 //de usuário, os campos devem ser adicionados usando addField.
-void addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize);
+int addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, int isFunction);
 
 //adiciona um argumento a um símbolo
 void addFuncArg(char* symbol, FuncArg* arg);
