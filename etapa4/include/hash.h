@@ -1,3 +1,5 @@
+#ifndef HASH_H
+#define HASH_H "hashh"
 #include "lexVal.h"
 #include "errors.h"
 
@@ -38,6 +40,10 @@ typedef struct utf{
 	char* fieldName;  // nome do campo
 }UserTypeField;
 
+//Flags para os símbolos
+#define CONST 0x1
+#define STATIC 0x2
+
 ////////////////////////////////////////////////////////////////////////////////
 /// HashContent                                                              ///
 /// Estrutura usada para armazenar informações dos símbolos da tabela de     ///
@@ -51,7 +57,17 @@ typedef struct hashContent{
 	int line;                     // linha do símbolo
 	int nature;                   // natureza, como definido em natureza.h
 	int type;                     // tipo de dado do símbolo
+	char* userType;               // se for um tipo de usuário esse campo armazenará
+                                  // o nome do tipo
+                                  // De forma geral uma valor na tabela terá USER
+                                  // em type em 2 casos:
+                                  // 1) Declaração do tipo de usuário com class
+                                  // 2) Declaração de variável de tipo de usuário
+                                  // para diferenciar em 1 userType vai ser NULL
+                                  // (pois mesma string estará em symbol) e vai
+                                  // ser o nome do tipo em 2
 	int isFunction;
+	int flags;                    // flags do tipo static e const
 	int size;                     // tamanho do símbolo derivado do tipo
 	int vecSize;				  // valor que será 0 se o símbolo não for um
                                   // vetor e o tamanho do vetor caso contrário
@@ -88,7 +104,7 @@ void closeTable();
 //no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
 //função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
 //de usuário, os campos devem ser adicionados usando addField.
-int addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, int isFunction);
+int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType, int vecSize, int isFunction, int flags);
 
 //adiciona um argumento a um símbolo
 void addFuncArg(char* symbol, FuncArg* arg);
@@ -109,5 +125,10 @@ int isFunction(char *symbol);
 
 int isDefined(char *symbol);
 
+int isUserType(char *symbol);
+
+int hasField (char* symbol, char* field);
+
 void printFields(char *symbol);
 
+#endif

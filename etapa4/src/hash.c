@@ -1,5 +1,3 @@
-//TODO: precisa determinar um jeito de testar se um símbolo deveria ser usado como
-// tipo de usuário para gerar o erro ERR_USER
 #include "../include/hash.h"
 #include <stdio.h>
 
@@ -120,7 +118,14 @@ void closeTable(){
 //de usuário, os campos devem ser adicionados usando addField.
 //Retornará 0 se adicionou corretamente, ou um valor diferente se ocorreu um erro
 //O erro que pode ocorrer é o símbolo já estar definido no escopo atual
-int addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, int isFunction){
+//adiciona um novo símbolo à tabela de símbolos do topo da pilha, será recebido 
+//o valor léxico do símbolo, a sua natureza e o seu tipo. A linha está presente
+//no valor léxico, e o tamanho é inferido a partid do tipo. Se o símbolo for uma
+//função, os argumentos devem ser adicionados usando addFuncArg. Se for um tipo
+//de usuário, os campos devem ser adicionados usando addField.
+//Retornará 0 se adicionou corretamente, ou um valor diferente se ocorreu um erro
+//O erro que pode ocorrer é o símbolo já estar definido no escopo atual
+int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType, int vecSize, int isFunction, int flags){
 	
 	int hashIndex = hashFunction(valor_lexico->value.str);
 	while (tabelas->currentTable[hashIndex]!=NULL){
@@ -139,7 +144,14 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, int vecSize, in
 	tabelas->currentTable[hashIndex]->line = valor_lexico->lineNumber;
 	tabelas->currentTable[hashIndex]->nature = nature;
 	tabelas->currentTable[hashIndex]->type = type;
+	if (userType == NULL)
+		tabelas->currentTable[hashIndex]->userType = NULL;
+	else{ 
+		tabelas->currentTable[hashIndex]->userType = (char*) malloc(sizeof(char) * (strlen(userType) + 1));
+		strcpy(tabelas->currentTable[hashIndex]->userType, userType);		
+	}
 	tabelas->currentTable[hashIndex]->isFunction = isFunction;
+	tabelas->currentTable[hashIndex]->flags = flags;
 	tabelas->currentTable[hashIndex]->size = sizeOfType(type, vecSize);
 	tabelas->currentTable[hashIndex]->vecSize = vecSize;
 	tabelas->currentTable[hashIndex]->argsNum = 0;
@@ -247,3 +259,28 @@ int isVariable(char *symbol){
 	}
 	else return defined;
 }
+
+int isUserType(char *symbol){
+	int defined = isDefined(symbol);
+	if (defined == 0){
+		Hash *symbolContent = getSymbol(symbol);
+		if(symbolContent->fieldsNum > 0)
+			return TRUE;
+		else return ERR_USER;
+	}
+	else return defined;
+}
+
+int hasField (char* symbol, char* field){
+	int isUT = isUserType(symbol);
+	if(isUT == TRUE){
+		Hash* symbolContent = getSymbol(symbol);
+		int i;
+		for(i = 0; i<symbolContent->fieldsNum; i++){
+			if (strcmp(symbolContent->fields[i]->fieldName, field) == 0) return TRUE;
+		}
+		return ERR_USER;
+	}
+	else return isUT;
+}
+

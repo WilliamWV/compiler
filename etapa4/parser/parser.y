@@ -18,6 +18,39 @@ extern Fields *currentFields;
 int parsingSucceded = FALSE;
 extern Node *danglingNodes;
 
+//Retorna constante representando o tipo
+//opera sobre regra tipo ou tipoPrimitivo
+int getType(struct node* type){
+	if (strcmp(type->token->value.str, "int") == 0) return INT;
+	if (strcmp(type->token->value.str, "float") == 0) return FLOAT;
+	if (strcmp(type->token->value.str, "char") == 0) return CHAR;
+	if (strcmp(type->token->value.str, "bool") == 0) return BOOL;
+	if (strcmp(type->token->value.str, "string") == 0) return STRING;
+	return USER;
+}
+
+//opera sovre tipo
+char* getUserType(struct node* type){
+	if (getType(type) != USER){
+		return NULL;
+	}
+	else return type->token->value.str;
+}
+
+//TODO: implementar função addArgs ->operar sobre nodo args
+void addArgs(char* symbol, struct node* args){
+
+}
+//TODO: implementar função addFields -> operar sobre nodo list
+void addFields(char* symbol, struct node* list){
+
+}
+
+//TODO: implementar função verifyArguments // operar sobre argsCall
+int verifyArguments(char* symbol, struct node* argsCall){
+	return TRUE;
+}
+
 %}
 %define parse.error verbose
 %verbose
@@ -167,7 +200,15 @@ extern Node *danglingNodes;
 ////////////////////////////////////////////////////////////////////////////////
 
 programa: 
-	componentes					{$$ = $1; arvore = $$; parsingSucceded = TRUE;}
+	scopeOpenner componentes	{
+		$$ = $2; arvore = $$; 
+		parsingSucceded = TRUE;
+		closeTable(); // fecha escopo global
+	}
+;
+
+scopeOpenner:                  //Regra usada quando um escopo deve ser aberto
+	%empty 						{initTable();}
 ;
 
 componentes: 
@@ -179,17 +220,78 @@ componente:
 	| TK_IDENTIFICADOR depoisDeIdent { // Regra introduzida para resolver conflitos
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		/*Pode ser:
+			1) Declaração de vetor -> cabeça da regra tem valor léxico '[' 
+			   correspondente à abertura dos colchetes para declarar o tamanho
+			2) Função -> primeiro filho da cabeça é '(' indicando
+			   abertura dos parênteses para os parâmetros da função
+			3) Variáveis globais -> caso contrário	
+		*/
+		if ($2->token->value.c == '['){
+			//trata vetor
+			// kids[0] = TK_LIT_INT
+			// kids[1] = ']'
+			// kids[2] = static | NULL
+			// kids[3] = tipo
+			// kids[4] = ';'
+			int flag = 0;
+			if ($2->kids[2]->token != NULL) 
+				flag = STATIC;
+			int addSymb = addSymbol(
+				$1, NATUREZA_IDENTIFICADOR, getType($2->kids[3]), 
+				getUserType($2->kids[3]), $2->kids[0]->token->value.i, 
+				FALSE, flag 
+			);
+			if(addSymb!=0) exit(addSymb);
+		}
+		if ($2->kids[0]->token->value.c == '('){
+			//trata função
+			//$1 = tipo
+			//head = TK_IDENTIFICADOR -> nome
+			//kids[0] = '('
+			//kids[0]->kids[0] = args
+			//kids[0]->kids[1] = ')' 
+			int addSymb = addSymbol($2->token, NATUREZA_IDENTIFICADOR, USER, getUserType($$), 0, TRUE, 0);			
+			if(addSymb!=0) exit(addSymb);
+			addArgs($2->token->value.str, $2->kids[0]->kids[0]);
+		}
+		else{
+			//Existem diferentes variações:
+			//var global com tipos primitivos não estático -> head = tipoPrimitivo, kids[0] = ';'
+			//var global estatica -> head = TK_PR_STATIC, kids[0] = tipo, kids[1] = ';'
+			//var global não estática com tipo de usuário -> head = tipodeUser, kids[0] = ';'
+			
+			if ($2->kidsNumber == 2){
+				//var global estática
+				int addSymb = addSymbol(
+					$1, NATUREZA_IDENTIFICADOR, getType($2->kids[0]), 
+					getUserType($2->kids[0]), 0, FALSE, STATIC
+				);
+				if(addSymb!=0) exit(addSymb);
+			}else{
+				//var global não estática, getType e getUserType devem poder diferenciar entre tipo 
+				//de usuário e primitivos
+				//int addSymb = addSymbol($1, NATUREZA_IDENTIFICADOR, getType($2), getUserType($2), 0, FALSE, 0);
+				//if(addSymb!=0) exit(addSymb);
+			}
+		}
 	}
 	// Funções
 	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands {
 		$$ = $1; adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, TRUE, 0);		
+		if(addSymb!=0) exit(addSymb);		
+		addArgs($2->value.str, $3->kids[0]);
 	}
 	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, $4);
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), getUserType($2), 0, TRUE, STATIC);
+		if(addSymb!=0) exit(addSymb);		
+		addArgs($3->value.str, $4->kids[0]);
 	}
 ;
 
@@ -261,7 +363,9 @@ novoTipo:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
-
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, NULL, 0, FALSE, 0);		
+		if(addSymb!=0) exit(addSymb);		
+		addFields($2->value.str, $3->kids[0]);
 
 		/*printf("currentFields: %d %d %s; simbolo: %s \n", currentFields->field->fieldType, currentFields->field->fieldEncaps, currentFields->field->fieldName, $2->value.str);
 
@@ -336,10 +440,11 @@ argsAndCommands :
 		* Precisei alterar as regras para comandos pois na especificação existem várias excessões de comandos que podem ou não podem ser aplicados em determinado lugar, separei o case dos comandos simples por não ter ';' e separei os que tem vírgula dos que não tem, pois somente os que não tem vírgula podem aparecer nas listas de comando do for
 */
 blocoComandos:
-	'{' comandos '}' {
+	'{' scopeOpenner comandos '}' {
 		$$ = criaNodo($1); 
-		adicionaFilho($$, $2); 
-		adicionaFilho($$, criaNodo($3));
+		adicionaFilho($$, $3); 
+		adicionaFilho($$, criaNodo($4));
+		closeTable();                     //Fecha escopo local
 	}
 ;
 comando:
@@ -401,20 +506,26 @@ foreach:
 		adicionaFilho($$, $5); 
 		adicionaFilho($$, criaNodo($6)); 
 		adicionaFilho($$, $7);
+		int isVar = isVariable($3->value.str);
+		if(isVar!=TRUE) exit(isVar);
 	}
 ;
 
+//Para o for se cria um escopo onde estarão definidos eventuais símbolos 
+//definidos nas forLists, esse escopo terá o escopo do blocoComandos acima
+//de si na pilha, enquanto os comandos do for são executados 
 for:
-	TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos	{
-		$$ = criaNodo($1); 
-		adicionaFilho($$, criaNodo($2)); 
-		adicionaFilho($$, $3); 
-		adicionaFilho($$, criaNodo($4)); 
-		adicionaFilho($$, $5); 
-		adicionaFilho($$, criaNodo($6)); 
-		adicionaFilho($$, $7); 
-		adicionaFilho($$, criaNodo($8)); 
-		adicionaFilho($$, $9);
+	scopeOpenner TK_PR_FOR '(' forList ':' expression ':' forList ')' blocoComandos	{
+		$$ = criaNodo($2); 
+		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, $4); 
+		adicionaFilho($$, criaNodo($5)); 
+		adicionaFilho($$, $6); 
+		adicionaFilho($$, criaNodo($7)); 
+		adicionaFilho($$, $8); 
+		adicionaFilho($$, criaNodo($9)); 
+		adicionaFilho($$, $10);
+		closeTable();
 	}
 ;
 
@@ -481,41 +592,60 @@ localVarDefinition:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($2)), 0, FALSE, STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($2)), 0, FALSE, CONST);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4));
+		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($3)), 0, FALSE, STATIC + CONST);
+		if(addSymb!=0) exit(addSymb);
+		
 	}
 	| TK_IDENTIFICADOR TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($1)), 0, FALSE, 0);
+		if(addSymb!=0) exit(addSymb);
+		
 	}
 	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3));
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3));
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
+		if(addSymb!=0) exit(addSymb);
+		
 	}
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
+		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2));
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
+		if(addSymb!=0) exit(addSymb);
 	}
 
 	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
@@ -523,7 +653,10 @@ localVarDefinition:
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
-		adicionaFilho($$, criaNodo($5));
+		adicionaFilho($$, criaNodo($5));		
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
+		if(addSymb!=0) exit(addSymb);
+		
 	}
 	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
 		$$ = criaNodo($1); 
@@ -531,6 +664,9 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
+		
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
@@ -538,6 +674,9 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5));
+		
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
 		$$ = criaNodo($1); 
@@ -545,6 +684,9 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
+		
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
@@ -553,6 +695,8 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, criaNodo($6));
+		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
 		$$ = criaNodo($1); 
@@ -560,19 +704,25 @@ localVarDefinition:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
-		adicionaFilho($$, $6);
+		adicionaFilho($$, $6);		
+		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4));
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, $4);
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
+		if(addSymb!=0) exit(addSymb);
 	}
 
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
@@ -582,6 +732,8 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6);
+		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
 		$$ = criaNodo($1); 
@@ -590,13 +742,17 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6);
+		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
-		adicionaFilho($$, $5);
+		adicionaFilho($$, $5);		
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
 		$$ = criaNodo($1); 
@@ -604,6 +760,8 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
 		$$ = criaNodo($1); 
@@ -611,6 +769,8 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
 		$$ = criaNodo($1); 
@@ -618,18 +778,24 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, $4);
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
+		if(addSymb!=0) exit(addSymb);
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, $4);
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, CONST);
+		if(addSymb!=0) exit(addSymb);
 	}
 ;
 negativeOrPositiveIdentifier:
@@ -684,6 +850,8 @@ assignment:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
+		int isVar = isVariable($1->value.str);
+		if (isVar!=TRUE) exit(isVar);
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
 		$$ = criaNodo($1); 
@@ -692,6 +860,8 @@ assignment:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6);
+		int isVec = isVector($1->value.str);
+		if (isVec != TRUE) exit(isVec);
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression {
 		$$ = criaNodo($1); 
@@ -699,6 +869,10 @@ assignment:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
+		int isUsr = isUserType($1->value.str);
+		if(isUsr!=TRUE) exit(isUsr);
+		int hasF = hasField($1->value.str, $3->value.str);
+		if(hasF != TRUE) exit(hasF);
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression {
 		$$ = criaNodo($1); 
@@ -709,6 +883,12 @@ assignment:
 		adicionaFilho($$, criaNodo($6)); 
 		adicionaFilho($$, criaNodo($7)); 
 		adicionaFilho($$, $8);
+		int isVec = isVector($1->value.str);
+		if (isVec != TRUE) exit(isVec);
+		int isUsr = isUserType($1->value.str);
+		if(isUsr!=TRUE) exit(isUsr);
+		int hasF = hasField($1->value.str, $6->value.str);
+		if(hasF != TRUE) exit(hasF);
 	}	
 ;
 input:
@@ -743,11 +923,19 @@ funcCall:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
+		int isFunc = isFunction($1->value.str);
+		if(isFunc!=TRUE) exit(isFunc);
+		int correctArgs = verifyArguments($1->value.str, $3);
+		if(correctArgs != TRUE) exit(correctArgs);
 	}
 	| TK_IDENTIFICADOR '(' ')' {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
+		int isFunc = isFunction($1->value.str);
+		if(isFunc!=TRUE) exit(isFunc);
+		int correctArgs = verifyArguments($1->value.str, NULL);
+		if(correctArgs != TRUE) exit(correctArgs);
 	}
 ;
 argsCall:
@@ -770,6 +958,8 @@ shift:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
+		int isVar = isVariable($1->value.str);
+		if (isVar!=TRUE) exit(isVar);
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression {
 		$$ = criaNodo($1); 
@@ -777,6 +967,10 @@ shift:
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, $4); 
 		adicionaFilho($$, $5);
+		int isUsr = isUserType($1->value.str);
+		if(isUsr!=TRUE) exit(isUsr);
+		int hasF = hasField($1->value.str, $3->value.str);
+		if(hasF != TRUE) exit(hasF);
 	}
 	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression {
 		$$ = criaNodo($1); 
@@ -785,6 +979,8 @@ shift:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
 		adicionaFilho($$, $6);
+		int isVec = isVector($1->value.str);
+		if (isVec != TRUE) exit(isVec);
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression {
 		$$ = criaNodo($1); 
@@ -795,8 +991,15 @@ shift:
 		adicionaFilho($$, criaNodo($6)); 
 		adicionaFilho($$, $7); 
 		adicionaFilho($$, $8);
+		int isVec = isVector($1->value.str);
+		if (isVec != TRUE) exit(isVec);
+		int isUsr = isUserType($1->value.str);
+		if(isUsr!=TRUE) exit(isUsr);
+		int hasF = hasField($1->value.str, $6->value.str);
+		if(hasF != TRUE) exit(hasF);
 	}
 ;
+
 
 return:
 	TK_PR_RETURN expression		{$$ = criaNodo($1); adicionaFilho($$, $2);}
@@ -863,12 +1066,22 @@ operands:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
+		int isVec = isVector($1->value.str);
+		if (isVec != TRUE) exit(isVec);
 	}
-	| TK_IDENTIFICADOR							{$$ = criaNodo($1);}
+	| TK_IDENTIFICADOR							{
+		$$ = criaNodo($1);
+		int isVar = isVariable($1->value.str);
+		if (isVar != TRUE) exit(isVar);
+	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR		{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
+		int isUsr = isUserType($1->value.str);
+		if(isUsr!=TRUE) exit(isUsr);
+		int hasF = hasField($1->value.str, $3->value.str);
+		if(hasF != TRUE) exit(hasF);
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
@@ -877,6 +1090,12 @@ operands:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, criaNodo($6));
+		int isVec = isVector($1->value.str);
+		if (isVec != TRUE) exit(isVec);
+		int isUsr = isUserType($1->value.str);
+		if(isUsr!=TRUE) exit(isUsr);
+		int hasF = hasField($1->value.str, $6->value.str);
+		if(hasF != TRUE) exit(hasF);
 	}
 	| TK_LIT_INT		{$$ = criaNodo($1);}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1);}
@@ -886,7 +1105,7 @@ operands:
 	| TK_LIT_STRING		{$$ = criaNodo($1);}
 	| funcCall			{$$ = $1;}
 	| pipe				{$$ = $1;}
-;	
+;
 operators:
 	'+'				{$$ = criaNodo($1);}
 	| '-'			{$$ = criaNodo($1);}
