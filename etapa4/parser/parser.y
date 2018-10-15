@@ -4,6 +4,7 @@
 #include "../include/lexVal.h"
 #include "../include/userTypeField.h"
 #include "../include/natureza.h"
+#include "../include/expression.h"
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
@@ -839,6 +840,8 @@ assignment:
 		adicionaFilho($$, $3);
 		int isVar = isVariable($1->value.str);
 		if (isVar!=TRUE) exit(isVar);
+		parseOperands($3);
+		printCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
 		$$ = criaNodo($1); 
@@ -853,7 +856,7 @@ assignment:
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
-		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodoCampo($3, $1->value.str)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
 		int isUsr = isUserType($1->value.str);
@@ -867,7 +870,7 @@ assignment:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
-		adicionaFilho($$, criaNodo($6)); 
+		adicionaFilho($$, criaNodoCampo($6, $1->value.str)); 
 		adicionaFilho($$, criaNodo($7)); 
 		adicionaFilho($$, $8);
 		int isVec = isVector($1->value.str);
@@ -951,7 +954,7 @@ shift:
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
-		adicionaFilho($$, criaNodo($3)); 
+		adicionaFilho($$, criaNodoCampo($3, $1->value.str));
 		adicionaFilho($$, $4); 
 		adicionaFilho($$, $5);
 		int isUsr = isUserType($1->value.str);
@@ -975,7 +978,7 @@ shift:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
-		adicionaFilho($$, criaNodo($6)); 
+		adicionaFilho($$, criaNodoCampo($6, $1->value.str));
 		adicionaFilho($$, $7); 
 		adicionaFilho($$, $8);
 		int isVec = isVector($1->value.str);
@@ -1064,7 +1067,7 @@ operands:
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR		{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
-		adicionaFilho($$, criaNodo($3));
+		adicionaFilho($$, criaNodoCampo($3, $1->value.str));
 		int isUsr = isUserType($1->value.str);
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $3->value.str);
@@ -1076,7 +1079,7 @@ operands:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
-		adicionaFilho($$, criaNodo($6));
+		adicionaFilho($$, criaNodoCampo($6, $1->value.str));
 		int isVec = isVector($1->value.str);
 		if (isVec != TRUE) exit(isVec);
 		int isUsr = isUserType($1->value.str);

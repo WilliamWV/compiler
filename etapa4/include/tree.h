@@ -6,10 +6,17 @@
 typedef struct node{
 	struct lexval* token;
 	int kidsNumber;
+	int coercion;
+	int type;
+	char *fieldOf;
 	struct node **kids; // lista de ponteiros
 } Node;
 
 Node* criaNodo(struct lexval* token);
+
+Node* criaNodoTipado(struct lexval* token, int type);
+
+Node* criaNodoCampo(struct lexval* token, char *fieldOf);
 
 Node* criaNodoDangling(struct lexval* token);
 

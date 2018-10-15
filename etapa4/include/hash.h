@@ -131,4 +131,8 @@ int hasField (char* symbol, char* field);
 
 void printFields(char *symbol);
 
+int fieldType(char *identifier, char *field);
+
+int identifierType(char *identifier);
+
 #endif

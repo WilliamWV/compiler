@@ -76,6 +76,27 @@ void printFields(char *symbol){
 		}
 	}
 }
+
+int fieldType(char *identifier, char *field){
+	Hash *symbolContent = getSymbol(identifier);
+	if (symbolContent!=NULL){
+		int i; 
+		for(i = 0; i < symbolContent->fieldsNum; i++){
+			if(strcmp(symbolContent->fields[i]->fieldName, field) == 0)
+				return symbolContent->fields[i]->fieldType;
+		}
+	}
+	return -1; // field nao encontrado
+}
+
+int identifierType(char *identifier){
+	Hash *symbolContent = getSymbol(identifier);
+	if (symbolContent!=NULL){
+		return symbolContent->type;
+	}
+	return -1; // field nao encontrado
+}
+
 //libera memória de todos os símbolos presentes na tabela do topo da pilha
 void freeTable(){
 	

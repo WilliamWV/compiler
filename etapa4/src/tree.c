@@ -20,6 +20,39 @@ Node* criaNodo(struct lexval* token){
 	if(token != NULL)
 		token->tokenInAst = TRUE;
 	Node *node = malloc(sizeof(Node));
+	node->type = NONE;
+	node->coercion = NONE;
+	node->fieldOf = NULL;
+	node->token = token;
+	node->kidsNumber = 0;
+	node->kids = (Node**)malloc(sizeof(Node*)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
+
+	return node;
+}
+
+Node* criaNodoTipado(struct lexval* token, int type){
+	nodosCriados++;
+	if(token != NULL)
+		token->tokenInAst = TRUE;
+	Node *node = malloc(sizeof(Node));
+	node->type = type;
+	node->coercion = NONE;
+	node->fieldOf = NULL;
+	node->token = token;
+	node->kidsNumber = 0;
+	node->kids = (Node**)malloc(sizeof(Node*)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
+
+	return node;
+}
+
+Node* criaNodoCampo(struct lexval* token, char *fieldOf){
+	nodosCriados++;
+	if(token != NULL)
+		token->tokenInAst = TRUE;
+	Node *node = malloc(sizeof(Node));
+	node->type = NONE;
+	node->coercion = NONE;
+	node->fieldOf = fieldOf;
 	node->token = token;
 	node->kidsNumber = 0;
 	node->kids = (Node**)malloc(sizeof(Node*)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
