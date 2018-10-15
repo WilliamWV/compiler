@@ -4,10 +4,10 @@
 //////////////////////////////////////////////////////////////////////////////// 
 
 //Tipos de usuário
-class pessoa [int idade : string nome];
+/*class pessoa [int idade : string nome];
 class animal [protected string name : private int eyes];
 class fake [public string fals: private string tru];
-class oneArg [int o];
+class oneArg [int o];*/
 
 //Variáveis globais
 g1 int;

@@ -68,11 +68,11 @@ void liberaFields(int index){
 }
 
 void printFields(char *symbol){
-	int index = hashFunction(symbol);
-	if (tabelas->currentTable[index]->fields!=NULL){
+	Hash *symbolContent = getSymbol(symbol);
+	if (symbolContent!=NULL){
 		int i; 
-		for(i = 0; i < tabelas->currentTable[index]->fieldsNum; i++){
-			printf("%s\n", tabelas->currentTable[index]->fields[i]->fieldName);
+		for(i = 0; i < symbolContent->fieldsNum; i++){
+			printf("%s\n", symbolContent->fields[i]->fieldName);
 		}
 	}
 }

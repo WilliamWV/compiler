@@ -41,10 +41,6 @@ char* getUserType(struct node* type){
 void addArgs(char* symbol, struct node* args){
 
 }
-//TODO: implementar função addFields -> operar sobre nodo list
-void addFields(char* symbol, struct node* list){
-
-}
 
 //TODO: implementar função verifyArguments // operar sobre argsCall
 int verifyArguments(char* symbol, struct node* argsCall){
@@ -175,7 +171,6 @@ int verifyArguments(char* symbol, struct node* argsCall){
 		      tentar liberar o mesmo token mais de uma vez se fizessemos algo no destrutor atual.
 	  */} <valor_lexico>
 %destructor {
-	//printFields("zorzo");
 	if(parsingSucceded == FALSE){
 		liberaDanglingParser($$);
 	}
@@ -364,17 +359,9 @@ novoTipo:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, NULL, 0, FALSE, 0);		
-		if(addSymb!=0) exit(addSymb);		
-		addFields($2->value.str, $3->kids[0]);
-
-		/*printf("currentFields: %d %d %s; simbolo: %s \n", currentFields->field->fieldType, currentFields->field->fieldEncaps, currentFields->field->fieldName, $2->value.str);
-
-		printf("currentFields: %d %d %s; simbolo: %s \n", currentFields->next->field->fieldType, currentFields->next->field->fieldEncaps, currentFields->next->field->fieldName, $2->value.str);
-
-printf("currentFields: %d %d %s; simbolo: %s \n", currentFields->next->next->field->fieldType, currentFields->next->next->field->fieldEncaps, currentFields->next->next->field->fieldName, $2->value.str);*/
-
-		//addSymbol($2, NATUREZA_IDENTIFICADOR, USER, 0, FALSE);
-		//addFieldsToSymbol($2->value.str, currentFields);
+		if(addSymb!=0) exit(addSymb);
+		addFieldsToSymbol($2->value.str, currentFields);
+		printFields("pessoa");
 		clearCurrentFields();
 	};
 listaCampos: 

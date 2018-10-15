@@ -4,10 +4,12 @@
 
 Fields *currentFields = NULL;
 int camposNoTipoAtual = 0;
+int contaCampos = 0;
 
 Fields *criaCampo(Node *field){
 	Fields *newField = malloc(sizeof(Fields));
 	newField->field = malloc(sizeof(UserTypeField));
+	newField->field->fieldEncaps = NOT_DEFINED_ENCAPS;
 	int i = 0;
 	if(field!=NULL){
 		adicionaInfoACampo(field, newField);
@@ -17,9 +19,8 @@ Fields *criaCampo(Node *field){
 			i++;
 		}
 	}
-	camposNoTipoAtual++;
 	newField->next = NULL;
-
+	contaCampos++;
 	return newField;	
 }
 
@@ -58,7 +59,6 @@ void adicionaInfoACampo(Node* field, Fields *newField){
 					newField->field->fieldName = strdup(field->token->value.str);		
 				}		
 			}
-			//adicionaInfoACampo(field->kids[i], newField);
 			i++;
 	}
 }
@@ -72,7 +72,8 @@ void adicionaCampo(Fields *newField){
 		}
 		aux->next = newField;
 		newField->next = NULL;
-	}
+	}	
+	camposNoTipoAtual++;
 }
 
 void addFieldsToSymbol(char* symbol, Fields *fields){
@@ -84,18 +85,50 @@ void addFieldsToSymbol(char* symbol, Fields *fields){
 	} 
 }
 
+/*void clearCurrentFields(){
+	Fields *aux = currentFields;
+	while(camposNoTipoAtual > 0){
+		int contador = 0;
+		while(aux != NULL){
+			printf("Avanca pro proximo ponteiro 1   ");
+			printf("%s (zorzo)\n", aux->field->fieldName);
+			printf("%d fields numb\n", camposNoTipoAtual);
+			aux = aux->next;
+			contador++;
+		}
+		free(aux);
+		aux = currentFields;
+		while(contador-1 > 0){
+			printf("Avanca pro proximo ponteiro 2   ");
+			printf("%s (zorzo)\n", aux->field->fieldName);
+			aux = aux->next;
+			contador--;
+		}
+		aux->next = NULL;
+		camposNoTipoAtual--;
+	}
+	free(currentFields);
+	currentFields = NULL;
+	printf("campos: %d\n", contaCampos)
+}*/
+
 void clearCurrentFields(){
 	Fields *aux = currentFields;
-
+	Fields *temp = aux;
 	while(camposNoTipoAtual > 0){
+		int contador = 0;
 		aux = currentFields;
-		int i = 0;
-		while(i < camposNoTipoAtual - 1){
+		while(aux != NULL){
 			aux = aux->next;
-			i++;
+			contador++;
 		}
-		if(aux->next != NULL)
-			free(aux->next);
+		aux = currentFields;
+		while(contador-1 > 0){
+			temp = aux;
+			aux = aux->next;
+			contador--;
+		}		
+		temp->next = NULL;
 		free(aux);
 		camposNoTipoAtual--;
 	}
