@@ -64,7 +64,28 @@ void adicionaOperando(Operands *newOperand){
 void parseOperands(Node *ast){
 	int i = 0;
 	if(ast!=NULL){
-		adicionaOperando(criaOperando(ast));
+		Operands *newOperand= criaOperando(ast);
+		/*int j = 0;
+		printf("\nnro de filhos: %d\n", ast->kidsNumber);
+		while(j < ast->kidsNumber){			
+			if(ast->kids[j]->token->tokenType == SPEC_CHAR){
+				printf("\nspecchar: %c  filho nro: %d", ast->kids[j]->token->value.c, j+1);
+				if(ast->token->tokenType == IDS)
+					printf(" token: %s  nro de filhos: %d\n", ast->token->value.str, ast->kidsNumber);
+			}			
+			printf("\nj = %d\n", j);
+			j++;
+		}*/
+		//excecoes especificas para tratar o caso de variaveis do tipo do usuario com campos (exemplo: tipousuario$campo); sem esses ifs acabamos adicionando tanto a variavel quanto o campo como operandos
+		if( (ast->kidsNumber == 2 || ast->kidsNumber == 4) && ast->kids[0]->token->tokenType == SPEC_CHAR){
+			if(ast->kids[0]->token->value.c != '$')
+				adicionaOperando(newOperand);
+		}
+		else if( (ast->kidsNumber == 7 || ast->kidsNumber == 5) && ast->kids[3]->token->tokenType == SPEC_CHAR){
+			if(ast->kids[3]->token->value.c != '$')
+				adicionaOperando(newOperand);
+		}
+		else adicionaOperando(newOperand);
 		while(i < ast->kidsNumber){ // enquanto houver filhos, os explora e os imprime
 			parseOperands(ast->kids[i]);
 			i++;
@@ -101,6 +122,11 @@ void printCurrentOperands(){
 				if(aux->identifier != NULL)
 					printf("Tipo: string; Identificador: %s\n", aux->identifier);
 				else printf("Tipo: string; Sem identificador (literal)\n");
+				break;
+			case USER:
+				if(aux->identifier != NULL)
+					printf("Tipo: criado pelo usuario; Identificador: %s\n", aux->identifier);
+				else printf("Tipo: criado pelo usuario; Sem identificador (literal)\n");
 				break;
 		}
 		aux = aux->next;
