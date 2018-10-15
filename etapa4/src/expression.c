@@ -132,3 +132,26 @@ void printCurrentOperands(){
 		aux = aux->next;
 	}
 }
+
+void clearCurrentOperands(){
+	Operands *aux = currentOperands;
+	Operands *temp = aux;
+	while(operandosNaExpAtual > 0){
+		int contador = 0;
+		aux = currentOperands;
+		while(aux != NULL){
+			aux = aux->next;
+			contador++;
+		}
+		aux = currentOperands;
+		while(contador-1 > 0){
+			temp = aux;
+			aux = aux->next;
+			contador--;
+		}		
+		temp->next = NULL;
+		free(aux);
+		operandosNaExpAtual--;
+	}
+	currentOperands = NULL;
+}

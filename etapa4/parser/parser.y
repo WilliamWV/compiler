@@ -362,7 +362,7 @@ novoTipo:
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, NULL, 0, FALSE, 0);		
 		if(addSymb!=0) exit(addSymb);
 		addFieldsToSymbol($2->value.str, currentFields);
-		printFields("pessoa");
+		//printFields("pessoa");
 		clearCurrentFields();
 	};
 listaCampos: 
@@ -842,6 +842,7 @@ assignment:
 		if (isVar!=TRUE) exit(isVar);
 		parseOperands($3);
 		printCurrentOperands();
+		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
 		$$ = criaNodo($1); 
@@ -870,7 +871,8 @@ assignment:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
-		adicionaFilho($$, criaNodoCampo($6, $1->value.str)); 
+		adicionaFilho($$, criaNodo($6));
+		//adicionaFilho($$, criaNodoCampo($6, $1->value.str)); 
 		adicionaFilho($$, criaNodo($7)); 
 		adicionaFilho($$, $8);
 		int isVec = isVector($1->value.str);
