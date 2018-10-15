@@ -133,6 +133,52 @@ void printCurrentOperands(){
 	}
 }
 
+int wrongTypeInExpression(Operands *operands){
+	Operands *aux = operands;
+	while(aux != NULL){
+		if(aux->type == CHAR || aux->type == STRING || aux->type == USER)
+			return ERR_WRONG_TYPE;
+	}
+	return 0;
+}
+
+//chamada apos a de cima
+int typeInference(Operands *operands){
+	Operands *aux = operands;
+	int type;
+	int contador = 0;
+	while(aux != NULL){
+		if(contador == 0){
+			contador++;
+			type = aux->type;
+		}
+		if(type == INT && aux->type == FLOAT)
+			type = FLOAT;
+		else if(type == BOOL && aux->type == INT)
+			type = INT;
+		else if(type == BOOL && aux->type == FLOAT)
+			type = FLOAT;
+	}
+	return type;
+}
+
+int coercion(Operands *operands, int expectedType, Node *expressionNode){
+	int expressionType = typeInference(operands);
+	if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
+	else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
+	else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
+	else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
+	else if(expectedType == USER && expressionType != USER) return ERR_USER_TO_X;
+	else if(expectedType != USER && expressionType == USER) return ERR_USER_TO_X;
+	else if(expectedType == FLOAT && expressionType == INT) printf("int vira float");
+	else if(expectedType == BOOL && expressionType == INT) printf("int vira bool");
+	else if(expectedType == FLOAT && expressionType == BOOL) printf("bool vira float");
+	else if(expectedType == INT && expressionType == BOOL) printf("bool vira int");
+	else if(expectedType == INT && expressionType == FLOAT) printf("float vira int");
+	else if(expectedType == BOOL && expressionType == FLOAT) printf("float vira bool");
+	return 0;
+}
+
 void clearCurrentOperands(){
 	Operands *aux = currentOperands;
 	Operands *temp = aux;
