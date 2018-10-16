@@ -130,18 +130,24 @@ void printCurrentOperands(){
 	}
 }
 
-int wrongTypeInExpression(Operands *operands){
-	Operands *aux = operands;
+int wrongTypeInExpression(){
+	Operands *aux = currentOperands;
+	int foundExpressionOperands = FALSE;
 	while(aux != NULL){
-		if(aux->type == CHAR || aux->type == STRING || aux->type == USER)
+		if(aux->type == USER)
 			return ERR_WRONG_TYPE;
+		if(aux->type != CHAR && aux->type != STRING &&  aux->type != USER)
+			foundExpressionOperands = TRUE;
+		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperands == TRUE)
+			return ERR_WRONG_TYPE;
+		aux = aux->next;
 	}
 	return 0;
 }
 
 //chamada apos a de cima
-int typeInference(Operands *operands){
-	Operands *aux = operands;
+int typeInference(){
+	Operands *aux = currentOperands;
 	int type;
 	int contador = 0;
 	while(aux != NULL){
@@ -155,24 +161,47 @@ int typeInference(Operands *operands){
 			type = INT;
 		else if(type == BOOL && aux->type == FLOAT)
 			type = FLOAT;
+		aux = aux->next;
 	}
+	/*switch(type)
+		{
+			case INT: 
+				printf("Tipo: int\n");
+				break;
+			case FLOAT: 
+				printf("Tipo: float\n");
+				break;
+			case BOOL: 
+				printf("Tipo: bool\n");
+				break;
+			case CHAR: 
+				printf("Tipo: char\n");
+				break;
+			case STRING: 
+				printf("Tipo: string\n");
+				break;
+			case USER:
+				printf("Tipo: user\n");
+				break;
+		}*/
 	return type;
 }
 
 int coercion(int expectedType, Node *expressionNode){
-	int expressionType = typeInference(currentOperands);
+	int correctOperands =  wrongTypeInExpression();
+		if (correctOperands != 0) return correctOperands;
+	int expressionType = typeInference();
 	if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
 	else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
 	else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
 	else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
-	else if(expectedType == USER && expressionType != USER) return ERR_USER_TO_X;
-	else if(expectedType != USER && expressionType == USER) return ERR_USER_TO_X;
-	else if(expectedType == FLOAT && expressionType == INT) printf("int vira float");
-	else if(expectedType == BOOL && expressionType == INT) printf("int vira bool");
-	else if(expectedType == FLOAT && expressionType == BOOL) printf("bool vira float");
-	else if(expectedType == INT && expressionType == BOOL) printf("bool vira int");
-	else if(expectedType == INT && expressionType == FLOAT) printf("float vira int");
-	else if(expectedType == BOOL && expressionType == FLOAT) printf("float vira bool");
+	else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
+	else if(expectedType == FLOAT && expressionType == INT) printf("int vira float\n");
+	else if(expectedType == BOOL && expressionType == INT) printf("int vira bool\n");
+	else if(expectedType == FLOAT && expressionType == BOOL) printf("bool vira float\n");
+	else if(expectedType == INT && expressionType == BOOL) printf("bool vira int\n");
+	else if(expectedType == INT && expressionType == FLOAT) printf("float vira int\n");
+	else if(expectedType == BOOL && expressionType == FLOAT) printf("float vira bool\n");
 	return 0;
 }
 

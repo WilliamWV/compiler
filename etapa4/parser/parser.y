@@ -522,6 +522,11 @@ ifThenElse:
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6); 
 		adicionaFilho($$, $7);
+
+		parseOperands($3);
+		int correctOperands =  coercion(BOOL, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 ;
 optElse:
@@ -556,6 +561,12 @@ for:
 		adicionaFilho($$, $8); 
 		adicionaFilho($$, criaNodo($9)); 
 		adicionaFilho($$, $10);
+
+		parseOperands($6);
+		int correctOperands =  coercion(BOOL, $6);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
+
 		closeTable();
 	}
 ;
@@ -568,6 +579,11 @@ while_do:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6);
+
+		parseOperands($3);
+		int correctOperands =  coercion(BOOL, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 ;
 do_while:
@@ -578,6 +594,11 @@ do_while:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5); 
 		adicionaFilho($$, criaNodo($6));
+
+		parseOperands($5);
+		int correctOperands =  coercion(BOOL, $5);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 ;
 
@@ -606,6 +627,11 @@ switch:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
+		
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 ;
 case:
@@ -891,7 +917,11 @@ assignment:
 		adicionaFilho($$, $3);
 		int isVar = isVariable($1->value.str);
 		if (isVar!=TRUE) exit(isVar);
+
 		parseOperands($3);
+		int correctOperands =  coercion(identifierType($1->value.str), $3);
+		//printf("%d\n\n", correctOperands);
+		if (correctOperands != 0) exit(correctOperands);
 		printCurrentOperands();
 		clearCurrentOperands();
 	}
@@ -904,6 +934,16 @@ assignment:
 		adicionaFilho($$, $6);
 		int isVec = isVector($1->value.str);
 		if (isVec != TRUE) exit(isVec);
+		
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
+
+		parseOperands($6);
+		correctOperands =  coercion(identifierType($1->value.str), $6);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR '=' expression {
 		$$ = criaNodo($1); 
@@ -915,6 +955,11 @@ assignment:
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $3->value.str);
 		if(hasF != TRUE) exit(hasF);
+		
+		parseOperands($5);
+		int correctOperands =  coercion(fieldType($1->value.str, $3->value.str), $5);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR '=' expression {
 		$$ = criaNodo($1); 
@@ -931,6 +976,16 @@ assignment:
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $6->value.str);
 		if(hasF != TRUE) exit(hasF);
+
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
+
+		parseOperands($8);
+		correctOperands =  coercion(fieldType($1->value.str, $6->value.str), $8);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}	
 ;
 input:
@@ -1002,6 +1057,11 @@ shift:
 		adicionaFilho($$, $3);
 		int isVar = isVariable($1->value.str);
 		if (isVar!=TRUE) exit(isVar);
+
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression {
 		$$ = criaNodo($1); 
@@ -1013,6 +1073,11 @@ shift:
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $3->value.str);
 		if(hasF != TRUE) exit(hasF);
+
+		parseOperands($5);
+		int correctOperands =  coercion(INT, $5);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression {
 		$$ = criaNodo($1); 
@@ -1023,6 +1088,16 @@ shift:
 		adicionaFilho($$, $6);
 		int isVec = isVector($1->value.str);
 		if (isVec != TRUE) exit(isVec);
+
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
+		
+		parseOperands($6);
+		correctOperands =  coercion(INT, $6);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression {
 		$$ = criaNodo($1); 
@@ -1039,6 +1114,16 @@ shift:
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $6->value.str);
 		if(hasF != TRUE) exit(hasF);
+
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
+
+		parseOperands($8);
+		correctOperands =  coercion(INT, $8);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 ;
 
@@ -1110,6 +1195,11 @@ operands:
 		adicionaFilho($$, criaNodo($4));
 		int isVec = isVector($1->value.str);
 		if (isVec != TRUE) exit(isVec);
+		
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR							{
 		$$ = criaNodo($1);
@@ -1138,6 +1228,11 @@ operands:
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $6->value.str);
 		if(hasF != TRUE) exit(hasF);
+
+		parseOperands($3);
+		int correctOperands =  coercion(INT, $3);
+		if (correctOperands != 0) exit(correctOperands);
+		clearCurrentOperands();
 	}
 	| TK_LIT_INT		{$$ = criaNodo($1);}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1);}
