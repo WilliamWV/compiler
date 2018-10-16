@@ -233,20 +233,33 @@ componente:
 			int flag = 0;
 			if ($2->kids[2]->token != NULL) 
 				flag = STATIC;
-			int addSymb = addSymbol(
-				$1, NATUREZA_IDENTIFICADOR, getType($2->kids[3]), 
-				getUserType($2->kids[3]), $2->kids[0]->token->value.i, 
-				FALSE, flag 
-			);
-			if(addSymb!=0) exit(addSymb);
+			int type = getType($2->kids[3]);			
+			if (type == USER){
+				int isUsr = isUserType($2->kids[3]->token->value.str);
+				if(isUsr!=TRUE) exit(isUsr);
+				int addSymb = addSymbol(
+					$1, NATUREZA_IDENTIFICADOR, USER, getUserType($2->kids[3]),
+					$2->kids[0]->token->value.i, FALSE, flag
+				);
+				if (addSymb!=0) exit(addSymb);
+			}
+			else{
+				int addSymb = addSymbol(
+					$1, NATUREZA_IDENTIFICADOR, type, NULL, $2->kids[0]->token->value.i, 
+					FALSE, flag 
+				);
+				if(addSymb!=0) exit(addSymb);
+			}
 		}
-		if ($2->kids[0]->token->value.c == '('){
+		else if ($2->kids[0]->token->value.c == '('){
 			//trata função
 			//$1 = tipo
 			//head = TK_IDENTIFICADOR -> nome
 			//kids[0] = '('
 			//kids[0]->kids[0] = args
 			//kids[0]->kids[1] = ')' 
+			int isUsr = isUserType($$->token->value.str);
+			if(isUsr!=TRUE) exit(isUsr);
 			int addSymb = addSymbol($2->token, NATUREZA_IDENTIFICADOR, USER, getUserType($$), 0, TRUE, 0);			
 			if(addSymb!=0) exit(addSymb);
 			addArgs($2->token->value.str, $2->kids[0]->kids[0]);
@@ -259,16 +272,36 @@ componente:
 			
 			if ($2->kidsNumber == 2){
 				//var global estática
-				int addSymb = addSymbol(
-					$1, NATUREZA_IDENTIFICADOR, getType($2->kids[0]), 
-					getUserType($2->kids[0]), 0, FALSE, STATIC
-				);
-				if(addSymb!=0) exit(addSymb);
+				int type = getType($2->kids[0]);				
+				if (type == USER){
+					int isUsr = isUserType($2->kids[0]->token->value.str);
+					if(isUsr!=TRUE) exit(isUsr);
+					int addSymb = addSymbol(
+						$1, NATUREZA_IDENTIFICADOR, USER, 
+						getUserType($2->kids[0]), 0, FALSE, STATIC
+					);
+					if(addSymb!=0) exit(addSymb);
+				}
+				else{
+					int addSymb = addSymbol(
+						$1, NATUREZA_IDENTIFICADOR, type, 
+						NULL, 0, FALSE, STATIC
+					);
+					if(addSymb!=0) exit(addSymb);
+				}
+				
 			}else{
-				//var global não estática, getType e getUserType devem poder diferenciar entre tipo 
-				//de usuário e primitivos
-				//int addSymb = addSymbol($1, NATUREZA_IDENTIFICADOR, getType($2), getUserType($2), 0, FALSE, 0);
-				//if(addSymb!=0) exit(addSymb);
+				int type = getType($2);
+				if (type == USER){
+					int isUsr = isUserType($2->token->value.str);
+					if(isUsr!=TRUE) exit(isUsr);
+					int addSymb = addSymbol($1, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, FALSE, 0);
+					if(addSymb!=0) exit(addSymb);
+				}
+				else{
+					int addSymb = addSymbol($1, NATUREZA_IDENTIFICADOR, type, NULL, 0, FALSE, 0);
+					if(addSymb!=0) exit(addSymb);
+				}
 			}
 		}
 	}
@@ -285,9 +318,19 @@ componente:
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, $4);
-		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), getUserType($2), 0, TRUE, STATIC);
-		if(addSymb!=0) exit(addSymb);		
-		addArgs($3->value.str, $4->kids[0]);
+		int type = getType($2);		
+		if(type == USER){
+			int isUsr = isUserType($2->token->value.str);
+			if(isUsr!=TRUE) exit(isUsr);
+			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, TRUE, STATIC);
+			if(addSymb!=0) exit(addSymb);		
+			addArgs($3->value.str, $4->kids[0]);
+		}
+		else{
+			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, type, NULL, 0, TRUE, STATIC);
+			if(addSymb!=0) exit(addSymb);		
+			addArgs($3->value.str, $4->kids[0]);
+		}
 	}
 ;
 
@@ -580,14 +623,18 @@ localVarDefinition:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
-		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($2)), 0, FALSE, STATIC);
+		int isUsr = isUserType($2->value.str);
+		if (isUsr !=TRUE) exit(isUsr);
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($$->kids[0]), 0, FALSE, STATIC);
 		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
-		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($2)), 0, FALSE, CONST);
+		int isUsr = isUserType($2->value.str);
+		if (isUsr !=TRUE) exit(isUsr);
+		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($$->kids[0]), 0, FALSE, CONST);
 		if(addSymb!=0) exit(addSymb);
 	}
 	| TK_PR_STATIC TK_PR_CONST TK_IDENTIFICADOR TK_IDENTIFICADOR {
@@ -595,14 +642,18 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4));
-		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($3)), 0, FALSE, STATIC + CONST);
+		int isUsr = isUserType($3->value.str);
+		if (isUsr !=TRUE) exit(isUsr);
+		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, USER, getUserType($$->kids[1]), 0, FALSE, STATIC + CONST);
 		if(addSymb!=0) exit(addSymb);
 		
 	}
 	| TK_IDENTIFICADOR TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
-		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, getUserType(criaNodo($1)), 0, FALSE, 0);
+		int isUsr = isUserType($1->value.str);
+		if (isUsr !=TRUE) exit(isUsr);
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, getUserType($$), 0, FALSE, 0);
 		if(addSymb!=0) exit(addSymb);
 		
 	}
@@ -860,7 +911,7 @@ assignment:
 		adicionaFilho($$, criaNodoCampo($3, $1->value.str)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
-		int isUsr = isUserType($1->value.str);
+		int isUsr = isUserVar($1->value.str);
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $3->value.str);
 		if(hasF != TRUE) exit(hasF);
@@ -877,7 +928,7 @@ assignment:
 		adicionaFilho($$, $8);
 		int isVec = isVector($1->value.str);
 		if (isVec != TRUE) exit(isVec);
-		int isUsr = isUserType($1->value.str);
+		int isUsr = isUserVar($1->value.str);
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $6->value.str);
 		if(hasF != TRUE) exit(hasF);
@@ -959,7 +1010,7 @@ shift:
 		adicionaFilho($$, criaNodoCampo($3, $1->value.str));
 		adicionaFilho($$, $4); 
 		adicionaFilho($$, $5);
-		int isUsr = isUserType($1->value.str);
+		int isUsr = isUserVar($1->value.str);
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $3->value.str);
 		if(hasF != TRUE) exit(hasF);
@@ -985,7 +1036,7 @@ shift:
 		adicionaFilho($$, $8);
 		int isVec = isVector($1->value.str);
 		if (isVec != TRUE) exit(isVec);
-		int isUsr = isUserType($1->value.str);
+		int isUsr = isUserVar($1->value.str);
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $6->value.str);
 		if(hasF != TRUE) exit(hasF);
@@ -1070,7 +1121,7 @@ operands:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodoCampo($3, $1->value.str));
-		int isUsr = isUserType($1->value.str);
+		int isUsr = isUserVar($1->value.str);
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $3->value.str);
 		if(hasF != TRUE) exit(hasF);
@@ -1084,7 +1135,7 @@ operands:
 		adicionaFilho($$, criaNodoCampo($6, $1->value.str));
 		int isVec = isVector($1->value.str);
 		if (isVec != TRUE) exit(isVec);
-		int isUsr = isUserType($1->value.str);
+		int isUsr = isUserVar($1->value.str);
 		if(isUsr!=TRUE) exit(isUsr);
 		int hasF = hasField($1->value.str, $6->value.str);
 		if(hasF != TRUE) exit(hasF);

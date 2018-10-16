@@ -110,6 +110,8 @@ void freeTable(){
 					liberaFields(tableIndex);
 					free(tabelas->currentTable[tableIndex]->symbol);
 					free(tabelas->currentTable[tableIndex]->valor_lexico);
+					if(tabelas->currentTable[tableIndex]->userType!=NULL)
+						free(tabelas->currentTable[tableIndex]->userType);
 					tabelas->currentTable[tableIndex]->valor_lexico = NULL;
 				}
 				free(tabelas->currentTable[tableIndex]);
@@ -148,6 +150,8 @@ void closeTable(){
 //O erro que pode ocorrer é o símbolo já estar definido no escopo atual
 int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType, int vecSize, int isFunction, int flags){
 	
+	if (isUserType(valor_lexico->value.str) == TRUE) return ERR_DECLARED;
+
 	int hashIndex = hashFunction(valor_lexico->value.str);
 	while (tabelas->currentTable[hashIndex]!=NULL){
 		if(strcmp(tabelas->currentTable[hashIndex]->symbol, valor_lexico->value.str) == 0){
@@ -285,7 +289,21 @@ int isUserType(char *symbol){
 	int defined = isDefined(symbol);
 	if (defined == 0){
 		Hash *symbolContent = getSymbol(symbol);
-		if(symbolContent->fieldsNum > 0)
+		//identificador de tipo de usuário tem tipo = USER e userType = NULL
+		// para poder diferenciar de variável de tipo de usuário
+		if(symbolContent->type == USER && symbolContent->userType == NULL)
+			return TRUE;
+		else return ERR_USER;
+	}
+	else return defined;
+}
+
+int isUserVar(char *symbol){
+	int defined = isDefined(symbol);
+	if (defined == 0){
+		Hash *symbolContent = getSymbol(symbol);
+		//variável de tipo de usuário tem tipo = USER e userType =  id do tipo
+		if(symbolContent->type == USER && symbolContent->userType != NULL)
 			return TRUE;
 		else return ERR_USER;
 	}
@@ -293,15 +311,17 @@ int isUserType(char *symbol){
 }
 
 int hasField (char* symbol, char* field){
-	int isUT = isUserType(symbol);
+	int isUT = isUserVar(symbol);
 	if(isUT == TRUE){
-		Hash* symbolContent = getSymbol(symbol);
+		//símbolo da variável de tipo de usuário
+		Hash* varSymbolContent = getSymbol(symbol);
+		//símbolo do identificador do tipo de usuário
+		Hash* typeSymbolContent = getSymbol(varSymbolContent->userType);
 		int i;
-		for(i = 0; i<symbolContent->fieldsNum; i++){
-			if (strcmp(symbolContent->fields[i]->fieldName, field) == 0) return TRUE;
+		for(i = 0; i<typeSymbolContent->fieldsNum; i++){
+			if (strcmp(typeSymbolContent->fields[i]->fieldName, field) == 0) return TRUE;
 		}
 		return ERR_USER;
 	}
 	else return isUT;
 }
-

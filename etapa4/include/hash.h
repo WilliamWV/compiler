@@ -127,6 +127,8 @@ int isDefined(char *symbol);
 
 int isUserType(char *symbol);
 
+int isUserVar(char *symbol);
+
 int hasField (char* symbol, char* field);
 
 void printFields(char *symbol);
