@@ -40,7 +40,6 @@ char* getUserType(struct node* type){
 	else return type->token->value.str;
 }
 
-
 int verifyArguments(char* symbol, struct node* argsCall){
 	Hash* func = getSymbol(symbol);
 	int argsNum = func->argsNum;
@@ -79,6 +78,7 @@ int verifyArguments(char* symbol, struct node* argsCall){
 	}
 	return TRUE;
 }
+
 %}
 %define parse.error verbose
 %verbose
@@ -140,7 +140,8 @@ int verifyArguments(char* symbol, struct node* argsCall){
 
 
 %type <ast> args
-%type <ast> argsAndCommands
+%type <ast> funcArgs
+%type <ast> funcName
 %type <ast> argCall
 %type <ast> argsCall
 %type <ast> assignment
@@ -338,35 +339,24 @@ componente:
 		}
 	}
 	// Funções
-	| tiposPrimitivos TK_IDENTIFICADOR argsAndCommands {
-		$$ = $1; adicionaFilho($$, criaNodo($2)); 
-		adicionaFilho($$, $3);
-		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, TRUE, 0);		
-		if(addSymb!=0) exit(addSymb);		
-		addArgsToSymbol($2->value.str, currentArgs);
-		//printArgs($2->value.str);
-		clearCurrentArgs();
-	}
-	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands {
-		$$ = criaNodo($1); 
-		adicionaFilho($$, $2); 
-		adicionaFilho($$, criaNodo($3)); 
+	| funcName scopeOpenner funcArgs blocoComandos {
+		$$ = $1; 
+		adicionaFilho($$, $3); 
 		adicionaFilho($$, $4);
-		int type = getType($2);		
-		if(type == USER){
-			int isUsr = isUserType($2->token->value.str);
-			if(isUsr!=TRUE) exit(isUsr);
-			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, TRUE, STATIC);
-			if(addSymb!=0) exit(addSymb);		
-			addArgsToSymbol($3->value.str, currentArgs);
-			clearCurrentArgs();
+		//funcName tem 2 formas possíveis:
+		// 1) head = tipoPrimitivo, kids[0] = nome da func
+		// 2) head = TK_PR_STATIC, kids[0] = tipo, kids[1] = nome DA FUNC		
+		int kid = 0;
+		if($1->kidsNumber == 2){
+			kid = 1;
 		}
-		else{
-			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, type, NULL, 0, TRUE, STATIC);
-			if(addSymb!=0) exit(addSymb);		
-			addArgsToSymbol($3->value.str, currentArgs);
-			clearCurrentArgs();
-		}
+	
+	
+		addArgsToSymbol($1->kids[kid]->token->value.str, currentArgs);
+		printArgs($1->kids[kid]->token->value.str);
+		clearCurrentArgs();
+		closeTable();
+		
 	}
 ;
 
@@ -392,8 +382,12 @@ depoisDeIdent:
 	}
 ;
 fechaVarOuFunc:
-	  ';'				{$$ = criaNodo($1);}
-	| argsAndCommands	{$$ = $1;}
+	  ';'									{$$ = criaNodo($1);}
+	| scopeOpenner funcArgs blocoComandos	{
+		$$ = $2;
+		adicionaFilho($$, $3);
+		closeTable();
+	}
 ;
 
 //Regras gerais
@@ -495,7 +489,6 @@ parameters :
 	| parameter					{$$ = $1; adicionaArg(criaArg($1));}
 ;
 parameter: //nodo raiz vai ter ou um filho (TK_IDENTIFICADOR; tipo vai ser o nodo raiz) ou dois (tipo e TK_IDENTIFICADOR)
-	
 	tipoConst TK_IDENTIFICADOR	{
 		$$ = $1; adicionaFilho($$, criaNodo($2));
 		//tipo const = TK_PR_CONST tipo || tipo
@@ -517,12 +510,39 @@ parameter: //nodo raiz vai ter ou um filho (TK_IDENTIFICADOR; tipo vai ser o nod
 			if(addSymb!=0) exit(addSymb);
 		}
 	}
-argsAndCommands : 
-	'(' args ')' blocoComandos {
-		$$ = criaNodo($1); 
-		adicionaFilho($$, $2); 
-		adicionaFilho($$, criaNodo($3)); 
-		adicionaFilho($$, $4);
+;
+//precisa executar antes do bloco de comandos da função e adicionar o nome 
+//em escopo global
+funcName:
+	tiposPrimitivos TK_IDENTIFICADOR {
+		$$ = $1;
+		adicionaFilho($$, criaNodo($2));
+		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, TRUE, 0);		
+		if(addSymb!=0) exit(addSymb);
+	}
+	|TK_PR_STATIC tipo TK_IDENTIFICADOR{
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);	
+		adicionaFilho($$, criaNodo($3));
+		int type = getType($2);
+		if(type == USER){
+			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, TRUE, STATIC);
+			if(addSymb!=0) exit(addSymb);
+		}
+		else{
+			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, type, NULL, 0, TRUE, STATIC);
+			if(addSymb!=0) exit(addSymb);
+		}
+
+	}
+;
+//precisa executar antes do bloco de comandos da função
+//e adicionar os nomes no escopo da função
+funcArgs:
+	'(' args ')' {
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		adicionaFilho($$, criaNodo($3));
 	}
 ;
 //Bloco de comandos
@@ -1096,7 +1116,7 @@ funcCall:
 	}
 ;
 argsCall:
-	argCall					{$$ = $1;} //TODO: preciso fazer algum teste aqui pra ver se o tipo da expressao condiz com oq deveria
+	argCall					{$$ = $1;} 
 	| argsCall ',' argCall {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
