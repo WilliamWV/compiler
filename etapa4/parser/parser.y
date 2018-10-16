@@ -1072,30 +1072,44 @@ assignment:
 input:
 	TK_PR_INPUT expression		{
 		$$ = criaNodo($1); adicionaFilho($$, $2);
-		if($2->token->tokenType!=IDS) exit(ERR_WRONG_PAR_INPUT);	
+		if($2->token->tokenType!=IDS) exit(ERR_WRONG_PAR_INPUT);
+		int isVar = isVariable($2->token->value.str);
+		if(isVar!=TRUE) exit(ERR_VARIABLE);	
 	}
 ;
-
+/**
+	Considera que expressão aritmética tem tipo:
+		int ou float
+	
+*/
 output:
 	TK_PR_OUTPUT expression continueOutput {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
+		if($2->type != INT && $2->type != FLOAT && $2->token->literType!=STRING)
+			exit(ERR_WRONG_PAR_OUTPUT);
 	}
 	| TK_PR_OUTPUT expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		if($2->type != INT && $2->type != FLOAT && $2->token->literType!=STRING)
+			exit(ERR_WRONG_PAR_OUTPUT);
 	}
 ;
 continueOutput: 
 	',' expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		if($2->type != INT && $2->type != FLOAT && $2->token->literType!=STRING)
+			exit(ERR_WRONG_PAR_OUTPUT);
 	}
 	| ',' expression continueOutput	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
+		if($2->type != INT && $2->type != FLOAT && $2->token->literType!=STRING)
+			exit(ERR_WRONG_PAR_OUTPUT);
 	}
 ;
 funcCall:
