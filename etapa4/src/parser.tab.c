@@ -4547,9 +4547,9 @@ yyreduce:
     {(yyval.ast) = (yyvsp[0].ast);
 		parseOperands((yyvsp[0].ast));
 		int correctOperands =  coercion(NONE, (yyvsp[0].ast));
-		printf("%d\n", (yyvsp[0].ast)->type);
+		printf("tipo da expressao: %d\n", (yyvsp[0].ast)->type);
 		if (correctOperands != 0) exit(correctOperands);
-		printf("%d\n", (yyvsp[0].ast)->type);
+		printf("tipo da expressao: %d\n", (yyvsp[0].ast)->type);
 		clearCurrentOperands();
 	}
 #line 4556 "parser.tab.c" /* yacc.c:1646  */
