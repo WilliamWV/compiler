@@ -40,16 +40,45 @@ char* getUserType(struct node* type){
 	else return type->token->value.str;
 }
 
-//TODO: implementar função addArgs ->operar sobre nodo args
-void addArgs(char* symbol, struct node* args){
 
-}
-
-//TODO: implementar função verifyArguments // operar sobre argsCall
 int verifyArguments(char* symbol, struct node* argsCall){
+	Hash* func = getSymbol(symbol);
+	int argsNum = func->argsNum;
+	if(argsCall == NULL){ // função sem argumentos
+		if (argsNum == 0) return TRUE;
+		return ERR_MISSING_ARGS;
+	}
+	if(argsNum == 0){ // argsCall não é nulo mas a função exige 0 argumentos
+		return ERR_EXCESS_ARGS;
+	}
+	// estrutura do nodo é:
+	// head = argCall; filhos pares = ','; filhos ímpares = argCall
+	// portanto argsCall deve ter 2*(argsNum-1) filhos
+	if(argsCall->kidsNumber < 2*(argsNum - 1)) return ERR_MISSING_ARGS;
+	if(argsCall->kidsNumber > 2*(argsNum - 1)) return ERR_EXCESS_ARGS;
+	
+	int currentArg = 0;	
+	//pipe
+	if (!(argsCall->token->tokenType == SPEC_CHAR || argsCall->token->value.c == '.')){
+		if (argsCall->type != func->args[currentArg]->argType) {
+			return ERR_WRONG_TYPE_ARGS;
+		
+		}
+	}
+	for(int i = 1; i<argsNum; i+=2){
+		currentArg++;
+		//pipe
+		if (!(argsCall->kids[i]->token->tokenType == SPEC_CHAR || 
+			  argsCall->kids[i]->token->value.c == '.') )
+		{		
+			if(argsCall->kids[i]->type != func->args[currentArg]->argType) {
+				printf("wrong type 2\n");
+				return ERR_WRONG_TYPE_ARGS;
+			}
+		}
+	}
 	return TRUE;
 }
-
 %}
 %define parse.error verbose
 %verbose
