@@ -315,7 +315,7 @@ componente:
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, TRUE, 0);		
 		if(addSymb!=0) exit(addSymb);		
 		addArgsToSymbol($2->value.str, currentArgs);
-		printArgs($2->value.str);
+		//printArgs($2->value.str);
 		clearCurrentArgs();
 	}
 	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands {
