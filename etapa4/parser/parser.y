@@ -17,6 +17,7 @@ extern void* arvore;
 
 extern Fields *currentFields;
 extern Args *currentArgs;
+extern char *currentFunc;
 
 int parsingSucceded = FALSE;
 extern Node *danglingNodes;
@@ -71,7 +72,6 @@ int verifyArguments(char* symbol, struct node* argsCall){
 			  argsCall->kids[i]->token->value.c == '.') )
 		{		
 			if(argsCall->kids[i]->type != func->args[currentArg]->argType) {
-				printf("wrong type 2\n");
 				return ERR_WRONG_TYPE_ARGS;
 			}
 		}
@@ -350,8 +350,7 @@ componente:
 		if($1->kidsNumber == 2){
 			kid = 1;
 		}
-	
-	
+			
 		addArgsToSymbol($1->kids[kid]->token->value.str, currentArgs);
 		printArgs($1->kids[kid]->token->value.str);
 		clearCurrentArgs();
@@ -519,6 +518,7 @@ funcName:
 		adicionaFilho($$, criaNodo($2));
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, TRUE, 0);		
 		if(addSymb!=0) exit(addSymb);
+		saveFunc($2->value.str);	
 	}
 	|TK_PR_STATIC tipo TK_IDENTIFICADOR{
 		$$ = criaNodo($1);
@@ -533,6 +533,7 @@ funcName:
 			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, type, NULL, 0, TRUE, STATIC);
 			if(addSymb!=0) exit(addSymb);
 		}
+		saveFunc($3->value.str);	
 
 	}
 ;
@@ -1212,7 +1213,11 @@ shift:
 
 
 return:
-	TK_PR_RETURN expression		{$$ = criaNodo($1); adicionaFilho($$, $2);}
+	TK_PR_RETURN expression		{
+		$$ = criaNodo($1); adicionaFilho($$, $2);
+		int verifRet = verifyReturn($2);
+		if (verifRet!=TRUE) exit(verifRet);	
+	}
 ;
 
 expression:

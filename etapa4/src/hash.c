@@ -1,6 +1,7 @@
 #include "../include/hash.h"
 #include <stdio.h>
 
+
 HashStack* tabelas = NULL;
 
 int sizeOfType(int type, int vecSize){
@@ -22,9 +23,9 @@ int sizeOfType(int type, int vecSize){
 int hashFunction(char* symbol){
 	unsigned long hash = 5381;
 	int c;
-	while(c = *symbol++)
+	while(c = *symbol++){
 		hash = ((hash<<5) + hash) + c;
-
+	}
 	return (int)(hash%HASH_SIZE);
 }
 
@@ -360,3 +361,5 @@ int hasField (char* symbol, char* field){
 	}
 	else return isUT;
 }
+
+
