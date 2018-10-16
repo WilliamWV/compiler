@@ -495,8 +495,28 @@ parameters :
 	| parameter					{$$ = $1; adicionaArg(criaArg($1));}
 ;
 parameter: //nodo raiz vai ter ou um filho (TK_IDENTIFICADOR; tipo vai ser o nodo raiz) ou dois (tipo e TK_IDENTIFICADOR)
-	tipoConst TK_IDENTIFICADOR	{$$ = $1; adicionaFilho($$, criaNodo($2));}
-;
+	
+	tipoConst TK_IDENTIFICADOR	{
+		$$ = $1; adicionaFilho($$, criaNodo($2));
+		//tipo const = TK_PR_CONST tipo || tipo
+		int flag = 0;
+		struct node* aux = $1;
+		if ($1->kidsNumber==2){
+			flag = CONST;
+			aux = $1->kids[0];
+		}
+		int type = getType(aux);
+		if (type == USER){
+			int isUsr = isUserType(aux->token->value.str);
+			if(isUsr!=TRUE) exit(isUsr);
+			int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, getUserType(aux), 0, FALSE, flag);		
+			if(addSymb!=0) exit(addSymb);
+		}	
+		else{	
+			int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, type, NULL, 0, FALSE, flag);		
+			if(addSymb!=0) exit(addSymb);
+		}
+	}
 argsAndCommands : 
 	'(' args ')' blocoComandos {
 		$$ = criaNodo($1); 
