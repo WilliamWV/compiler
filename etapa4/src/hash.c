@@ -79,8 +79,9 @@ void printFields(char *symbol){
 
 int fieldType(char *identifier, char *field){
 	Hash *symbolContent = getSymbol(identifier);
+	symbolContent = getSymbol(symbolContent->userType);
 	if (symbolContent!=NULL){
-		int i; 
+		int i;
 		for(i = 0; i < symbolContent->fieldsNum; i++){
 			if(strcmp(symbolContent->fields[i]->fieldName, field) == 0)
 				return symbolContent->fields[i]->fieldType;

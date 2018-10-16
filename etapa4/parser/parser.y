@@ -922,8 +922,7 @@ assignment:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
-		adicionaFilho($$, criaNodo($6));
-		//adicionaFilho($$, criaNodoCampo($6, $1->value.str)); 
+		adicionaFilho($$, criaNodoCampo($6, $1->value.str)); 
 		adicionaFilho($$, criaNodo($7)); 
 		adicionaFilho($$, $8);
 		int isVec = isVector($1->value.str);

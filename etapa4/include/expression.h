@@ -22,6 +22,6 @@ void clearCurrentOperands();
 int wrongTypeInExpression(Operands *operands);
 
 //deve ser chamada depois da funcao acima, vai retornar ou o tipo da coercao e marcar no nodo correspondente, ou o erro encontrado (ERR_STRING_TO_X, ERR_CHAR_TO_X, ERR_USER_TO_X)
-int coercion(Operands *operands, int expectedType, Node *expressionNode);
+int coercion(int expectedType, Node *expressionNode);
 
 int typeInference(Operands *operands);

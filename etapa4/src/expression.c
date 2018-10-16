@@ -65,17 +65,7 @@ void parseOperands(Node *ast){
 	int i = 0;
 	if(ast!=NULL){
 		Operands *newOperand= criaOperando(ast);
-		/*int j = 0;
-		printf("\nnro de filhos: %d\n", ast->kidsNumber);
-		while(j < ast->kidsNumber){			
-			if(ast->kids[j]->token->tokenType == SPEC_CHAR){
-				printf("\nspecchar: %c  filho nro: %d", ast->kids[j]->token->value.c, j+1);
-				if(ast->token->tokenType == IDS)
-					printf(" token: %s  nro de filhos: %d\n", ast->token->value.str, ast->kidsNumber);
-			}			
-			printf("\nj = %d\n", j);
-			j++;
-		}*/
+
 		//excecoes especificas para tratar o caso de variaveis do tipo do usuario com campos (exemplo: tipousuario$campo); sem esses ifs acabamos adicionando tanto a variavel quanto o campo como operandos
 		if( (ast->kidsNumber == 2 || ast->kidsNumber == 4) && ast->kids[0]->token->tokenType == SPEC_CHAR){
 			if(ast->kids[0]->token->value.c != '$'){
@@ -169,8 +159,8 @@ int typeInference(Operands *operands){
 	return type;
 }
 
-int coercion(Operands *operands, int expectedType, Node *expressionNode){
-	int expressionType = typeInference(operands);
+int coercion(int expectedType, Node *expressionNode){
+	int expressionType = typeInference(currentOperands);
 	if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
 	else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
 	else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
