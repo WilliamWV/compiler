@@ -1,6 +1,8 @@
-int ident(int a){
+int ident(char a){
 	//return a;
 }
 int main(){
-	ident(1+2);
+	char zorzo;
+	ident(zorzo);
+	ident('a');
 }

@@ -137,12 +137,12 @@ int wrongTypeInExpression(){
 	Operands *aux = currentOperands;
 	int foundExpressionOperands = FALSE;
 	while(aux != NULL){
-		if(aux->type == USER)
-			return ERR_WRONG_TYPE;
+		if(aux->type == USER){printf("oi1\n");
+			return ERR_WRONG_TYPE;}
 		if(aux->type != CHAR && aux->type != STRING &&  aux->type != USER)
 			foundExpressionOperands = TRUE;
-		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperands == TRUE)
-			return ERR_WRONG_TYPE;
+		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperands == TRUE){printf("oi1\n");
+			return ERR_WRONG_TYPE;}
 		aux = aux->next;
 	}
 	return 0;
@@ -194,14 +194,15 @@ int coercion(int expectedType, Node *expressionNode){
 	int correctOperands =  wrongTypeInExpression();
 		if (correctOperands != 0) return correctOperands;
 	int expressionType = typeInference();
-	if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
-	else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
-	else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
-	else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
-	else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
+	if(expectedType != NONE){ // se estou esperando qualquer tipo nao ha erro de coercao
+		if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
+		else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
+		else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
+		else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
+		else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
+	}
 
 	expressionNode->type = expressionType;
-	//printf("wut: %d\n", expressionNode->type);
 
 	if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; /*printf("int vira float\n");*/ }
 	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; /*printf("int vira bool\n");*/ }

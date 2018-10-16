@@ -1003,7 +1003,8 @@ assignment:
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printf("%d\n\n", correctOperands);
 		if (correctOperands != 0) exit(correctOperands);
-		//printCurrentOperands();
+		printf("tipo da expressao: %d", $3->type);
+		printCurrentOperands();
 		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
@@ -1145,9 +1146,9 @@ argCall:
 	expression			{$$ = $1;
 		parseOperands($1);
 		int correctOperands =  coercion(NONE, $1);
-		printf("tipo da expressao: %d\n", $1->type);
+		//printf("tipo da expressao: %d\n", $1->type);
 		if (correctOperands != 0) exit(correctOperands);
-		printf("tipo da expressao: %d\n", $1->type);
+		//printf("tipo da expressao: %d\n", $1->type);
 		clearCurrentOperands();
 	}
 	| '.'				{$$ = criaNodo($1);};
