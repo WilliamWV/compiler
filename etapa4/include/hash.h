@@ -1,18 +1,9 @@
 #ifndef HASH_H
 #define HASH_H "hashh"
 #include "lexVal.h"
-#include "errors.h"
+#include "defines.h"
 
-#define HASH_SIZE 40009
-/* Reusa tipos de literais definidos em lexVal.h
-#define INT 0X8
-#define FLOAT 0x9
-#define CHAR 0xA
-#define BOOL 0XB
-#define STRING 0XC
-*/
-#define USER 0xD //adiciona tipo de usuário
-#define VEC 0xE  //adiciona tipo vetor
+
 ////////////////////////////////////////////////////////////////////////////////
 /// FuncArg                                                                  ///
 /// Estrutura usada para armazenar informações de um argumento de função, é  ///
@@ -40,9 +31,7 @@ typedef struct utf{
 	char* fieldName;  // nome do campo
 }UserTypeField;
 
-//Flags para os símbolos
-#define CONST 0x1
-#define STATIC 0x2
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// HashContent                                                              ///
@@ -132,6 +121,8 @@ int isUserVar(char *symbol);
 int hasField (char* symbol, char* field);
 
 void printFields(char *symbol);
+
+void printArgs(char *symbol);
 
 int fieldType(char *identifier, char *field);
 

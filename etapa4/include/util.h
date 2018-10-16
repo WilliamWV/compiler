@@ -1,5 +1,6 @@
 #include "../include/lexVal.h"
 #include "../include/hash.h"
+#include "defines.h"
 
 /**
 	O objetivo desse arquivo, associado com o arquivo util.c, é fornecer funções

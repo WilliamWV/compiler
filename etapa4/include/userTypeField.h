@@ -1,11 +1,6 @@
 #include "tree.h"
 #include "hash.h"
-
-//Definição dos modificadores de encapsulamento
-#define PUBLIC_ENCAPS     0x10
-#define PRIVATE_ENCAPS    0x11
-#define PROTECTED_ENCAPS  0X12
-#define NOT_DEFINED_ENCAPS 0X13
+#include "defines.h"
 
 typedef struct fieldList{
 	UserTypeField *field;

@@ -3,8 +3,9 @@
 #include "../include/tree.h"
 #include "../include/lexVal.h"
 #include "../include/userTypeField.h"
-#include "../include/natureza.h"
+#include "../include/defines.h"
 #include "../include/expression.h"
+#include "../include/functionArgs.h"
 int yylex(void);
 extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
 int yyerror (char const *s){
@@ -15,6 +16,7 @@ int yyerror (char const *s){
 extern void* arvore;
 
 extern Fields *currentFields;
+extern Args *currentArgs;
 
 int parsingSucceded = FALSE;
 extern Node *danglingNodes;
@@ -251,7 +253,7 @@ componente:
 				if(addSymb!=0) exit(addSymb);
 			}
 		}
-		else if ($2->kids[0]->token->value.c == '('){
+		else if ($2->kids[0]->token->value.c == '('){ //
 			//trata função
 			//$1 = tipo
 			//head = TK_IDENTIFICADOR -> nome
@@ -262,7 +264,8 @@ componente:
 			if(isUsr!=TRUE) exit(isUsr);
 			int addSymb = addSymbol($2->token, NATUREZA_IDENTIFICADOR, USER, getUserType($$), 0, TRUE, 0);			
 			if(addSymb!=0) exit(addSymb);
-			addArgs($2->token->value.str, $2->kids[0]->kids[0]);
+			addArgsToSymbol($2->token->value.str, currentArgs);
+			clearCurrentArgs();
 		}
 		else{
 			//Existem diferentes variações:
@@ -311,7 +314,9 @@ componente:
 		adicionaFilho($$, $3);
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, TRUE, 0);		
 		if(addSymb!=0) exit(addSymb);		
-		addArgs($2->value.str, $3->kids[0]);
+		addArgsToSymbol($2->value.str, currentArgs);
+		printArgs($2->value.str);
+		clearCurrentArgs();
 	}
 	| TK_PR_STATIC tipo TK_IDENTIFICADOR argsAndCommands {
 		$$ = criaNodo($1); 
@@ -324,12 +329,14 @@ componente:
 			if(isUsr!=TRUE) exit(isUsr);
 			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, TRUE, STATIC);
 			if(addSymb!=0) exit(addSymb);		
-			addArgs($3->value.str, $4->kids[0]);
+			addArgsToSymbol($3->value.str, currentArgs);
+			clearCurrentArgs();
 		}
 		else{
 			int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, type, NULL, 0, TRUE, STATIC);
 			if(addSymb!=0) exit(addSymb);		
-			addArgs($3->value.str, $4->kids[0]);
+			addArgsToSymbol($3->value.str, currentArgs);
+			clearCurrentArgs();
 		}
 	}
 ;
@@ -449,12 +456,16 @@ args:
 parameters : 
 	parameter ',' parameters {
 		$$ = $1; 
+		
+		adicionaArg(criaArg($1));
+
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
+
 	}
-	| parameter					{$$ = $1;}
+	| parameter					{$$ = $1; adicionaArg(criaArg($1));}
 ;
-parameter: 
+parameter: //nodo raiz vai ter ou um filho (TK_IDENTIFICADOR; tipo vai ser o nodo raiz) ou dois (tipo e TK_IDENTIFICADOR)
 	tipoConst TK_IDENTIFICADOR	{$$ = $1; adicionaFilho($$, criaNodo($2));}
 ;
 argsAndCommands : 
@@ -1036,7 +1047,7 @@ funcCall:
 	}
 ;
 argsCall:
-	argCall					{$$ = $1;}
+	argCall					{$$ = $1;} //TODO: preciso fazer algum teste aqui pra ver se o tipo da expressao condiz com oq deveria
 	| argsCall ',' argCall {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 

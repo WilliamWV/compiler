@@ -1,5 +1,6 @@
 #include "tree.h"
 #include "hash.h"
+#include "defines.h"
 
 typedef struct operandsList{
 	char *identifier;

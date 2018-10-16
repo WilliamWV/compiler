@@ -2,6 +2,7 @@
 #define TREE_H
 
 #include "lexVal.h"
+#include "defines.h"
 
 typedef struct node{
 	struct lexval* token;

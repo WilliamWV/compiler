@@ -77,6 +77,40 @@ void printFields(char *symbol){
 	}
 }
 
+void printArgs(char *symbol){
+	Hash *symbolContent = getSymbol(symbol);
+	if (symbolContent!=NULL){
+		int i; 
+		for(i = 0; i < symbolContent->argsNum; i++){
+			printf("Nome do argumento: %s  ", symbolContent->args[i]->argName);
+			if(symbolContent->args[i]->isConst == FALSE)
+				printf("Const: false  ");
+			else printf("Const: true  ");
+			switch(symbolContent->args[i]->argType)
+			{
+				case INT: 
+					printf("Tipo: int\n");
+					break;
+				case FLOAT: 
+					printf("Tipo: float\n");
+					break;
+				case BOOL: 
+					printf("Tipo: bool\n");
+					break;
+				case CHAR: 
+					printf("Tipo: char\n");
+					break;
+				case STRING: 
+					printf("Tipo: string\n");
+					break;
+				case USER:
+					printf("Tipo: user (%s)\n", symbolContent->args[i]->userType);
+					break;
+			}
+		}
+	}
+}
+
 int fieldType(char *identifier, char *field){
 	Hash *symbolContent = getSymbol(identifier);
 	symbolContent = getSymbol(symbolContent->userType);

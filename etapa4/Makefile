@@ -18,6 +18,8 @@ HASH_C=src/hash.c
 HASH_O=obj/hash.o
 EXP_C=src/expression.c
 EXP_O=obj/expression.o
+FARGS_C=src/functionArgs.c
+FARGS_O=obj/functionArgs.o
 UTF_C=src/userTypeField.c
 UTF_O=obj/userTypeField.o
 REPORT_FILE = report
@@ -33,11 +35,11 @@ bison: $(BISON_SRC)
 	mv parser.tab.h include
 	mv parser.output parser
 gen_obj: flex
-	$(CC) -c $(FLEX_C) $(BISON_C) $(TREE_C) $(UTF_C) $(EXP_C) $(HASH_C) $(MAIN_C)
+	$(CC) -c $(FLEX_C) $(BISON_C) $(TREE_C) $(UTF_C) $(EXP_C) $(FARGS_C) $(HASH_C) $(MAIN_C)
 	mv *.o obj
 
 gen_bin: gen_obj
-	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) $(TREE_O) $(UTF_O) $(EXP_O) $(HASH_O) $(MAIN_O) -lfl
+	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) $(TREE_O) $(UTF_O) $(EXP_O) $(FARGS_C) $(HASH_O) $(MAIN_O) -lfl
 
 
 clean:
