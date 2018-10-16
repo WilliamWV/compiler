@@ -137,12 +137,12 @@ int wrongTypeInExpression(){
 	Operands *aux = currentOperands;
 	int foundExpressionOperands = FALSE;
 	while(aux != NULL){
-		if(aux->type == USER){printf("oi1\n");
-			return ERR_WRONG_TYPE;}
+		if(aux->type == USER)
+			return ERR_WRONG_TYPE;
 		if(aux->type != CHAR && aux->type != STRING &&  aux->type != USER)
 			foundExpressionOperands = TRUE;
-		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperands == TRUE){printf("oi1\n");
-			return ERR_WRONG_TYPE;}
+		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperands == TRUE)
+			return ERR_WRONG_TYPE;
 		aux = aux->next;
 	}
 	return 0;
