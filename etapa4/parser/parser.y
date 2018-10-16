@@ -1069,7 +1069,10 @@ assignment:
 	}	
 ;
 input:
-	TK_PR_INPUT expression		{$$ = criaNodo($1); adicionaFilho($$, $2);}
+	TK_PR_INPUT expression		{
+		$$ = criaNodo($1); adicionaFilho($$, $2);
+		if($2->token->tokenType!=IDS) exit(ERR_WRONG_PAR_INPUT);	
+	}
 ;
 
 output:
