@@ -1,0 +1,2 @@
+class usertypeComp [private float idade];
+int zorzo(int arg1, float arg2, int zorzo, const usertypeComp var, char will, string comp){}

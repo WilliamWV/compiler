@@ -352,7 +352,7 @@ componente:
 		}
 			
 		addArgsToSymbol($1->kids[kid]->token->value.str, currentArgs);
-		printArgs($1->kids[kid]->token->value.str);
+		//printArgs($1->kids[kid]->token->value.str);
 		clearCurrentArgs();
 		closeTable();
 		
@@ -1003,7 +1003,7 @@ assignment:
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printf("%d\n\n", correctOperands);
 		if (correctOperands != 0) exit(correctOperands);
-		printCurrentOperands();
+		//printCurrentOperands();
 		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
@@ -1142,7 +1142,14 @@ argsCall:
 	}
 ;
 argCall:
-	expression			{$$ = $1;}
+	expression			{$$ = $1;
+		parseOperands($1);
+		int correctOperands =  coercion(NONE, $1);
+		printf("tipo da expressao: %d\n", $1->type);
+		if (correctOperands != 0) exit(correctOperands);
+		printf("tipo da expressao: %d\n", $1->type);
+		clearCurrentOperands();
+	}
 	| '.'				{$$ = criaNodo($1);};
 
 shiftOp: 

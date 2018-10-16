@@ -199,7 +199,11 @@ int coercion(int expectedType, Node *expressionNode){
 	else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
 	else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
 	else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
-	else if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; /*printf("int vira float\n");*/ }
+
+	expressionNode->type = expressionType;
+	//printf("wut: %d\n", expressionNode->type);
+
+	if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; /*printf("int vira float\n");*/ }
 	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; /*printf("int vira bool\n");*/ }
 	else if(expectedType == FLOAT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_FLOAT; /*printf("bool vira float\n");*/ }
 	else if(expectedType == INT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_INT; /*printf("bool vira int\n");*/ }
@@ -233,6 +237,7 @@ void clearCurrentOperands(){
 
 int verifyReturn(struct node* returnExpression){
 	Hash* func = getSymbol(currentFunc);
+	//printf("tipo: %d\n", returnExpression->type);
 	if(func == NULL){
 		//tem algo errado com o tratamento se chegar aqui
 		return ERR_WRONG_PAR_RETURN;

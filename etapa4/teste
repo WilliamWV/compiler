@@ -1,0 +1,6 @@
+int ident(int a){
+	//return a;
+}
+int main(){
+	ident(1+2);
+}
