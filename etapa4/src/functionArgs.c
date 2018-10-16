@@ -21,7 +21,7 @@ Args *criaArg(Node *arg){
 				newArg->arg->argType = USER;
 			}
 		while(i < arg->kidsNumber){
-			if(!(arg->kidsNumber == 2 && arg->kids[0]->token->tokenType == IDS && i == 0)) // se estou analisando o primeiro filho e ele eh um identificador, significa que ele eh um tipo de usuario e que nao quero adicionar ele como argumento
+			if(!(arg->kidsNumber == 2 && arg->kids[0]->token->tokenType == IDS && i == 0)) // se estou analisando o primeiro filho e ele eh um identificador, significa que ele eh um tipo de usuario e que nao quero adicionar ele como argumento; quero adicionar apenas a variavel que eh desse tipo
 				adicionaInfoAArg(arg->kids[i], newArg);
 			else{
 				newArg->arg->userType = arg->kids[0]->token->value.str;

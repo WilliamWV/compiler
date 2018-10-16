@@ -77,3 +77,12 @@
 #define PRIVATE_ENCAPS    0x11
 #define PROTECTED_ENCAPS  0X12
 #define NOT_DEFINED_ENCAPS 0X13
+
+
+//Coercoes
+#define FLOAT_TO_INT  1000
+#define FLOAT_TO_BOOL 1001
+#define INT_TO_FLOAT  1002
+#define INT_TO_BOOL   1003
+#define BOOL_TO_FLOAT 1004
+#define BOOL_TO_INT   1005

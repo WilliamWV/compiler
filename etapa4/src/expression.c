@@ -196,12 +196,12 @@ int coercion(int expectedType, Node *expressionNode){
 	else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
 	else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
 	else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
-	else if(expectedType == FLOAT && expressionType == INT) printf("int vira float\n");
-	else if(expectedType == BOOL && expressionType == INT) printf("int vira bool\n");
-	else if(expectedType == FLOAT && expressionType == BOOL) printf("bool vira float\n");
-	else if(expectedType == INT && expressionType == BOOL) printf("bool vira int\n");
-	else if(expectedType == INT && expressionType == FLOAT) printf("float vira int\n");
-	else if(expectedType == BOOL && expressionType == FLOAT) printf("float vira bool\n");
+	else if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; printf("int vira float\n"); }
+	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; printf("int vira bool\n"); }
+	else if(expectedType == FLOAT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_FLOAT; printf("bool vira float\n"); }
+	else if(expectedType == INT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_INT; printf("bool vira int\n"); }
+	else if(expectedType == INT && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_INT; printf("float vira int\n"); }
+	else if(expectedType == BOOL && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_BOOL; printf("float vira bool\n"); }
 	return 0;
 }
 
