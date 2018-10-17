@@ -691,11 +691,23 @@ do_while:
 
 
 foreachList:
-	expression						{$$ = $1;}
+	expression						{
+		$$ = $1;
+
+		parseOperands($1);
+		int correctOperands =  coercion(NONE, $1);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		clearCurrentOperands();
+	}
 	| foreachList ',' expression {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
+
+		parseOperands($3);
+		int correctOperands =  coercion(NONE, $3);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		clearCurrentOperands();
 	}
 ;
 forList:
