@@ -23,6 +23,8 @@ extern char *currentFunc;
 extern int yylex_destroy  (void); 
 
 int parsingSucceded = FALSE;
+int returnError;
+char *identifierError;
 extern Node *danglingNodes;
 
 //Retorna constante representando o tipo
@@ -42,6 +44,42 @@ char* getUserType(struct node* type){
 		return NULL;
 	}
 	else return type->token->value.str;
+}
+
+void exitAndFree2(int exitCode, char *identifier){
+
+	int lineNumber = get_line_number();
+	
+		
+	
+	switch(exitCode)
+	{
+		case ERR_UNDECLARED: printf("Undeclared identifier on line %d.\n", get_line_number()); break;
+		case ERR_DECLARED:  printf("Redeclaration on line %d.\n", get_line_number()); break;
+		case ERR_VARIABLE: printf("Identifier not used as variable on line %d.\n", get_line_number());  break;
+		case ERR_VECTOR: printf("Identifier not used as vector on line %d.\n", get_line_number());  break;
+		case ERR_WRONG_TYPE: printf("Char, string or user type used in expression on line %d.\n", get_line_number()); break;
+		case ERR_STRING_TO_X: printf("Tried to assign string to a non-string or non-string to a string on line %d.\n", get_line_number()); break;
+		case ERR_CHAR_TO_X: printf("Tried to assign char to a non-char or non-char to char on line %d.\n", get_line_number()); break;
+		case ERR_USER_TO_X: printf("Tried to assign a user type to another type or another type to a user type on line %d.\n", get_line_number()); break;
+		case ERR_MISSING_ARGS: printf("Missing arguments on line %d.\n", get_line_number()); break;
+		case ERR_EXCESS_ARGS: printf("Excessive arguments on line %d.\n", get_line_number()); break;
+		case ERR_WRONG_TYPE_ARGS: printf("Wrong arguments type on line %d.\n", get_line_number()); break;
+		case ERR_WRONG_PAR_INPUT: printf("Non-identifier used as input on line %d.\n", get_line_number()); break;
+		case ERR_WRONG_PAR_OUTPUT: printf("Non-expression and non-string literal used as output on line %d.\n", get_line_number()); break;
+		case ERR_WRONG_PAR_RETURN: printf("Expression type does not match return type on line %d.\n", get_line_number()); break;
+		default: printf("Unknown error.\n"); break;
+	}
+
+	clearCurrentOperands();
+	clearCurrentFields();
+	clearCurrentArgs();	
+
+	liberaTodasTabelas();
+
+	//TODO: devemos liberar a memoria, imagino que seja soh chamar a tua closeTable o tanto de vezes que abrimos uma
+	
+	exit(exitCode);
 }
 
 void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
@@ -69,10 +107,15 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 		default: printf("Unknown error.\n"); break;
 	}
 
-	liberaDanglingParser(danglingNode);
-	libera(arvore);
+	clearCurrentOperands();
+	clearCurrentFields();
+	clearCurrentArgs();	
+
 	liberaTodasTabelas();
-	liberaFunc();
+	
+	//YYABORT;
+
+	libera(arvore);
 	yylex_destroy();
 
 	//TODO: devemos liberar a memoria, imagino que seja soh chamar a tua closeTable o tanto de vezes que abrimos uma
@@ -243,6 +286,7 @@ int verifyArguments(char* symbol, struct node* argsCall){
 	  */} <valor_lexico>
 %destructor {
 	if(parsingSucceded == FALSE){
+		printf("hue\n");
 		liberaDanglingParser($$);
 	}
 } <ast>
@@ -1040,6 +1084,8 @@ assignment:
 		parseOperands($3);
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printf("%d\n\n", correctOperands);
+		returnError = correctOperands;
+		if (correctOperands != 0){ printf("achou o erro;\n"); YYABORT;}
 		if (correctOperands != 0) exitAndFree(correctOperands, NULL, $$);
 		//printCurrentOperands();
 		clearCurrentOperands();

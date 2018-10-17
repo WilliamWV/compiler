@@ -248,11 +248,6 @@ int verifyReturn(struct node* returnExpression){
 }
 
 void saveFunc(char* symbol){
-	if (currentFunc!=NULL) free(currentFunc);
-	currentFunc = (char*) malloc(sizeof(strlen(symbol)) + 1);
-	strcpy(currentFunc, symbol);
+	currentFunc = symbol;
 	
-}	
-void liberaFunc(){
-	free(currentFunc);
 }

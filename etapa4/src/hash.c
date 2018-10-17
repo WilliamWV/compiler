@@ -145,7 +145,6 @@ void freeTable(){
 					liberaArgs(tableIndex);
 					liberaFields(tableIndex);
 					free(tabelas->currentTable[tableIndex]->symbol);
-					free(tabelas->currentTable[tableIndex]->valor_lexico->value.str);
 					free(tabelas->currentTable[tableIndex]->valor_lexico);
 					if(tabelas->currentTable[tableIndex]->userType!=NULL)
 						free(tabelas->currentTable[tableIndex]->userType);
