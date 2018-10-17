@@ -41,6 +41,19 @@ Operands *criaOperando(Node *ast){
 					newOperand->type = identifierType(ast->token->value.str);
 				}
 			}
+			else if(ast->token->tokenType == SPEC_CHAR){
+				newOperand = malloc(sizeof(Operands));
+				newOperand->identifier = NULL;
+				newOperand->next = NULL;
+				newOperand->type = SPEC_CHAR;
+				newOperand->character =  ast->token->value.c;				
+			}
+			else if(ast->token->tokenType == COMP_OPER){
+				newOperand = malloc(sizeof(Operands));
+				newOperand->next = NULL;
+				newOperand->type = COMP_OPER;
+				newOperand->identifier = ast->token->value.str;				
+			}
 		}
 	}
 	
@@ -133,17 +146,42 @@ void printCurrentOperands(){
 
 int wrongTypeInExpression(){
 	Operands *aux = currentOperands;
-	int foundExpressionOperands = FALSE;
+	int foundExpressionOperandsOrOperators = FALSE;
+	int isComparison = 0;
+	int isNotComparison = 0;
+	int isBitwise = 0;
 	while(aux != NULL){
+		if(aux->type == COMP_OPER){
+			if( !(strcmp(aux->identifier, "==") == 0 || strcmp(aux->identifier, "!=") == 0) ){
+				foundExpressionOperandsOrOperators = TRUE;
+				//printf("%s\n",aux->identifier );
+				isNotComparison = -1;
+				
+			}
+			else isComparison = 1;
+		}
+
+		if(aux->type == SPEC_CHAR){
+			if( !(aux->character == '&' || aux->character == '|') ){
+				foundExpressionOperandsOrOperators = TRUE;		
+			}
+			else isBitwise = 2;
+		}
+		if(aux->type == INT || aux->type == FLOAT || aux->type == BOOL){ foundExpressionOperandsOrOperators = TRUE; /*printf("ta\n");*/}
 		if(aux->type == USER)
 			return ERR_WRONG_TYPE;
-		if(aux->type != CHAR && aux->type != STRING &&  aux->type != USER)
-			foundExpressionOperands = TRUE;
-		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperands == TRUE)
-			return ERR_WRONG_TYPE;
+		aux = aux->next;		
+	}
+
+	aux = currentOperands;
+
+	while(aux != NULL){
+		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperandsOrOperators == TRUE){
+			//printf("ta2\n");
+			return ERR_WRONG_TYPE;}
 		aux = aux->next;
 	}
-	return 0;
+	return isComparison + isBitwise + isNotComparison;
 }
 
 //chamada apos a de cima
@@ -190,8 +228,10 @@ int typeInference(){
 
 int coercion(int expectedType, Node *expressionNode){
 	int correctOperands =  wrongTypeInExpression();
-		if (correctOperands != 0) return correctOperands;
-	int expressionType = typeInference();
+	if (correctOperands > 3) return correctOperands;
+	int expressionType = typeInference();	
+	if(correctOperands == 1) expressionType = BOOL;
+	//printf("%d %d", expectedType, expressionType);
 	if(expectedType != NONE){ // se estou esperando qualquer tipo nao ha erro de coercao
 		if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
 		else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
@@ -202,12 +242,12 @@ int coercion(int expectedType, Node *expressionNode){
 
 	expressionNode->type = expressionType;
 
-	if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; /*printf("int vira float\n");*/ }
-	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; /*printf("int vira bool\n");*/ }
-	else if(expectedType == FLOAT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_FLOAT; /*printf("bool vira float\n");*/ }
-	else if(expectedType == INT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_INT; /*printf("bool vira int\n");*/ }
-	else if(expectedType == INT && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_INT; /*printf("float vira int\n");*/ }
-	else if(expectedType == BOOL && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_BOOL; /*printf("float vira bool\n");*/ }
+	if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; /*printf("int vira float\n"); */}
+	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; /*printf("int vira bool\n"); */}
+	else if(expectedType == FLOAT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_FLOAT; /*printf("bool vira float\n"); */}
+	else if(expectedType == INT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_INT; /*printf("bool vira int\n"); */}
+	else if(expectedType == INT && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_INT; /*printf("float vira int\n"); */}
+	else if(expectedType == BOOL && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_BOOL; /*printf("float vira bool\n"); */}
 	return 0;
 }
 

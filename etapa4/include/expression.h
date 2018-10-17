@@ -8,6 +8,7 @@ typedef struct operandsList{
 	char *identifier;
 	int type;
 	struct operandsList *next;
+	char character;
 } Operands;
 
 void adicionaOperando(Operands *newOperand);

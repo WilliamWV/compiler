@@ -1,4 +1,4 @@
 int main(){
-bool teste;
-teste = "string" == "string";
+string teste;
+teste = "string" & "string" & 1;
 }
