@@ -23,7 +23,7 @@ extern char *currentFunc;
 extern int yylex_destroy  (void); 
 
 int parsingSucceded = FALSE;
-int returnError;
+int returnError = 1;
 Node *nodeNotAdded = NULL;
 char *identifierError;
 extern Node *danglingNodes;

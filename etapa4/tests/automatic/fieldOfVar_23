@@ -1,8 +1,6 @@
 
 var int;
 int main(){
-	//int a <= var$campo;
-	int a;
-	a = var$campo;
+	int a <= var$campo;
 }
 
