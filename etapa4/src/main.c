@@ -8,12 +8,14 @@ void descompila (void *arvore);
 void libera (void *arvore);
 //função definida em lex.yy.c para desalocar memória usada pelo flex
 extern int yylex_destroy  (void); 
-extern void exitAndFree2(int exitCode, char *identifier);
+extern void exitAndFree(int exitCode, char *identifier, Node *danglingNode);
 extern int nodosCriados;
 extern int contaNodosRaiz;
 extern int tokensCriados;
+
 extern int returnError;
 extern char *identifierError;
+extern Node *nodeNotAdded;
 
 int main (int argc, char **argv)
 {
@@ -24,9 +26,10 @@ int main (int argc, char **argv)
 		contaNodosNaRaiz(arvore);
 		printf("\nTokens criados: %d\nNodos na raiz: %d\nNodos criados: %d\n", tokensCriados, contaNodosRaiz, nodosCriados);
 	#endif
+
 	libera(arvore);
 	yylex_destroy();
 	arvore = NULL;
-	if(ret == 1) exitAndFree2(returnError, identifierError);
+	if(ret == 1) exitAndFree(returnError, identifierError, nodeNotAdded);
 	return ret;
 }
