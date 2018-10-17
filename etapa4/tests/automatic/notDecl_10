@@ -1,0 +1,6 @@
+a int;
+int main(){
+	//int a;
+	int a;
+	notAFunc();
+}

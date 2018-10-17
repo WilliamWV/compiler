@@ -1,0 +1,27 @@
+class pessoa[string nome : int idade];
+var int;
+vec [12] int;
+
+int add(int a, int b){
+	return a+b;
+}
+
+float toFloat(int a){
+	return a + 0.0;
+}
+
+
+int main(){
+	float var;
+	input var;
+	output "Hello World";
+	vec[0] = 2;
+	vec[3] = 7;
+	var = 3.14159265;
+	pessoa will;
+	will$nome="william";
+	will$idade=20;
+	vec[10]=will$idade;
+	vec[1] = 1 + 2 + 3+ 10 - 9;
+	
+}

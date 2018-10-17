@@ -1,12 +1,10 @@
 make > dump
 ##### Adicionar arquivos de teste como foi feito com o arquivo correctEntries #####
-./etapa4 < tests/correctEntries > firstOutput
-./etapa4 < firstOutput > secondOutput
-diff firstOutput secondOutput
-echo $?
 
-##### Remoção de arquivos temporários #####
+for i in $(ls tests/automatic); do
+	./etapa4<tests/automatic/$i > dump
+	echo $i $?
+done
+
+make clean > dump
 rm -rf dump
-rm -rf firstOutput
-rm -rf secondOutput
-

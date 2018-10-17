@@ -1,0 +1,6 @@
+
+var int;
+int main(){
+	var[12] = 2;
+}
+
