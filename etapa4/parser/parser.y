@@ -1107,6 +1107,7 @@ output:
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
 		parseOperands($2);
+		$2->type = typeInference();
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1117,12 +1118,24 @@ output:
 		}
 		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
+		clearCurrentOperands();
 	}
 	| TK_PR_OUTPUT expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		parseOperands($2);
+		$2->type = typeInference();
+		if($2->type == BOOL){
+			int correctOperands =  coercion(INT, $2);
+			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		}
+		else{
+			int correctOperands =  coercion(NONE, $2);
+			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		}
 		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
+		clearCurrentOperands();
 	}
 ;
 continueOutput: 
@@ -1269,13 +1282,14 @@ return:
 		$$ = criaNodo($1); adicionaFilho($$, $2);
 
 		parseOperands($2);
+		$2->type = typeInference();
 		int retType = getCurrentFuncReturnType();
 		int correctOperands =  coercion(retType, $2);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
-
+		
 		int verifRet = verifyReturn($2);
-		if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}	
+		if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}
+		clearCurrentOperands();
 	}
 ;
 
