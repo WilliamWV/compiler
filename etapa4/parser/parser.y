@@ -1094,13 +1094,22 @@ output:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
-		if($2->type != INT && $2->type != FLOAT && $2->token->literType!=STRING)
+		parseOperands($2);
+		if($2->type == BOOL){
+			int correctOperands =  coercion(INT, $2);
+			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		}
+		else{
+			int correctOperands =  coercion(NONE, $2);
+			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		}
+		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
 	}
 	| TK_PR_OUTPUT expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
-		if($2->type != INT && $2->type != FLOAT && $2->token->literType!=STRING)
+		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
 	}
 ;
@@ -1248,7 +1257,8 @@ return:
 		$$ = criaNodo($1); adicionaFilho($$, $2);
 
 		parseOperands($2);
-		int correctOperands =  coercion(NONE, $2);
+		int retType = getCurrentFuncReturnType();
+		int correctOperands =  coercion(retType, $2);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
 		clearCurrentOperands();
 

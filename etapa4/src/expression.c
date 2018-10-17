@@ -5,8 +5,6 @@
 #include <stdio.h>
 
 Operands *currentOperands = NULL;
-//útil para verificar retorno
-char *currentFunc = NULL;
 
 int operandosNaExpAtual = 0;
 
@@ -236,18 +234,4 @@ void clearCurrentOperands(){
 	currentOperands = NULL;
 }
 
-int verifyReturn(struct node* returnExpression){
-	Hash* func = getSymbol(currentFunc);
-	//printf("tipo: %d\n", returnExpression->type);
-	if(func == NULL){
-		//tem algo errado com o tratamento se chegar aqui
-		return ERR_WRONG_PAR_RETURN;
-	}
-	if(func->type == returnExpression->type ) return TRUE;
-	else return ERR_WRONG_PAR_RETURN;
-}
 
-void saveFunc(char* symbol){
-	currentFunc = symbol;
-	
-}

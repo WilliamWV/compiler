@@ -2,7 +2,11 @@
 #include "../include/tree.h"
 #include <stdio.h>
 
+//útil para verificar retorno
+char *currentFunc = NULL;
+
 Args *currentArgs = NULL;
+
 int argsNaFuncaoAtual = 0;
 int contaArgs = 0;
 
@@ -114,6 +118,22 @@ void addArgsToSymbol(char* symbol, Args *args){
 	}
 }
 
+int verifyReturn(struct node* returnExpression){
+	Hash* func = getSymbol(currentFunc);
+	//printf("tipo: %d\n", returnExpression->type);
+	if(func == NULL){
+		//tem algo errado com o tratamento se chegar aqui
+		return ERR_WRONG_PAR_RETURN;
+	}
+	if(func->type == returnExpression->type ) return TRUE;
+	else return ERR_WRONG_PAR_RETURN;
+}
+
+void saveFunc(char* symbol){
+	currentFunc = symbol;
+	
+}
+
 void clearCurrentArgs(){
 	Args *aux = currentArgs;
 	Args *temp = aux;
@@ -135,4 +155,11 @@ void clearCurrentArgs(){
 		argsNaFuncaoAtual--;
 	}
 	currentArgs = NULL;
+}
+
+int getCurrentFuncReturnType(){
+	Hash* func = getSymbol(currentFunc);
+	if(func == NULL) return NONE;	
+	return func->type;
+
 }

@@ -6,5 +6,5 @@ int main(){
 	int will;
 	//will = 1 + 'c';
 	//zorzo = 12;
-	ident(1+2, 'd');
+	ident(1+2, 'a');
 }

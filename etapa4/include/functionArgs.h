@@ -19,3 +19,9 @@ void adicionaInfoAArg(Node* arg, Args *newArg);
 void clearCurrentArgs();
 
 void addArgsToSymbol(char* symbol, Args *args);
+
+int verifyReturn(struct node* returnExpression);
+
+void saveFunc(char* symbol);
+
+int getCurrentFuncReturnType();

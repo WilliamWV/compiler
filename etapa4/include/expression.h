@@ -26,7 +26,3 @@ int wrongTypeInExpression();
 int coercion(int expectedType, Node *expressionNode);
 
 int typeInference();
-
-int verifyReturn(struct node* returnExpression);
-
-void saveFunc(char* symbol);
