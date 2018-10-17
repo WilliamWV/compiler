@@ -74,10 +74,12 @@ int verifyArguments(char* symbol, struct node* argsCall){
 			if (!(argsCall->kids[i]->token->tokenType == SPEC_CHAR || 
 				  argsCall->kids[i]->token->value.c == '.') )
 			{		
-				//printf("OI: %d %d\n\n", argsCall->kids[i]->type, func->args[currentArg]->argType);
-				if(argsCall->kids[i]->type != func->args[currentArg]->argType) {
-					return ERR_WRONG_TYPE_ARGS;
-				}
+				parseOperands(argsCall->kids[i]);
+				argsCall->kids[i]->type = typeInference();
+				int correctOperands =  coercion(func->args[currentArg]->argType, argsCall->kids[i]);
+				if (correctOperands != 0){ return ERR_WRONG_TYPE_ARGS; }
+				clearCurrentOperands();
+				
 			}
 		currentArg++;
 	}

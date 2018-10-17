@@ -9,6 +9,6 @@ int main(){
 	int a;
 	int b;
 	float c;
-	func(a, c, b);
+	func(a, c, 'a');
 }
 
