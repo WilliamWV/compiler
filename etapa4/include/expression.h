@@ -30,3 +30,5 @@ int typeInference();
 int verifyReturn(struct node* returnExpression);
 
 void saveFunc(char* symbol);
+
+void liberaFunc();

@@ -145,6 +145,7 @@ void freeTable(){
 					liberaArgs(tableIndex);
 					liberaFields(tableIndex);
 					free(tabelas->currentTable[tableIndex]->symbol);
+					free(tabelas->currentTable[tableIndex]->valor_lexico->value.str);
 					free(tabelas->currentTable[tableIndex]->valor_lexico);
 					if(tabelas->currentTable[tableIndex]->userType!=NULL)
 						free(tabelas->currentTable[tableIndex]->userType);
@@ -362,4 +363,9 @@ int hasField (char* symbol, char* field){
 	else return isUT;
 }
 
+void liberaTodasTabelas(){
+	while(tabelas!=NULL){
+		closeTable();
+	}
+}
 

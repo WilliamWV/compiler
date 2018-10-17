@@ -47,7 +47,9 @@ char* getUserType(struct node* type){
 void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 
 	int lineNumber = get_line_number();
-
+	
+		
+	
 	switch(exitCode)
 	{
 		case ERR_UNDECLARED: printf("Undeclared identifier on line %d.\n", get_line_number()); break;
@@ -69,6 +71,8 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 
 	liberaDanglingParser(danglingNode);
 	libera(arvore);
+	liberaTodasTabelas();
+	liberaFunc();
 	yylex_destroy();
 
 	//TODO: devemos liberar a memoria, imagino que seja soh chamar a tua closeTable o tanto de vezes que abrimos uma

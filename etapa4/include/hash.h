@@ -128,4 +128,6 @@ int fieldType(char *identifier, char *field);
 
 int identifierType(char *identifier);
 
+void liberaTodasTabelas();
+
 #endif
