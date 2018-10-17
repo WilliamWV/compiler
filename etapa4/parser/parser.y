@@ -1282,16 +1282,8 @@ shift:
 return:
 	TK_PR_RETURN expression		{
 		$$ = criaNodo($1); adicionaFilho($$, $2);
-
-		parseOperands($2);
-		$2->type = typeInference();
-		int retType = getCurrentFuncReturnType();
-		int correctOperands =  coercion(retType, $2);
-		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		
 		int verifRet = verifyReturn($2);
 		if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 ;
 

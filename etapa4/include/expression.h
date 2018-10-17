@@ -1,3 +1,5 @@
+#ifndef EXPRESSIONH
+#define EXPRESSIONH "xd"
 #include "tree.h"
 #include "hash.h"
 #include "defines.h"
@@ -26,3 +28,5 @@ int wrongTypeInExpression();
 int coercion(int expectedType, Node *expressionNode);
 
 int typeInference();
+
+#endif

@@ -1,7 +1,7 @@
 class pessoa[int idade];
 var int;
 
-int func(int a, int b, float c){
+int func(int a, int b, char c){
 	return c;
 }
 

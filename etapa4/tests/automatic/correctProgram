@@ -10,6 +10,9 @@ float toFloat(int a){
 	return a + 0.0;
 }
 
+float return3(){
+	return 3;
+}
 
 int main(){
 	float var;

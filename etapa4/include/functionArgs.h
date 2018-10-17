@@ -1,6 +1,7 @@
 #include "tree.h"
 #include "hash.h"
 #include "defines.h"
+#include "expression.h"
 
 typedef struct argsList{
 	FuncArg *arg;
