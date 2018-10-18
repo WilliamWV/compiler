@@ -1,0 +1,16 @@
+/*int main(){
+int teste;
+teste = !!!(true + 1);
+}*/
+/*
+int main(){
+int teste;
+bool zorzo;
+teste = ((1 + (2 + 3.0)) + (((4)))) && zorzo & 1.0;
+}*/
+
+int main(){
+int teste;
+bool zorzo;
+teste = ((1 + (2 + 3.0)) + (((4)))) && zorzo;
+}

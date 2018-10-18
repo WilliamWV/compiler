@@ -1,4 +1,11 @@
 int main(){
-string teste;
-teste = -"string";
+bool teste;
+teste = "2" & "1" | "2.0" == "3";
 }
+
+/* verificar que o teste abaixo da errado, como deveria:
+int main(){
+bool teste;
+teste = "2" & "1" | ("2.0" == "3");
+}
+*/

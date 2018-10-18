@@ -7,84 +7,51 @@
 Operands *currentOperands = NULL;
 
 int operandosNaExpAtual = 0;
-int openedParenthesis = 0;
+
 Operands *criaOperando(Node *ast){
 	Operands *newOperand = NULL;
 	if(ast != NULL){
 		if(ast->token != NULL)
 		{
 			if(ast->token->literType == INT || ast->token->literType == FLOAT || ast->token->literType == BOOL || ast->token->literType == STRING || ast->token->literType == CHAR){	
-				if(openedParenthesis == 0){
-					newOperand = malloc(sizeof(Operands));
-					newOperand->identifier = NULL;
-					newOperand->originalType = NONE;
-					newOperand->next = NULL;
-					newOperand->previous = NULL;
-					switch(ast->token->literType)
-					{
-						case INT: newOperand->originalType = INT; break;
-						case FLOAT: newOperand->originalType = FLOAT; break;
-						case BOOL: newOperand->originalType = BOOL; break;
-						case STRING: newOperand->originalType = STRING; break;
-						case CHAR: newOperand->originalType = CHAR; break;
-					}
-					newOperand->type = newOperand->originalType;
-				}
-			}
-			else if(ast->token->tokenType == IDS && openedParenthesis == 0){				
 				newOperand = malloc(sizeof(Operands));
 				newOperand->identifier = NULL;
-				newOperand->originalType = NONE;
 				newOperand->type = NONE;
 				newOperand->next = NULL;
-				newOperand->previous = NULL;
+				switch(ast->token->literType)
+				{
+					case INT: newOperand->type = INT; break;
+					case FLOAT: newOperand->type = FLOAT; break;
+					case BOOL: newOperand->type = BOOL; break;
+					case STRING: newOperand->type = STRING; break;
+					case CHAR: newOperand->type = CHAR; break;
+				}
+			}
+			else if(ast->token->tokenType == IDS){				
+				newOperand = malloc(sizeof(Operands));
+				newOperand->identifier = NULL;
+				newOperand->type = NONE;
+				newOperand->next = NULL;
 				if(ast->fieldOf != NULL){
 					newOperand->identifier = ast->token->value.str;
-					newOperand->originalType = fieldType(ast->fieldOf, ast->token->value.str);
-					newOperand->type = newOperand->originalType;
+					newOperand->type = fieldType(ast->fieldOf, ast->token->value.str);
 				}
 				else{
 					newOperand->identifier = ast->token->value.str;
-					newOperand->originalType = identifierType(ast->token->value.str);
-					newOperand->type = newOperand->originalType;
+					newOperand->type = identifierType(ast->token->value.str);
 				}
 			}
 			else if(ast->token->tokenType == SPEC_CHAR){
-				if(openedParenthesis == 0){
-					if(ast->token->value.c == '('){
-						newOperand = malloc(sizeof(Operands));
-						newOperand->identifier = NULL;
-						newOperand->next = NULL;
-						newOperand->previous = NULL;
-						newOperand->character =  ast->token->value.c;
-						newOperand->originalType = ast->kids[0]->type;
-						//printf("tipo: %d\n",newOperand->originalType );
-						newOperand->type = newOperand->originalType;
-						//printf("ok1\n");
-					}
-					else{
-						newOperand = malloc(sizeof(Operands));
-						newOperand->identifier = NULL;
-						newOperand->next = NULL;
-						newOperand->previous = NULL;
-						newOperand->originalType = SPEC_CHAR;
-						newOperand->type = newOperand->originalType;
-						newOperand->character =  ast->token->value.c;
-					}
-				}
-				if(ast->token->value.c == '('){
-						openedParenthesis++;
-				}
-				else if(ast->token->value.c == ')'){
-						openedParenthesis--;
-				}			
+				newOperand = malloc(sizeof(Operands));
+				newOperand->identifier = NULL;
+				newOperand->next = NULL;
+				newOperand->type = SPEC_CHAR;
+				newOperand->character =  ast->token->value.c;				
 			}
-			else if(ast->token->tokenType == COMP_OPER && openedParenthesis == 0 ){
+			else if(ast->token->tokenType == COMP_OPER){
 				newOperand = malloc(sizeof(Operands));
 				newOperand->next = NULL;
-				newOperand->previous = NULL;
-				newOperand->originalType = COMP_OPER;
-				newOperand->type = newOperand->originalType;
+				newOperand->type = COMP_OPER;
 				newOperand->identifier = ast->token->value.str;				
 			}
 		}
@@ -102,9 +69,6 @@ void adicionaOperando(Operands *newOperand){
 				aux = aux->next;
 			}
 			aux->next = newOperand;
-			//printf("ops\n");
-			newOperand->previous = aux;
-			//printf("uepa\n");
 			newOperand->next = NULL;
 		}	
 		operandosNaExpAtual++;
@@ -191,54 +155,46 @@ int wrongTypeInExpression(){
 	int foundString = FALSE;
 	int foundChar = FALSE;
 	while(aux != NULL){
-		if(aux->originalType == COMP_OPER){
-			if(aux->originalType == USER) return ERR_WRONG_TYPE;
-			if(strcmp(aux->identifier, "==") == 0 || strcmp(aux->identifier, "!=") == 0 ){
-				//printf("%d %d\n", aux->previous->type, aux->next->type);
-				if(!(aux->previous->type == aux->next->type || ( (aux->previous->type == INT || aux->previous->type == FLOAT || aux->previous->type == BOOL) && (aux->next->type == INT || aux->next->type == FLOAT || aux->next->type == BOOL) ) ))
-					return ERR_WRONG_TYPE;
-				else{
-					aux->next->type = BOOL;
-					aux->previous->type = BOOL;
-				}
-
-				//printf("previous coercion type:%d next original type:%d next coercion type: %d\n", aux->previous->type, aux->next->originalType, aux->next->type);
+		if(aux->type == COMP_OPER){
+			if( !(strcmp(aux->identifier, "==") == 0 || strcmp(aux->identifier, "!=") == 0) ){
+				foundExpressionOperandsOrOperators = TRUE;
+				isNotComparisonOnly = -1; // marca que a comparacao eh misturada com outros operandos aritmeticos
+				
 			}
-			else if( strcmp(aux->identifier, "&&") == 0 || strcmp(aux->identifier, "||") == 0 ){
-					if(aux->previous->type == CHAR || aux->previous->type == STRING || aux->next->type == CHAR || aux->next->type == STRING) return ERR_WRONG_TYPE;
-					if(aux->previous->type == INT) aux->previous->type = BOOL;
-					if (aux->previous->type == FLOAT) aux->previous->type = BOOL;
-					if(aux->next->type == INT) aux->next->type = BOOL;
-					if(aux->next->type == FLOAT) aux->next->type = BOOL;
-				}
-			else{
-				if(aux->type == CHAR || aux->type == STRING)
-					return ERR_WRONG_TYPE;
-			}
-			
+			else isComparison = 1; // marca que achou uma comparacao na expressao
 		}
 
-		if(aux->originalType == SPEC_CHAR){
-			if( aux->character == '&' || aux->character == '|'){
-				if(!(aux->previous->type == aux->next->type || ( (aux->previous->type == INT || aux->previous->type == FLOAT || aux->previous->type == BOOL) && (aux->next->type == INT || aux->next->type == FLOAT || aux->next->type == BOOL) ) ))
-					return ERR_WRONG_TYPE;	
-			}
-			else if( aux->character == '!' ){
-				if(aux->next->type == CHAR || aux->next->type == STRING)
-					return ERR_WRONG_TYPE;
-				else if(aux->next->type == INT) {aux->next->type = BOOL;/* printf("%c    tipo: %d    tipo original: %d\n\n", aux->next->character,aux->next->type, aux->next->originalType);*/}
-				else if(aux->next->type == FLOAT) aux->next->type = BOOL;
-			}
-			else{
-				if(aux->next->type == USER || aux->next->type == CHAR || aux->next->type == STRING)
-					return ERR_WRONG_TYPE;
+		if(aux->type == SPEC_CHAR){
+			if( !(aux->character == '&' || aux->character == '|') ){
+				foundExpressionOperandsOrOperators = TRUE;	
+				isNotComparisonOnly = -1;	
 			}
 		}
+
+		if(aux->type == INT || aux->type == FLOAT || aux->type == BOOL)
+			foundExpressionOperandsOrOperators = TRUE;
+		if(aux->type == USER)
+			return ERR_WRONG_TYPE;
+		if(aux->type == CHAR)
+			foundChar = 1;
+		if(aux->type == STRING)
+			foundString = 1;
 
 		aux = aux->next;		
 	}
 
-	return 0;
+	if(foundChar == 1 && foundString == 1)
+		return ERR_WRONG_TYPE;
+
+	aux = currentOperands;
+
+	while(aux != NULL){
+		if( (aux->type == CHAR || aux->type == STRING) && foundExpressionOperandsOrOperators == TRUE) // se achei operandos/operadores aritmeticos/booleanos e ha strings ou chars na expressao, ela esta errada
+			return ERR_WRONG_TYPE;
+
+		aux = aux->next;
+	}
+	return isComparison + isNotComparisonOnly;
 }
 
 //chamada apos a de cima
@@ -246,16 +202,13 @@ int typeInference(){
 	Operands *aux = currentOperands;
 	int type;
 	int contador = 0;
-	while(aux->next != NULL){aux = aux->next;}
-	type = aux->type;
-	aux = currentOperands;
 	while(aux != NULL){
-		/*if(contador == 0){
+		if(contador == 0){
 			if(aux->type != SPEC_CHAR && aux->type != COMP_OPER){
 				contador++;
 				type = aux->type;
 			}
-		}*/
+		}
 		if(type == INT && aux->type == FLOAT)
 			type = FLOAT;
 		else if(type == BOOL && aux->type == INT)
@@ -264,7 +217,27 @@ int typeInference(){
 			type = FLOAT;
 		aux = aux->next;
 	}
-	
+	/*switch(type)
+		{
+			case INT: 
+				printf("Tipo: int\n");
+				break;
+			case FLOAT: 
+				printf("Tipo: float\n");
+				break;
+			case BOOL: 
+				printf("Tipo: bool\n");
+				break;
+			case CHAR: 
+				printf("Tipo: char\n");
+				break;
+			case STRING: 
+				printf("Tipo: string\n");
+				break;
+			case USER:
+				printf("Tipo: user\n");
+				break;
+		}*/
 	return type;
 }
 
@@ -285,7 +258,7 @@ int coercion(int expectedType, Node *expressionNode){
 	}
 
 	expressionNode->type = expressionType;
-	//printf("%d\n", expressionNode->type);
+	printf("%d\n", expressionNode->type);
 
 	if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; printf("int vira float\n"); }
 	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; printf("int vira bool\n"); }

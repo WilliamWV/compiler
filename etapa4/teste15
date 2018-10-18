@@ -1,0 +1,13 @@
+/*int main(){
+int teste;
+teste = (1 && (2.0 || -5));
+}*/
+/*
+int main2(){
+	int teste;
+	teste = (((1 && 5)));
+}*/
+int main2(){
+	int teste;
+	teste = 1 == 2.0;
+}

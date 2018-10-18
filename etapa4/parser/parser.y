@@ -1333,6 +1333,12 @@ parenthesisOrOperand:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3));
+
+		parseOperands($2);
+		int correctOperands =  coercion(NONE, $2);
+		//printf("tipo do parentesis: %d\n", $2->type);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		clearCurrentOperands();
 	}
 	| operands					{$$ = $1;}
 	| '-' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}

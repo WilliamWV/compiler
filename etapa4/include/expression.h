@@ -6,9 +6,11 @@
 
 typedef struct operandsList{
 	char *identifier;
-	int type;
+	int type; // tipo apos coercao
 	struct operandsList *next;
+	struct operandsList *previous;
 	char character;
+	int originalType;
 } Operands;
 
 void adicionaOperando(Operands *newOperand);
