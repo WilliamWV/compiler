@@ -41,6 +41,7 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 		case ERR_WRONG_PAR_INPUT: printf("Non-identifier used as input on line %d.\n", get_line_number()); break;
 		case ERR_WRONG_PAR_OUTPUT: printf("Non-expression and non-string literal used as output on line %d.\n", get_line_number()); break;
 		case ERR_WRONG_PAR_RETURN: printf("Expression type does not match return type on line %d.\n", get_line_number()); break;
+		case 1: break;
 		default: printf("Unknown error.\n"); break;
 	}
 

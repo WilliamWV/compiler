@@ -12,5 +12,5 @@ teste = ((1 + (2 + 3.0)) + (((4)))) && zorzo & 1.0;
 int main(){
 int teste;
 bool zorzo;
-teste = ((1 + (2 + 3.0)) + (((4)))) && zorzo;
+teste = (((1 + (2 + 3.0)) + (((4)))) && zorzo;
 }
