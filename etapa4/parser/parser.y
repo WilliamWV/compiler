@@ -22,6 +22,13 @@ extern char *currentFunc;
 
 extern int yylex_destroy  (void); 
 
+//útil quando um componente tem 2 identificadores e não se sabe se é var global
+//ou função com tipo de usuário
+struct node* firstID;
+struct node* secondID;
+
+//útil para verificar o tipo de uma expressão em pipe
+struct node* inpPipe;
 int parsingSucceded = FALSE;
 int returnError = 1;
 Node *nodeNotAdded = NULL;
@@ -80,6 +87,15 @@ int verifyArguments(char* symbol, struct node* argsCall){
 				if (correctOperands != 0){ return ERR_WRONG_TYPE_ARGS; }
 				clearCurrentOperands();
 				
+			}else{
+				if(inpPipe==NULL) return ERR_WRONG_TYPE_ARGS;
+				else{
+					Hash* inPipeFunc = getSymbol(inpPipe->token->value.str);
+					if (inPipeFunc->type != func->args[currentArg]->argType){
+						return ERR_WRONG_TYPE_ARGS;
+					} 
+
+				}
 			}
 		currentArg++;
 	}
@@ -172,6 +188,8 @@ int verifyArguments(char* symbol, struct node* argsCall){
 %type <ast> foreachList
 %type <ast> forList
 %type <ast> funcCall
+%type <ast> idThatCanBeFuncType
+%type <ast> idThatCanBeFuncName
 %type <ast> ifThenElse
 %type <ast> infiniteQuestionMarks
 %type <ast> input
@@ -192,6 +210,7 @@ int verifyArguments(char* symbol, struct node* argsCall){
 %type <ast> pipe
 %type <ast> programa
 %type <ast> return
+%type <ast> savePipe
 %type <ast> shift
 %type <ast> shiftOp
 %type <ast> static
@@ -250,10 +269,24 @@ componentes:
 	%empty 						{$$ = criaNodo(NULL);}
 	| componente componentes 	{ $$ = $1; adicionaFilho($$, $2);}
 ;
+
+//As duas regras abaixo servem para a eventual possibilidade do código possuir
+//uma função que retorna tipo de usuário. As regras a seguir armazenam os 
+//identificadores que representam o tipo e o nome para que possam ser adicionados
+//na tabela de símbolos antes da execução do bloco de comandos da função
+
+idThatCanBeFuncType:
+	TK_IDENTIFICADOR	{$$ = criaNodo($1); firstID = $$;}
+;
+
+idThatCanBeFuncName:
+	TK_IDENTIFICADOR	{$$ = criaNodo($1); secondID = $$;}
+;
+
 componente:
 	  novoTipo							{$$ = $1;}
-	| TK_IDENTIFICADOR depoisDeIdent { // Regra introduzida para resolver conflitos
-		$$ = criaNodo($1); 
+	| idThatCanBeFuncType depoisDeIdent { // Regra introduzida para resolver conflitos
+		$$ = $1; 
 		adicionaFilho($$, $2);
 		/*Pode ser:
 			1) Declaração de vetor -> cabeça da regra tem valor léxico '[' 
@@ -277,30 +310,21 @@ componente:
 				int isUsr = isUserType($2->kids[3]->token->value.str);
 				if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 				int addSymb = addSymbol(
-					$1, NATUREZA_IDENTIFICADOR, USER, getUserType($2->kids[3]),
+					$1->token, NATUREZA_IDENTIFICADOR, USER, getUserType($2->kids[3]),
 					$2->kids[0]->token->value.i, FALSE, flag
 				);
 				if (addSymb!=0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
 			}
 			else{
 				int addSymb = addSymbol(
-					$1, NATUREZA_IDENTIFICADOR, type, NULL, $2->kids[0]->token->value.i, 
+					$1->token, NATUREZA_IDENTIFICADOR, type, NULL, $2->kids[0]->token->value.i, 
 					FALSE, flag 
 				);
 				if (addSymb!=0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
 			}
 		}
 		else if ($2->kids[0]->token->value.c == '('){ //
-			//trata função
-			//$1 = tipo
-			//head = TK_IDENTIFICADOR -> nome
-			//kids[0] = '('
-			//kids[0]->kids[0] = args
-			//kids[0]->kids[1] = ')' 
-			int isUsr = isUserType($$->token->value.str);
-			if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
-			int addSymb = addSymbol($2->token, NATUREZA_IDENTIFICADOR, USER, getUserType($$), 0, TRUE, 0);			
-			if (addSymb!=0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
+			//só precisa adicionar os argumentos, nome da função já foi adicionado em userTypeFunc
 			addArgsToSymbol($2->token->value.str, currentArgs);
 			clearCurrentArgs();
 		}
@@ -317,7 +341,7 @@ componente:
 					int isUsr = isUserType($2->kids[0]->token->value.str);
 					if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 					int addSymb = addSymbol(
-						$1, NATUREZA_IDENTIFICADOR, USER, 
+						$1->token, NATUREZA_IDENTIFICADOR, USER, 
 						getUserType($2->kids[0]), 0, FALSE, STATIC
 					);
 					if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
@@ -325,7 +349,7 @@ componente:
 				}
 				else{
 					int addSymb = addSymbol(
-						$1, NATUREZA_IDENTIFICADOR, type, 
+						$1->token, NATUREZA_IDENTIFICADOR, type, 
 						NULL, 0, FALSE, STATIC
 					);
 					if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}		
@@ -336,11 +360,11 @@ componente:
 				if (type == USER){
 					int isUsr = isUserType($2->token->value.str);
 					if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
-					int addSymb = addSymbol($1, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, FALSE, 0);
+					int addSymb = addSymbol($1->token, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, FALSE, 0);
 					if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 				}
 				else{
-					int addSymb = addSymbol($1, NATUREZA_IDENTIFICADOR, type, NULL, 0, FALSE, 0);
+					int addSymb = addSymbol($1->token, NATUREZA_IDENTIFICADOR, type, NULL, 0, FALSE, 0);
 					if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 				}
 			}
@@ -383,20 +407,29 @@ depoisDeIdent:
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2));
 	}
-	| TK_IDENTIFICADOR fechaVarOuFunc {
-		$$ = criaNodo($1); 
+	| idThatCanBeFuncName fechaVarOuFunc {
+		$$ = $1; 
 		adicionaFilho($$, $2);
 	}
 ;
 fechaVarOuFunc:
 	  ';'									{$$ = criaNodo($1);}
-	| scopeOpenner funcArgs blocoComandos	{
-		$$ = $2;
-		adicionaFilho($$, $3);
+	| userTypeFunc scopeOpenner funcArgs blocoComandos	{
+		$$ = $3;
+		adicionaFilho($$, $4);
 		closeTable();
 	}
 ;
-
+//regra que adiciona à tabela de símbolos o nome da função de tipo de usuário
+userTypeFunc:
+	%empty {
+		int isUsr = isUserType(firstID->token->value.str);
+		if (isUsr!=TRUE){ returnError = isUsr; /*nodeNotAdded = $$*/; YYABORT;}
+		int addSymb = addSymbol(secondID->token, NATUREZA_IDENTIFICADOR, USER, getUserType(firstID), 0, TRUE, 0);
+		if(addSymb != 0){ returnError = addSymb; /*nodeNotAdded = $$*/; YYABORT;}
+		saveFunc(secondID->token->value.str);
+	}
+;
 //Regras gerais
 encapsulamento: 
 	%empty 				{$$ = criaNodo(NULL);}
@@ -1305,8 +1338,12 @@ infiniteQuestionMarks:
 	parenthesisOrOperand '?'		{$$ = $1; adicionaFilho($$, criaNodo($2));}
 	| infiniteQuestionMarks '?'		{$$ = $1; adicionaFilho($$, criaNodo($2));}
 ;
+
+savePipe:
+	funcCall 	{$$ = $1; inpPipe = $1;}
+;
 pipe:
-	funcCall TK_OC_FORWARD_PIPE funcCall {
+	savePipe TK_OC_FORWARD_PIPE funcCall {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
@@ -1316,7 +1353,7 @@ pipe:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 	}
-	|funcCall TK_OC_BASH_PIPE funcCall {
+	|savePipe TK_OC_BASH_PIPE funcCall {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);

@@ -1,0 +1,13 @@
+
+int add(int a, int b, int c){
+	return a+b+c;
+}
+
+int ret2(){
+	return 2;
+}
+
+int main(){
+	ret2() %>% add(., 3, .);
+	int a <= b;
+}
