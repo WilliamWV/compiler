@@ -86,3 +86,9 @@
 #define INT_TO_BOOL   1003
 #define BOOL_TO_FLOAT 1004
 #define BOOL_TO_INT   1005
+
+//mudança dinâmica de tamanho
+#define IDENT    2000
+#define VECTOR   2001
+#define USR      2002
+#define VEC_USR  2003

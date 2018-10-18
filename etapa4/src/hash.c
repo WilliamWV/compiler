@@ -205,15 +205,17 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 	tabelas->currentTable[hashIndex]->line = valor_lexico->lineNumber;
 	tabelas->currentTable[hashIndex]->nature = nature;
 	tabelas->currentTable[hashIndex]->type = type;
+	tabelas->currentTable[hashIndex]->isFunction = isFunction;
+	tabelas->currentTable[hashIndex]->flags = flags;
+	tabelas->currentTable[hashIndex]->size = sizeOfType(type, vecSize);
 	if (userType == NULL)
 		tabelas->currentTable[hashIndex]->userType = NULL;
 	else{ 
 		tabelas->currentTable[hashIndex]->userType = (char*) malloc(sizeof(char) * (strlen(userType) + 1));
-		strcpy(tabelas->currentTable[hashIndex]->userType, userType);		
+		strcpy(tabelas->currentTable[hashIndex]->userType, userType);	
+		Hash* usrType = getSymbol(userType);		
+		tabelas->currentTable[hashIndex]->size = usrType->size;	
 	}
-	tabelas->currentTable[hashIndex]->isFunction = isFunction;
-	tabelas->currentTable[hashIndex]->flags = flags;
-	tabelas->currentTable[hashIndex]->size = sizeOfType(type, vecSize);
 	tabelas->currentTable[hashIndex]->vecSize = vecSize;
 	tabelas->currentTable[hashIndex]->argsNum = 0;
 	tabelas->currentTable[hashIndex]->fieldsNum = 0;
@@ -239,7 +241,7 @@ void addFuncArg(char* symbol, FuncArg* arg)
 
 	}
 }
-//adiciona um tipo de usuário a um símbolo
+//adiciona um campo tipo de usuário a um símbolo
 void addField(char* symbol, UserTypeField* utf)
 {
 	Hash* symbolContent = getSymbol(symbol);
@@ -252,7 +254,7 @@ void addField(char* symbol, UserTypeField* utf)
 		);
 		symbolContent->fields[symbolContent->fieldsNum - 1] = utf;
 		//tamanho do tipo de usuário
-		symbolContent->size = symbolContent->size + sizeOfType(utf->fieldType, 0);
+		symbolContent->size = symbolContent->size + utf->size;
 	}
 }
 //busca um determinado símbolo em toda a pilha de tabelas de símbolos, começando
@@ -368,3 +370,82 @@ void liberaTodasTabelas(){
 	}
 }
 
+int getFieldSize(char* ut, char* field){
+	Hash* usr = getSymbol(ut);
+	for(int i = 0; i<usr->fieldsNum; i++){
+		if(strcmp(usr->fields[i]->fieldName, field) == 0){
+			return usr->fields[i]->size;			
+		}
+	}
+	return 0;
+}
+
+void setFieldSize(char* ut, char* field, int size){
+	//printf("Usertype = %s, field = %s, expSize = %d\n", ut, field, size);
+	Hash* usr = getSymbol(ut);
+	Hash* usrType = getSymbol(usr->userType);
+	//printf("fieldNum = %d\n", usrType->fieldsNum);
+	for(int i = 0; i<usrType->fieldsNum; i++){
+		//printf("field = %s\n", usrType->fields[i]->fieldName);
+		if(strcmp(usrType->fields[i]->fieldName, field) == 0){
+			if(size > usrType->fields[i]->size){
+				usrType->size = usrType->size + size - usrType->fields[i]->size;			
+				usrType->fields[i]->size = size;
+				usr->size = usrType->size;
+			}
+		}
+	}
+}
+
+int getStringExpressionSize(struct node* expression){
+	//expression pode ser:
+	// 1) Identificador
+	// 2) Literal
+	// 3) elemento de vetor
+	// 4) campo de tipo de usuário
+	// 5) campo de um elemento de um vetor de tipo de usuário	
+	if (expression->token->tokenType == LITERAL){//literal
+		return strlen(expression->token->value.str) - 2; 
+	}
+	else if(expression->kidsNumber==0){//identificador
+		Hash* expSymb = getSymbol(expression->token->value.str);		
+		return expSymb->size;
+	}
+	else if(expression->kidsNumber==3){//elemento de vetor
+		Hash* expSymb = getSymbol(expression->token->value.str);
+		if(expSymb->vecSize > 0)
+			return expSymb->size /expSymb->vecSize; 
+	}
+	else if(expression->kidsNumber==2){//campo de tipo de usuário
+		return getFieldSize(expression->token->value.str, expression->kids[1]->token->value.str);
+	}
+	else if(expression->kidsNumber==5){//campo de um elemento de um vetor de tipo de usuário
+		
+	}
+}
+
+void updateStringSize(char* id, struct node* expression, int type, char* field){
+	
+	Hash* idSymb = getSymbol(id);	
+	switch(type){
+		case IDENT: 
+			idSymb->size = getStringExpressionSize(expression);
+			break;
+		case VECTOR:
+			if(idSymb->vecSize>0){
+				int currentSize = idSymb->size/idSymb->vecSize;
+				int expSize = getStringExpressionSize(expression);
+				if(currentSize < expSize){
+					idSymb->size = expSize * idSymb->vecSize;
+				}
+			}
+			break;
+		case USR:
+			setFieldSize(id, field, getStringExpressionSize(expression));
+			break;
+		case VEC_USR:
+		break;
+	}
+	//printf("Size of \'%s\' = %d\n", id, idSymb->size);
+	
+}

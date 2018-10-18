@@ -2,6 +2,7 @@
 #define HASH_H "hashh"
 #include "lexVal.h"
 #include "defines.h"
+#include "tree.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +30,7 @@ typedef struct utf{
 	int fieldType;    // tipo do campo, como, não permite tipo de usuário, não 
                       // precisa de um campo userType como a estrutura anterior 
 	char* fieldName;  // nome do campo
+	int size;	  // necessário para poder mudar dinâmicamente quando for string
 }UserTypeField;
 
 
@@ -129,5 +131,12 @@ int fieldType(char *identifier, char *field);
 int identifierType(char *identifier);
 
 void liberaTodasTabelas();
+
+void setFieldSize(char* ut, char* field, int size);
+
+int getStringExpressionSize(struct node* expression);
+
+void updateStringSize(char* id, struct node* expression, int type, char* field);
+
 
 #endif

@@ -31,19 +31,24 @@ void adicionaInfoACampo(Node* field, Fields *newField){
 				if(field->token->tokenType == KEYWORD){
 					char *string = field->token->value.str;
 					if(strcmp(string, "int") == 0){
-						newField->field->fieldType = INT;					
+						newField->field->fieldType = INT;
+						newField->field->size = 4;					
 					}
 					else if(strcmp(string, "float") == 0){
-						newField->field->fieldType = FLOAT;			
+						newField->field->fieldType = FLOAT;	
+						newField->field->size = 8;		
 					}
 					else if(strcmp(string, "bool") == 0){
-						newField->field->fieldType = BOOL;			
+						newField->field->fieldType = BOOL;
+						newField->field->size = 1;			
 					}
 					else if(strcmp(string, "char") == 0){
 						newField->field->fieldType = CHAR;
+						newField->field->size = 1;
 					}
 					else if(strcmp(string, "string") == 0){
-						newField->field->fieldType = STRING;		
+						newField->field->fieldType = STRING;
+						newField->field->size = 1;		
 					}
 					else if(strcmp(string, "public") == 0){
 						newField->field->fieldEncaps = PUBLIC_ENCAPS;	
