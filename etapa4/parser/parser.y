@@ -855,6 +855,13 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($5));		
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		int isVar = isVariable($5->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($$->kids[3]);
+		int correctOperands =  coercion(getType($2), $$->kids[3]);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();
+		
 		
 	}
 	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
@@ -865,7 +872,15 @@ localVarDefinition:
 		adicionaFilho($$, $5);
 		
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
-		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
+				
+		// o identificador é sempre o útimo filho desse nodo
+		int isVar = isVariable($5->kids[$5->kidsNumber - 1]->token->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($5);
+		int correctOperands =  coercion(getType($2), $5);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();	
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
@@ -876,6 +891,12 @@ localVarDefinition:
 		
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		int isVar = isVariable($5->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($$->kids[3]);
+		int correctOperands =  coercion(getType($2), $$->kids[3]);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
 		$$ = criaNodo($1); 
@@ -886,6 +907,13 @@ localVarDefinition:
 		
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		// o identificador é sempre o útimo filho desse nodo
+		int isVar = isVariable($5->kids[$5->kidsNumber - 1]->token->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($5);
+		int correctOperands =  coercion(getType($2), $5);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();	
 	}
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
@@ -896,6 +924,13 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($6));
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		int isVar = isVariable($6->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($$->kids[4]);
+		int correctOperands =  coercion(getType($3), $$->kids[4]);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();
+
 	}
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
 		$$ = criaNodo($1); 
@@ -906,6 +941,13 @@ localVarDefinition:
 		adicionaFilho($$, $6);		
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		// o identificador é sempre o útimo filho desse nodo
+		int isVar = isVariable($6->kids[$6->kidsNumber - 1]->token->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($6);
+		int correctOperands =  coercion(getType($3), $6);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();	
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = $1; 
@@ -914,6 +956,12 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($4));
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		int isVar = isVariable($4->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($$->kids[2]);
+		int correctOperands =  coercion(getType($1), $$->kids[2]);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveIdentifier {
 		$$ = $1; 
@@ -922,6 +970,13 @@ localVarDefinition:
 		adicionaFilho($$, $4);
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		// o identificador é sempre o útimo filho desse nodo
+		int isVar = isVariable($4->kids[$4->kidsNumber - 1]->token->value.str);
+		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		parseOperands($4);
+		int correctOperands =  coercion(getType($1), $4);
+		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
+		clearCurrentOperands();	
 	}
 
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
