@@ -1249,6 +1249,9 @@ assignment:
 
 		correctOperands =  coercion(fieldType($1->value.str, $6->value.str), $8);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		if(fieldType($1->value.str, $6->value.str) == STRING){
+			updateStringSize($1->value.str, $8, VEC_USR, $6->value.str);
+		}
 	}	
 ;
 input:

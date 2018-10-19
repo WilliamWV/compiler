@@ -132,7 +132,7 @@ int identifierType(char *identifier);
 
 void liberaTodasTabelas();
 
-void setFieldSize(char* ut, char* field, int size);
+void setFieldSize(char* ut, char* field, int size, int vecSize);
 
 int getStringExpressionSize(struct node* expression);
 

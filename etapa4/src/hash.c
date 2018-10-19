@@ -372,23 +372,24 @@ void liberaTodasTabelas(){
 
 int getFieldSize(char* ut, char* field){
 	Hash* usr = getSymbol(ut);
-	for(int i = 0; i<usr->fieldsNum; i++){
-		if(strcmp(usr->fields[i]->fieldName, field) == 0){
-			return usr->fields[i]->size;			
+	Hash* usrType = getSymbol(usr->userType);
+	for(int i = 0; i<usrType->fieldsNum; i++){
+		if(strcmp(usrType->fields[i]->fieldName, field) == 0){
+			return usrType->fields[i]->size;			
 		}
 	}
 	return 0;
 }
 
-void setFieldSize(char* ut, char* field, int size){
+void setFieldSize(char* ut, char* field, int size, int vecSize){
 	Hash* usr = getSymbol(ut);
 	Hash* usrType = getSymbol(usr->userType);
 	for(int i = 0; i<usrType->fieldsNum; i++){
 		if(strcmp(usrType->fields[i]->fieldName, field) == 0){
-			if(size > usrType->fields[i]->size){
+			if(size> usrType->fields[i]->size){
 				usrType->size = usrType->size + size - usrType->fields[i]->size;			
 				usrType->fields[i]->size = size;
-				usr->size = usrType->size;
+				usr->size = usrType->size * vecSize;
 			}
 		}
 	}
@@ -426,7 +427,7 @@ int getStringExpressionSize(struct node* expression){
 			return getFieldSize(expression->token->value.str, expression->kids[1]->token->value.str);
 		}
 		else if(expression->kidsNumber==5){//campo de um elemento de um vetor de tipo de usuário
-			return -1;
+			return getFieldSize(expression->token->value.str, expression->kids[4]->token->value.str);			
 		}
 	}
 	else{
@@ -456,9 +457,10 @@ void updateStringSize(char* id, struct node* expression, int type, char* field){
 			}
 			break;
 		case USR:
-			setFieldSize(id, field, getStringExpressionSize(expression));
+			setFieldSize(id, field, getStringExpressionSize(expression), 1);
 			break;
 		case VEC_USR:
+			setFieldSize(id, field, getStringExpressionSize(expression), idSymb->vecSize);
 		break;
 	}
 	//printf("Size of \'%s\' = %d\n", id, idSymb->size);
