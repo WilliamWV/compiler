@@ -781,7 +781,7 @@ case:
 
 
 /*Definição de Variáveis*/
-localVarDefinition: //TODO: falta ajeitar os negative/positive literal/identifcador
+localVarDefinition:
 	TK_PR_STATIC TK_IDENTIFICADOR TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
@@ -1058,7 +1058,7 @@ localVarDefinition: //TODO: falta ajeitar os negative/positive literal/identifca
 		}	
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE negativeOrPositiveLiteral {
-		$$ = criaNodo($1); 
+		$$ = criaNodo($1);
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4)); 
@@ -1089,7 +1089,7 @@ localVarDefinition: //TODO: falta ajeitar os negative/positive literal/identifca
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, $4);
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, CONST);
-		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
+		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($1), $4);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
 	}
@@ -1098,18 +1098,27 @@ negativeOrPositiveIdentifier:
 	'-' negativeOrPositiveIdentifier {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		$$->type = $2->type;
+		printf("N deu segfault aqui\n");
 	}
 	| '-' TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
-		adicionaFilho($$, criaNodo($2));
+		adicionaFilho($$, criaNodo($2));		
+		$$->kids[0]->type = identifierType($2->value.str);
+		int coercion = unaryArithCoercion($$, $$->kids[0]);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
 	| '+' negativeOrPositiveIdentifier {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		$$->type = $2->type;
 	}
 	| '+' TK_IDENTIFICADOR{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
+		$$->kids[0]->type = identifierType($2->value.str);
+		int coercion = unaryArithCoercion($$, $$->kids[0]);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
 ;
 
@@ -1117,26 +1126,40 @@ negativeOrPositiveLiteral:
 	'-' negativeOrPositiveLiteral {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		$$->type = $2->type;
 	}
 	| '-' TK_LIT_INT {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
+		$$->kids[0]->type = INT;
+		int coercion = unaryArithCoercion($$, $$->kids[0]);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
 	| '-' TK_LIT_FLOAT {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
+		$$->kids[0]->type = FLOAT;
+		int coercion = unaryArithCoercion($$, $$->kids[0]);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
 	| '+' negativeOrPositiveLiteral {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		$$->type = $2->type;
 	}
 	| '+' TK_LIT_INT {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
+		$$->kids[0]->type = INT;
+		int coercion = unaryArithCoercion($$, $$->kids[0]);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
 	| '+' TK_LIT_FLOAT {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
+		$$->kids[0]->type = FLOAT;
+		int coercion = unaryArithCoercion($$, $$->kids[0]);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
 ;
 
