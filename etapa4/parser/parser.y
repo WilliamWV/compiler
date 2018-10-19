@@ -1110,7 +1110,7 @@ negativeOrPositiveIdentifier:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
 		$$->type = $2->type;
-		printf("N deu segfault aqui\n");
+		//printf("N deu segfault aqui\n");
 	}
 	| '-' TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
@@ -1185,7 +1185,7 @@ assignment:
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printExpression($3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		printExpression($3);
+		//printExpression($3);
 		if(identifierType($1->value.str) == STRING){
 			//atualizar tamanho
 			updateStringSize($1->value.str, $3, IDENT, NULL);			
@@ -1619,7 +1619,7 @@ operands:
 		$$->type = fieldType($1->value.str, $6->value.str);
 
 	}
-	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT; printf("Uepa: %d\n", $1->value.i);}
+	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT;}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT;}
 	| TK_LIT_TRUE		{$$ = criaNodo($1); $$->type = BOOL;}
 	| TK_LIT_FALSE		{$$ = criaNodo($1); $$->type = BOOL;}
