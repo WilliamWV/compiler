@@ -1,9 +1,4 @@
 int main(){
-int teste;
-//teste = 1.0 + 1.0 + (((1 + true + 5.0 + 7)));
-//teste = !(((1 + 2.0)));
-//teste = ( ((((2))) + 1.0) / true - 57 );
-//teste = ((((1+1.0+1))) + (1+(true)));
-//teste  = ----15;
-teste = (5.0) / 25 - 32;
+float zorzo <= 2;
+int teste <= zorzo;
 }
