@@ -119,6 +119,17 @@ int verifyArguments(char* symbol, struct node* argsCall){
 	return TRUE;
 }
 
+//age sobre regra negativeOrPositiveIdentifier para obter o identificador 
+//que é a folha da regra
+char* getIdFromNegOrPosId(struct node* negOrPosId){
+	
+	struct node* aux = negOrPosId;
+	do{
+		aux = aux->kids[0];
+	}while(aux->token->tokenType != IDS);
+	return aux->token->value.str;
+}
+
 
 %}
 %define parse.error verbose
@@ -879,7 +890,7 @@ localVarDefinition:
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
 				
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = isVariable($5->kids[$5->kidsNumber - 1]->token->value.str);
+		int isVar = isVariable(getIdFromNegOrPosId($5));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -914,7 +925,7 @@ localVarDefinition:
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = isVariable($5->kids[$5->kidsNumber - 1]->token->value.str);
+		int isVar = isVariable(getIdFromNegOrPosId($5));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -948,7 +959,7 @@ localVarDefinition:
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = isVariable($6->kids[$6->kidsNumber - 1]->token->value.str);
+		int isVar = isVariable(getIdFromNegOrPosId($6));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($3), $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -979,7 +990,7 @@ localVarDefinition:
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = isVariable($4->kids[$4->kidsNumber - 1]->token->value.str);
+		int isVar = isVariable(getIdFromNegOrPosId($4));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($1), $4);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
