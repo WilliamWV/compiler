@@ -162,7 +162,6 @@ int verifyArguments(char* symbol, struct node* argsCall){
 
 //Regras, em ordem alfabética, cujo tipo será ast, ou seja, seu valor semântico é representado como uma árvore
 
-
 %type <ast> args
 %type <ast> funcArgs
 %type <ast> funcName
@@ -646,10 +645,8 @@ ifThenElse:
 		adicionaFilho($$, $6); 
 		adicionaFilho($$, $7);
 
-		parseOperands($3);
 		int correctOperands =  coercion(BOOL, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 ;
 optElse:
@@ -685,10 +682,8 @@ for:
 		adicionaFilho($$, criaNodo($9)); 
 		adicionaFilho($$, $10);
 
-		parseOperands($6);
 		int correctOperands =  coercion(BOOL, $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 
 		closeTable();
 	}
@@ -703,10 +698,8 @@ while_do:
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6);
 
-		parseOperands($3);
 		int correctOperands =  coercion(BOOL, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 ;
 do_while:
@@ -718,10 +711,8 @@ do_while:
 		adicionaFilho($$, $5); 
 		adicionaFilho($$, criaNodo($6));
 
-		parseOperands($5);
 		int correctOperands =  coercion(BOOL, $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 ;
 
@@ -730,20 +721,16 @@ foreachList:
 	expression						{
 		$$ = $1;
 
-		parseOperands($1);
 		int correctOperands =  coercion(NONE, $1);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 	| foreachList ',' expression {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 
-		parseOperands($3);
 		int correctOperands =  coercion(NONE, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 ;
 forList:
@@ -763,10 +750,8 @@ switch:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
 		
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 ;
 case:
@@ -858,10 +843,8 @@ localVarDefinition:
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		int isVar = isVariable($5->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($$->kids[3]);
 		int correctOperands =  coercion(getType($2), $$->kids[3]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();
 		if (getType($2) == STRING){
 			//atualiza tamanho
 			updateStringSize($3->value.str, $$->kids[3], IDENT, NULL);
@@ -881,10 +864,8 @@ localVarDefinition:
 		// o identificador é sempre o útimo filho desse nodo
 		int isVar = isVariable($5->kids[$5->kidsNumber - 1]->token->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($5);
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 		
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
@@ -898,10 +879,8 @@ localVarDefinition:
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		int isVar = isVariable($5->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($$->kids[3]);
 		int correctOperands =  coercion(getType($2), $$->kids[3]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();
 		if (getType($2) == STRING){
 			//atualiza tamanho
 			updateStringSize($3->value.str, $$->kids[3], IDENT, NULL);
@@ -919,10 +898,8 @@ localVarDefinition:
 		// o identificador é sempre o útimo filho desse nodo
 		int isVar = isVariable($5->kids[$5->kidsNumber - 1]->token->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($5);
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 	}
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = criaNodo($1); 
@@ -935,10 +912,8 @@ localVarDefinition:
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		int isVar = isVariable($6->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($$->kids[4]);
 		int correctOperands =  coercion(getType($3), $$->kids[4]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();
 		if (getType($3) == STRING){
 			//atualiza tamanho
 			updateStringSize($4->value.str, $$->kids[4], IDENT, NULL);
@@ -957,10 +932,8 @@ localVarDefinition:
 		// o identificador é sempre o útimo filho desse nodo
 		int isVar = isVariable($6->kids[$6->kidsNumber - 1]->token->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($6);
 		int correctOperands =  coercion(getType($3), $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR {
 		$$ = $1; 
@@ -971,10 +944,8 @@ localVarDefinition:
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		int isVar = isVariable($4->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($$->kids[2]);
 		int correctOperands =  coercion(getType($1), $$->kids[2]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();
 		if (getType($1) == STRING){
 			//atualiza tamanho
 			updateStringSize($2->value.str, $$->kids[2], IDENT, NULL);
@@ -990,10 +961,8 @@ localVarDefinition:
 		// o identificador é sempre o útimo filho desse nodo
 		int isVar = isVariable($4->kids[$4->kidsNumber - 1]->token->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		parseOperands($4);
 		int correctOperands =  coercion(getType($1), $4);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 	}
 
 	| TK_PR_STATIC TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
@@ -1005,10 +974,8 @@ localVarDefinition:
 		adicionaFilho($$, $6);
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		parseOperands($6);
 		int correctOperands =  coercion(getType($3), $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 		if (getType($3) == STRING){
 			//atualiza tamanho
 			updateStringSize($4->value.str, $6, IDENT, NULL);
@@ -1023,10 +990,8 @@ localVarDefinition:
 		adicionaFilho($$, $6);
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
-		parseOperands($6);
 		int correctOperands =  coercion(getType($3), $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 	}
 	| TK_PR_STATIC tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
 		$$ = criaNodo($1); 
@@ -1036,10 +1001,8 @@ localVarDefinition:
 		adicionaFilho($$, $5);		
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		parseOperands($5);
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 		if (getType($2) == STRING){
 			//atualiza tamanho
 			updateStringSize($3->value.str, $5, IDENT, NULL);
@@ -1053,10 +1016,8 @@ localVarDefinition:
 		adicionaFilho($$, $5);
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
-		parseOperands($5);
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();		
 	}
 	| TK_PR_CONST tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
 		$$ = criaNodo($1); 
@@ -1066,10 +1027,8 @@ localVarDefinition:
 		adicionaFilho($$, $5);
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
-		parseOperands($5);
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 		if (getType($2) == STRING){
 			//atualiza tamanho
 			updateStringSize($3->value.str, $5, IDENT, NULL);
@@ -1083,10 +1042,8 @@ localVarDefinition:
 		adicionaFilho($$, $5);
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		parseOperands($5);
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();
 	}
 	| tiposPrimitivos TK_IDENTIFICADOR TK_OC_LE literais {
 		$$ = $1; 
@@ -1095,10 +1052,8 @@ localVarDefinition:
 		adicionaFilho($$, $4);
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		parseOperands($4);
 		int correctOperands =  coercion(getType($1), $4);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();	
 		if (getType($1) == STRING){
 			//atualiza tamanho
 			updateStringSize($2->value.str, $4, IDENT, NULL);
@@ -1111,10 +1066,8 @@ localVarDefinition:
 		adicionaFilho($$, $4);
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		parseOperands($4);
 		int correctOperands =  coercion(getType($1), $4);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
-		clearCurrentOperands();
 	}
 ;
 negativeOrPositiveIdentifier:
@@ -1171,18 +1124,16 @@ assignment:
 		adicionaFilho($$, $3);
 		int isVar = isVariable($1->value.str);
 		if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
-
-		parseOperands($3);
+		//printf("Tipo da expressao apos identificador: %d\n", $3->type);
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printf("%d\n\n", correctOperands);
+		printExpression($3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
 		//if (correctOperands != 0) exitAndFree(correctOperands, NULL, $$);
 		//printCurrentOperands();
-		clearCurrentOperands();
 		if(identifierType($1->value.str) == STRING){
 			//atualizar tamanho
-			updateStringSize($1->value.str, $3, IDENT, NULL);
-			
+			updateStringSize($1->value.str, $3, IDENT, NULL);			
 		}
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
@@ -1195,15 +1146,11 @@ assignment:
 		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
 		
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 
-		parseOperands($6);
 		correctOperands =  coercion(identifierType($1->value.str), $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 
 		if(identifierType($1->value.str) == STRING){
 			updateStringSize($1->value.str, $6, VECTOR, NULL);
@@ -1220,10 +1167,8 @@ assignment:
 		int hasF = hasField($1->value.str, $3->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
 		
-		parseOperands($5);
 		int correctOperands =  coercion(fieldType($1->value.str, $3->value.str), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 		if (fieldType($1->value.str, $3->value.str) == STRING){
 			updateStringSize($1->value.str, $5, USR, $3->value.str);
 		}
@@ -1244,15 +1189,11 @@ assignment:
 		int hasF = hasField($1->value.str, $6->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
 
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 
-		parseOperands($8);
 		correctOperands =  coercion(fieldType($1->value.str, $6->value.str), $8);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}	
 ;
 input:
@@ -1354,12 +1295,10 @@ argsCall:
 ;
 argCall:
 	expression			{$$ = $1;
-		parseOperands($1);
 		int correctOperands =  coercion(NONE, $1);
 		//printf("tipo da expressao: %d\n", $1->type);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
 		//printf("tipo da expressao: %d\n", $1->type);
-		clearCurrentOperands();
 	}
 	| '.'				{$$ = criaNodo($1);};
 
@@ -1374,10 +1313,8 @@ shift:
 		int isVar = isVariable($1->value.str);
 		if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
 
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR shiftOp expression {
 		$$ = criaNodo($1); 
@@ -1390,10 +1327,8 @@ shift:
 		int hasF = hasField($1->value.str, $3->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
 
-		parseOperands($5);
 		int correctOperands =  coercion(INT, $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' shiftOp expression {
 		$$ = criaNodo($1); 
@@ -1405,15 +1340,11 @@ shift:
 		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
 
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 		
-		parseOperands($6);
 		correctOperands =  coercion(INT, $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR shiftOp expression {
 		$$ = criaNodo($1); 
@@ -1431,15 +1362,11 @@ shift:
 		int hasF = hasField($1->value.str, $6->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
 
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 
-		parseOperands($8);
 		correctOperands =  coercion(INT, $8);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 ;
 
@@ -1453,18 +1380,77 @@ return:
 ;
 
 expression:
-	parenthesisOrOperand operators expression {
+		expression operators parenthesisOrOperand {
+		$$ = criaNodo(NULL);
+		adicionaFilho($$, $1); 
+		adicionaFilho($$, $2); 
+		adicionaFilho($$, $3);
+		
+		if($2->token->tokenType == SPEC_CHAR){
+			if($2->token->value.c == '+' || $2->token->value.c == '%' || $2->token->value.c == '/' || $2->token->value.c == '*' || $2->token->value.c == '-' || $2->token->value.c == '^'){
+				int coercion = arithmeticCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if($2->token->value.c == '|' || $2->token->value.c == '&'){
+				int coercion = bitwiseCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if($2->token->value.c == '<' || $2->token->value.c == '>'){
+				int coercion = arithRelationalCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+		}
+		else if($2->token->tokenType == COMP_OPER){
+			if(strcmp($2->token->value.str, "<=") == 0 || strcmp($2->token->value.str, ">=") == 0){
+				int coercion = arithRelationalCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if(strcmp($2->token->value.str, "&&") == 0 || strcmp($2->token->value.str, "||") == 0){
+				int coercion = logicCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if(strcmp($2->token->value.str, "==") == 0 || strcmp($2->token->value.str, "!=") == 0){
+				int coercion = relationalCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+		}				
+	}
+	| 	expression operators infiniteQuestionMarks{
 		$$ = $1; 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
+
+		if($2->token->tokenType == SPEC_CHAR){
+			if($2->token->value.c == '+' || $2->token->value.c == '%' || $2->token->value.c == '/' || $2->token->value.c == '*' || $2->token->value.c == '-' || $2->token->value.c == '^'){
+				int coercion = arithmeticCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if($2->token->value.c == '|' || $2->token->value.c == '&'){
+				int coercion = bitwiseCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if($2->token->value.c == '<' || $2->token->value.c == '>'){
+				int coercion = arithRelationalCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+		}
+		else if($2->token->tokenType == COMP_OPER){
+			if(strcmp($2->token->value.str, "<=") == 0 || strcmp($2->token->value.str, ">=") == 0){
+				int coercion = arithRelationalCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if(strcmp($2->token->value.str, "&&") == 0 || strcmp($2->token->value.str, "||") == 0){
+				int coercion = logicCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+			else if(strcmp($2->token->value.str, "==") == 0 || strcmp($2->token->value.str, "!=") == 0){
+				int coercion = relationalCoercion($$, $1, $3);
+				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+			}
+		}
 	}
-	| infiniteQuestionMarks operators expression {
-		$$ = $1; 
-		adicionaFilho($$, $2); 
-		adicionaFilho($$, $3);
-	}
-	| parenthesisOrOperand			{$$ = $1;}
-	| infiniteQuestionMarks			{$$ = $1;}
+	| parenthesisOrOperand			{$$ = $1; $$->type = $1->type;}
+	| infiniteQuestionMarks			{$$ = $1; $$->type = $1->type;}
 ;
 infiniteQuestionMarks:
 	parenthesisOrOperand '?'		{$$ = $1; adicionaFilho($$, criaNodo($2));}
@@ -1499,25 +1485,34 @@ pipe:
 
 parenthesisOrOperand:
 	'(' expression ')' {
-		$$ = criaNodo($1); 
+		$$ = criaNodoTipado($1, $2->type); 
 		adicionaFilho($$, $2); 
-		adicionaFilho($$, criaNodo($3));
-
-		parseOperands($2);
-		int correctOperands =  coercion(NONE, $2);
-		//printf("tipo do parentesis: %d\n", $2->type);
-		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
+		adicionaFilho($$, criaNodoTipado($3, $2->type));
 	}
-	| operands					{$$ = $1;}
-	| '-' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '+' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '!' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '*' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '&' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
-	| '#' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2);}
+	| operands					{$$ = $1; $$->type = $1->type;}
+	| '-' parenthesisOrOperand	{
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		int coercion = unaryArithCoercion($$, $2);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+	}
+	| '+' parenthesisOrOperand	{
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		int coercion = unaryArithCoercion($$, $2);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+	}
+	| '!' parenthesisOrOperand	{
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		int coercion = unaryLogicCoercion($$, $2);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+	}
+	| '*' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '&' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '#' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
 ;
-operands:
+operands: // TODO: IDENTIFICADORES, CHAMADAS DE FUNCAO E PIPE
 	TK_IDENTIFICADOR '[' expression ']' {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
@@ -1526,10 +1521,8 @@ operands:
 		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
 		
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 	| TK_IDENTIFICADOR							{
 		$$ = criaNodo($1);
@@ -1559,19 +1552,18 @@ operands:
 		int hasF = hasField($1->value.str, $6->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
 
-		parseOperands($3);
 		int correctOperands =  coercion(INT, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
+
 	}
-	| TK_LIT_INT		{$$ = criaNodo($1);}
-	| TK_LIT_FLOAT		{$$ = criaNodo($1);}
-	| TK_LIT_TRUE		{$$ = criaNodo($1);}
-	| TK_LIT_FALSE		{$$ = criaNodo($1);}
-	| TK_LIT_CHAR		{$$ = criaNodo($1);}		
-	| TK_LIT_STRING		{$$ = criaNodo($1);}
-	| funcCall			{$$ = $1;}
-	| pipe				{$$ = $1;}
+	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT;}
+	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT;}
+	| TK_LIT_TRUE		{$$ = criaNodo($1); $$->type = BOOL;}
+	| TK_LIT_FALSE		{$$ = criaNodo($1); $$->type = BOOL;}
+	| TK_LIT_CHAR		{$$ = criaNodo($1); $$->type = CHAR;}		
+	| TK_LIT_STRING		{$$ = criaNodo($1); $$->type = STRING;}
+	| funcCall			{$$ = $1;} //TODO: TYPE
+	| pipe				{$$ = $1;} //TODO: TYPE
 ;
 operators:
 	'+'				{$$ = criaNodo($1);}

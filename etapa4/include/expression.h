@@ -13,6 +13,16 @@ typedef struct operandsList{
 	int originalType;
 } Operands;
 
+int unaryArithCoercion(Node *ss, Node *s2);
+int unaryLogicCoercion(Node *ss, Node *s2);
+int bitwiseCoercion(Node *ss, Node *s1, Node *s3);
+int arithmeticCoercion(Node *ss, Node *s1, Node *s3);
+int arithRelationalCoercion(Node *ss, Node *s1, Node *s3);
+int relationalCoercion(Node *ss, Node *s1, Node *s3);
+int logicCoercion(Node *ss, Node *s1, Node *s3);
+void printExpression(Node *expression);
+void printOperand(Node *operand);
+
 void adicionaOperando(Operands *newOperand);
 
 Operands *criaOperando(Node *ast);

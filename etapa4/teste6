@@ -1,6 +1,6 @@
 int main(){
 bool teste;
-teste = "2" & "1" | "2.0" == "3";
+teste = ( (((("2"))) & "1") | "2.0" == "3" );
 }
 
 /* verificar que o teste abaixo da errado, como deveria:

@@ -50,7 +50,7 @@ Operands *criaOperando(Node *ast){
 				}
 			}
 			else if(ast->token->tokenType == SPEC_CHAR){
-				if(openedParenthesis == 0){
+				/*if(openedParenthesis == 0){
 					if(ast->token->value.c == '('){
 						newOperand = malloc(sizeof(Operands));
 						newOperand->identifier = NULL;
@@ -77,7 +77,7 @@ Operands *criaOperando(Node *ast){
 				}
 				else if(ast->token->value.c == ')'){
 						openedParenthesis--;
-				}			
+				}*/			
 			}
 			else if(ast->token->tokenType == COMP_OPER && openedParenthesis == 0 ){
 				newOperand = malloc(sizeof(Operands));
@@ -113,7 +113,7 @@ void adicionaOperando(Operands *newOperand){
 
 void parseOperands(Node *ast){
 	int i = 0;
-	if(ast!=NULL){
+	/*if(ast!=NULL){
 		Operands *newOperand= criaOperando(ast);
 
 		//excecoes especificas para tratar o caso de variaveis do tipo do usuario com campos (exemplo: tipousuario$campo); sem esses ifs acabamos adicionando tanto a variavel quanto o campo como operandos
@@ -137,7 +137,7 @@ void parseOperands(Node *ast){
 			parseOperands(ast->kids[i]);
 			i++;
 		}
-	}
+	}*/
 }
 
 void printCurrentOperands(){
@@ -268,34 +268,6 @@ int typeInference(){
 	return type;
 }
 
-int coercion(int expectedType, Node *expressionNode){
-	int correctOperands =  wrongTypeInExpression(); // 1 eh pq soh tem operadores de comparacao na expressao, entao seu tipo deve ser booleano; 0 indica que a expressao pode ter tipos diversos
-	if (correctOperands > 1) return correctOperands;
-
-	int expressionType = typeInference();	
-	if(correctOperands == 1) expressionType = BOOL;
-
-	//printf("%d %d", expectedType, expressionType);
-	if(expectedType != NONE){ // se estou esperando qualquer tipo nao ha erro de coercao
-		if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
-		else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
-		else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
-		else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
-		else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
-	}
-
-	expressionNode->type = expressionType;
-	//printf("%d\n", expressionNode->type);
-
-	if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; printf("int vira float\n"); }
-	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; printf("int vira bool\n"); }
-	else if(expectedType == FLOAT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_FLOAT; printf("bool vira float\n"); }
-	else if(expectedType == INT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_INT; printf("bool vira int\n"); }
-	else if(expectedType == INT && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_INT; printf("float vira int\n"); }
-	else if(expectedType == BOOL && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_BOOL; printf("float vira bool\n"); }
-	return 0;
-}
-
 void clearCurrentOperands(){
 	Operands *aux = currentOperands;
 	Operands *temp = aux;
@@ -319,4 +291,291 @@ void clearCurrentOperands(){
 	currentOperands = NULL;
 }
 
+int coercion(int expectedType, Node *expressionNode){
+	//int correctOperands =  wrongTypeInExpression(); // 1 eh pq soh tem operadores de comparacao na expressao, entao seu tipo deve ser booleano; 0 indica que a expressao pode ter tipos diversos
+	//if (correctOperands > 1) return correctOperands;
 
+	int expressionType = expressionNode->type;//typeInference();	
+	//if(correctOperands == 1) expressionType = BOOL;
+
+	if(expectedType != NONE){ // se estou esperando qualquer tipo nao ha erro de coercao
+		if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
+		else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
+		else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
+		else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
+		else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
+	}
+	
+
+	if(expectedType == FLOAT && expressionType == INT) { expressionNode->coercion = INT_TO_FLOAT; printf("int vira float\n"); }
+	else if(expectedType == BOOL && expressionType == INT) { expressionNode->coercion = INT_TO_BOOL; printf("int vira bool\n"); }
+	else if(expectedType == FLOAT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_FLOAT; printf("bool vira float\n"); }
+	else if(expectedType == INT && expressionType == BOOL) { expressionNode->coercion = BOOL_TO_INT; printf("bool vira int\n"); }
+	else if(expectedType == INT && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_INT; printf("float vira int\n"); }
+	else if(expectedType == BOOL && expressionType == FLOAT) { expressionNode->coercion = FLOAT_TO_BOOL; printf("float vira bool\n"); }
+
+	return 0;
+}
+
+int logicCoercion(Node *ss, Node *s1, Node *s3){
+	if(s1->type == CHAR || s1->type == STRING || s3->type == CHAR || s3->type == STRING || s1->type == USER || s3->type == USER)
+		return ERR_WRONG_TYPE;
+	if(s1->type == INT)
+		s1->coercion = INT_TO_BOOL;
+	if(s3->type == INT)
+		s1->coercion = INT_TO_BOOL;
+	if(s1->type == FLOAT)
+		s1->coercion = FLOAT_TO_BOOL;
+	if(s3->type == FLOAT)
+		s1->coercion = FLOAT_TO_BOOL;
+	ss->type = BOOL;
+	return 0;
+}
+int unaryLogicCoercion(Node *ss, Node *s2){
+	if(s2->type == CHAR || s2->type == STRING || s2->type == USER)
+		return ERR_WRONG_TYPE;
+	if(s2->type == INT)
+		s2->coercion = INT_TO_BOOL;
+	else if(s2->type == FLOAT)
+		s2->coercion = FLOAT_TO_BOOL;
+
+	ss->type = BOOL;
+	return 0;
+}
+
+int relationalCoercion(Node *ss, Node *s1, Node *s3){
+	if(s1->type == USER || s3->type == USER)
+		return ERR_WRONG_TYPE;
+	if(s1->type == STRING && s3->type != STRING)
+		return ERR_WRONG_TYPE;
+	if(s1->type == CHAR && s3->type != CHAR)
+		return ERR_WRONG_TYPE;
+	else if(s1->type == INT && s3->type == FLOAT){
+		s1->coercion = INT_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s3->type == INT && s1->type == FLOAT){
+		s3->coercion = INT_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == FLOAT){
+		s1->coercion = BOOL_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s3->type == BOOL && s1->type == FLOAT){
+		s3->coercion = BOOL_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == INT){
+		s1->coercion = BOOL_TO_INT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s3->type == BOOL && s1->type == INT){
+		s3->coercion = BOOL_TO_INT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s1->type == s3->type){
+		ss->type = BOOL;
+	}
+	return 0;
+}
+
+int bitwiseCoercion(Node *ss, Node *s1, Node *s3){
+	if(s1->type == USER || s3->type == USER)
+		return ERR_WRONG_TYPE;
+	if(s1->type == STRING && s3->type != STRING)
+		return ERR_WRONG_TYPE;
+	if(s1->type == CHAR && s3->type != CHAR)
+		return ERR_WRONG_TYPE;
+	else if(s1->type == INT && s3->type == FLOAT){
+		s1->coercion = INT_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s3->type == INT && s1->type == FLOAT){
+		s3->coercion = INT_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == FLOAT){
+		s1->coercion = BOOL_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s3->type == BOOL && s1->type == FLOAT){
+		s3->coercion = BOOL_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == INT){
+		s1->coercion = BOOL_TO_INT;
+		ss->type = INT;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s3->type == BOOL && s1->type == INT){
+		s3->coercion = BOOL_TO_INT;
+		ss->type = INT;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s1->type == s3->type){
+		ss->type = s1->type;
+		
+		printf("chegoulhe\n\n");
+	}
+	return 0;
+}
+
+int unaryArithCoercion(Node *ss, Node *s2){
+	if(s2->type == CHAR || s2->type == STRING || s2->type == USER)
+		return ERR_WRONG_TYPE;
+	if(s2->type == INT)
+		ss->type = INT;
+	else if(s2->type == FLOAT)
+		ss->type = FLOAT;
+	else if(s2->type == BOOL)
+		ss->type = BOOL;
+	return 0;
+}
+
+int arithRelationalCoercion(Node *ss, Node *s1, Node *s3){
+	if(s1->type == CHAR || s1->type == STRING || s3->type == CHAR || s3->type == STRING || s1->type == USER || s3->type == USER)
+		return ERR_WRONG_TYPE;
+	else if(s1->type == INT && s3->type == FLOAT){
+		s1->coercion = INT_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s3->type == INT && s1->type == FLOAT){
+		s3->coercion = INT_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == FLOAT){
+		s1->coercion = BOOL_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s3->type == BOOL && s1->type == FLOAT){
+		s3->coercion = BOOL_TO_FLOAT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == INT){
+		s1->coercion = BOOL_TO_INT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s3->type == BOOL && s1->type == INT){
+		s3->coercion = BOOL_TO_INT;
+		ss->type = BOOL;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s1->type == s3->type)
+		ss->type = BOOL;
+	return 0;
+}
+
+int arithmeticCoercion(Node *ss, Node *s1, Node *s3){
+	//printf("Tipo da esquerda: %d   Tipo da direita: %d\n\n", s1->type, s3->type );
+	if(s1->type == CHAR || s1->type == STRING || s3->type == CHAR || s3->type == STRING || s1->type == USER || s3->type == USER)
+		return ERR_WRONG_TYPE;
+	else if(s1->type == INT && s3->type == FLOAT){
+		s1->coercion = INT_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s3->type == INT && s1->type == FLOAT){
+		s3->coercion = INT_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nINT TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == FLOAT){
+		s1->coercion = BOOL_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s3->type == BOOL && s1->type == FLOAT){
+		s3->coercion = BOOL_TO_FLOAT;
+		ss->type = FLOAT;
+		//printf("\nBOOL TO FLOAT\n");
+	}
+	else if(s1->type == BOOL && s3->type == INT){
+		s1->coercion = BOOL_TO_INT;
+		ss->type = INT;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s3->type == BOOL && s1->type == INT){
+		s3->coercion = BOOL_TO_INT;
+		ss->type = INT;
+		//printf("\nBOOL TO INT\n");
+	}
+	else if(s1->type == s3->type)
+		ss->type = s1->type;
+
+	return 0;
+}
+void printOperand(Node *operand){
+	int type = operand->type;
+	int coercion = operand->coercion;
+	if(operand->token == NULL) return;
+	
+	switch(operand->token->tokenType)
+	{
+		case SPEC_CHAR: printf("Operando SPEC_CHAR: \"%c\".", operand->token->value.c); break;
+		case COMP_OPER: printf("Operando COMP_OPER: \"%s\".", operand->token->value.str); break;
+		case IDS: printf("Operando IDENTIFICADOR: \"%s\".", operand->token->value.str); break;
+		case LITERAL: 
+			switch(operand->token->literType)
+			{
+				case INT: printf("Operando LITERAL INT: \"%d\".", operand->token->value.i); break;
+				case FLOAT: printf("Operando LITERAL FLOAT: \"%f\".", operand->token->value.f); break;
+				case CHAR: printf("Operando LITERAL CHAR: \"%c\".", operand->token->value.c); break;
+				case BOOL: 
+					if(operand->token->value.b == TRUE)
+						printf("Operando LITERAL BOOL: \"true\".");
+					else printf("Operando LITERAL BOOL: \"false\".");
+					break;
+				case STRING: printf("Operando LITERAL STRING: \"%s\".", operand->token->value.str); break;	
+			}
+			break;
+		default: printf("Operando desconhecido."); break;
+	}
+	switch(operand->type)
+	{
+		case INT: printf(" Tipo INT."); break;
+		case FLOAT: printf(" Tipo FLOAT."); break;
+		case BOOL: printf(" Tipo BOOL."); break;
+		case CHAR: printf(" Tipo CHAR."); break;
+		case STRING: printf(" Tipo STRING."); break;
+		case USER: printf(" Tipo USER."); break;
+		case NONE: printf(" Tipo NONE."); break;
+		default: printf(" Tipo UNKNOWN."); break;
+	}
+	switch(operand->coercion)
+	{
+		case INT_TO_BOOL: printf(" Coercao de INT para BOOL.\n"); break;
+		case INT_TO_FLOAT: printf(" Coercao de INT para FLOAT.\n"); break;
+		case FLOAT_TO_INT: printf(" Coercao de FLOAT para INT.\n"); break;
+		case FLOAT_TO_BOOL: printf(" Coercao de FLOAT para BOOL.\n"); break;
+		case BOOL_TO_FLOAT: printf(" Coercao de BOOL para FLOAT.\n"); break;
+		case BOOL_TO_INT: printf(" Coercao de BOOL para INT.\n"); break;
+		case NONE: printf(" Nao sofreu coercao.\n"); break;
+		default: printf(" Coercao desconhecida.\n"); break;
+	}
+}
+void printExpression(Node *expression){
+	int i = 0;
+	if(expression!=NULL){
+		printOperand(expression);
+		while(i < expression->kidsNumber){ // enquanto houver filhos, os explora e os imprime
+			printExpression(expression->kids[i]);
+			i++;
+		}
+	}
+}

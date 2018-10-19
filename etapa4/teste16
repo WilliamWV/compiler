@@ -1,16 +1,9 @@
-/*int main(){
-int teste;
-teste = !!!(true + 1);
-}*/
-/*
 int main(){
 int teste;
-bool zorzo;
-teste = ((1 + (2 + 3.0)) + (((4)))) && zorzo & 1.0;
-}*/
-
-int main(){
-int teste;
-bool zorzo;
-teste = (((1 + (2 + 3.0)) + (((4)))) && zorzo;
+//teste = 1.0 + 1.0 + (((1 + true + 5.0 + 7)));
+//teste = !(((1 + 2.0)));
+//teste = ( ((((2))) + 1.0) / true - 57 );
+//teste = ((((1+1.0+1))) + (1+(true)));
+//teste  = ----15;
+teste = (5.0) / 25 - 32;
 }
