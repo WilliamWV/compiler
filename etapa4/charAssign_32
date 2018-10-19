@@ -1,7 +1,0 @@
-
-var int;
-int main(){
-	int a;
-	a = 'a';
-}
-

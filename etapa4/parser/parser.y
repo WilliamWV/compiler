@@ -8,7 +8,8 @@
 #include "../include/functionArgs.h"
 #include "../include/parser.tab.h" 
 int yylex(void);
-extern int get_line_number(void); // avisa que função deve ser lincada e está em outro arquivo
+extern int get_line_number(void);
+
 int yyerror (char const *s){
 	printf("%s, on line %d\n", s, get_line_number());
 	return -1;
@@ -22,21 +23,38 @@ extern char *currentFunc;
 
 extern int yylex_destroy  (void); 
 
-//útil quando um componente tem 2 identificadores e não se sabe se é var global
-//ou função com tipo de usuário
+////////////////////////////////////////////////////////////////////////////////
+/// Variáveis firstID e secondID usadas quando um componente de uma entrada  ///
+/// válida da gramática começa com dois identificadores. Elas são            ///
+/// necessárias, pois não se sabe se o componente é uma variável global ou   ///
+/// uma função de tipos de usuário, no entanto, para que não exista          ///
+/// conflitos gramáticais, foi necessário criar regras que processassem um   ///
+/// identificador e depois diferenciassem se é uma função ou variável global ///
+/// mas essas regras não teriam acesso aos identificadores já processados    ///
+/// portanto os nodos da ast correspondentes a esses identificadores devem   ///
+/// são salvos nessas variáveis para que o processamento adequado para cada  ///
+/// caso seja possível                                                       ///
+//////////////////////////////////////////////////////////////////////////////// 
 struct node* firstID;
 struct node* secondID;
 
-//útil para verificar o tipo de uma expressão em pipe
+////////////////////////////////////////////////////////////////////////////////
+/// Variável inpPipe usada para salvar o nodo de uma expressão de pipe que   ///
+/// será passado para uma função, é necessário para fazer a correta          ///
+/// verificação de tipos dos argumentos da chamada de função com os          ///
+/// parâmetros formais da função                                             ///
+////////////////////////////////////////////////////////////////////////////////
 struct node* inpPipe;
+
+
 int parsingSucceded = FALSE;
 int returnError = 1;
 Node *nodeNotAdded = NULL;
 char *identifierError;
 extern Node *danglingNodes;
 
-//Retorna constante representando o tipo
-//opera sobre regra tipo ou tipoPrimitivo
+//Retorna constante representando o tipo, o nodo da ast passado deve ser ou da
+//regra tipo, ou da regra tipoPrimitivo
 int getType(struct node* type){
 	if (strcmp(type->token->value.str, "int") == 0) return INT;
 	if (strcmp(type->token->value.str, "float") == 0) return FLOAT;
@@ -46,7 +64,7 @@ int getType(struct node* type){
 	return USER;
 }
 
-//opera sovre tipo
+//opera sobre regra tipo obtém o nome do tipo de usuário
 char* getUserType(struct node* type){
 	if (getType(type) != USER){
 		return NULL;
@@ -57,7 +75,7 @@ char* getUserType(struct node* type){
 int verifyArguments(char* symbol, struct node* argsCall){
 	Hash* func = getSymbol(symbol);
 	int argsNum = func->argsNum;
-	if(argsCall == NULL){ // função sem argumentos
+	if(argsCall == NULL){ // chamada de função sem argumentos
 		if (argsNum == 0) return TRUE;
 		return ERR_MISSING_ARGS;
 	}
@@ -69,25 +87,24 @@ int verifyArguments(char* symbol, struct node* argsCall){
 		* kids[0], kids[2], kids[4], ..., kids[(argsNum - 1) * 2] -> argCall ->
 			contém expressão que representa o argumento
 		* kids[1], kids[3], kids[5], ..., kids[(argsNum-1)*2 - 1] -> vírgula
-		
 	*/
 	if(argsCall->kidsNumber < 2*argsNum -1) return ERR_MISSING_ARGS;
 	if(argsCall->kidsNumber > 2*argsNum -1) return ERR_EXCESS_ARGS;
-	
 	int currentArg = 0;	
 	for(int i = 0; i <= ((argsNum-1)* 2); i+=2){
-		//pipe
+		
 		if (argsCall->kids[i] != NULL)
-			if (!(argsCall->kids[i]->token->tokenType == SPEC_CHAR || 
-				  argsCall->kids[i]->token->value.c == '.') )
+			if (argsCall->kids[i]->token == NULL || 
+				(!(argsCall->kids[i]->token->tokenType == SPEC_CHAR || 
+				   argsCall->kids[i]->token->value.c == '.')) )
 			{		
+				
 				parseOperands(argsCall->kids[i]);
-				//argsCall->kids[i]->type = typeInference();
 				int correctOperands =  coercion(func->args[currentArg]->argType, argsCall->kids[i]);
 				if (correctOperands != 0){ return ERR_WRONG_TYPE_ARGS; }
 				clearCurrentOperands();
 				
-			}else{
+			}else{ // verifica argumentos em uma expressão em pipe
 				if(inpPipe==NULL) return ERR_WRONG_TYPE_ARGS;
 				else{
 					Hash* inPipeFunc = getSymbol(inpPipe->token->value.str);
@@ -324,11 +341,13 @@ componente:
 			}
 		}
 		else if ($2->kids[0]->token->value.c == '('){ //
-			//só precisa adicionar os argumentos, nome da função já foi adicionado em userTypeFunc
+			//trata função 
+			// só precisa adicionar os argumentos, nome da função já foi adicionado em userTypeFunc
 			addArgsToSymbol($2->token->value.str, currentArgs);
 			clearCurrentArgs();
 		}
 		else{
+			//trata variável global
 			//Existem diferentes variações:
 			//var global com tipos primitivos não estático -> head = tipoPrimitivo, kids[0] = ';'
 			//var global estatica -> head = TK_PR_STATIC, kids[0] = tipo, kids[1] = ';'
@@ -384,7 +403,6 @@ componente:
 		}
 			
 		addArgsToSymbol($1->kids[kid]->token->value.str, currentArgs);
-		//printArgs($1->kids[kid]->token->value.str);
 		clearCurrentArgs();
 		closeTable();
 		
@@ -424,13 +442,12 @@ fechaVarOuFunc:
 userTypeFunc:
 	%empty {
 		int isUsr = isUserType(firstID->token->value.str);
-		if (isUsr!=TRUE){ returnError = isUsr; /*nodeNotAdded = $$*/; YYABORT;}
+		if (isUsr!=TRUE){ returnError = isUsr; YYABORT;}
 		int addSymb = addSymbol(secondID->token, NATUREZA_IDENTIFICADOR, USER, getUserType(firstID), 0, TRUE, 0);
-		if(addSymb != 0){ returnError = addSymb; /*nodeNotAdded = $$*/; YYABORT;}
+		if(addSymb != 0){ returnError = addSymb; YYABORT;}
 		saveFunc(secondID->token->value.str);
 	}
 ;
-//Regras gerais
 encapsulamento: 
 	%empty 				{$$ = criaNodo(NULL);}
 	| TK_PR_PRIVATE 	{$$ = criaNodo($1);}
@@ -475,7 +492,6 @@ novoTipo:
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, NULL, 0, FALSE, 0);		
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		addFieldsToSymbol($2->value.str, currentFields);
-		//printFields("pessoa");
 		clearCurrentFields();
 	};
 listaCampos: 
@@ -551,7 +567,7 @@ parameter: //nodo raiz vai ter ou um filho (TK_IDENTIFICADOR; tipo vai ser o nod
 		}
 	}
 ;
-//precisa executar antes do bloco de comandos da função e adicionar o nome 
+//precisa executar antes do bloco de comandos da função para adicionar seu nome 
 //em escopo global
 funcName:
 	tiposPrimitivos TK_IDENTIFICADOR {
@@ -578,8 +594,8 @@ funcName:
 
 	}
 ;
-//precisa executar antes do bloco de comandos da função
-//e adicionar os nomes no escopo da função
+//precisa executar antes do bloco de comandos da função para adicionar os
+//parâmetros à tabela
 funcArgs:
 	'(' args ')' {
 		$$ = criaNodo($1);
@@ -948,8 +964,7 @@ localVarDefinition: //TODO: falta ajeitar os negative/positive literal/identifca
 		int correctOperands =  coercion(getType($1), $$->kids[2]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
 
-		//printf("Tipo do identificador: %d   %d\n", getType($1), identifierType($$->kids[2]->token->value.str));		
-
+		
 		if (getType($1) == STRING){
 			//atualiza tamanho
 			updateStringSize($2->value.str, $$->kids[2], IDENT, NULL);
@@ -1132,13 +1147,9 @@ assignment:
 		adicionaFilho($$, $3);
 		int isVar = isVariable($1->value.str);
 		if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
-		//printf("Tipo da expressao apos identificador: %d\n", $3->type);
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
-		//printf("%d\n\n", correctOperands);
-		printExpression($3);
+		//printExpression($3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		//if (correctOperands != 0) exitAndFree(correctOperands, NULL, $$);
-		//printCurrentOperands();
 		if(identifierType($1->value.str) == STRING){
 			//atualizar tamanho
 			updateStringSize($1->value.str, $3, IDENT, NULL);			
@@ -1223,7 +1234,6 @@ output:
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
 		parseOperands($2);
-		//$2->type = typeInference();
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1240,7 +1250,6 @@ output:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
 		parseOperands($2);
-		//$2->type = typeInference();
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1304,9 +1313,8 @@ argsCall:
 argCall:
 	expression			{$$ = $1;
 		int correctOperands =  coercion(NONE, $1);
-		//printf("tipo da expressao: %d\n", $1->type);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		//printf("tipo da expressao: %d\n", $1->type);
+		
 	}
 	| '.'				{$$ = criaNodo($1);};
 
@@ -1520,7 +1528,7 @@ parenthesisOrOperand:
 	| '&' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
 	| '#' parenthesisOrOperand	{$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
 ;
-operands: // TODO: PIPE
+operands:
 	TK_IDENTIFICADOR '[' expression ']' {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 

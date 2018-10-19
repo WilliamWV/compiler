@@ -90,32 +90,6 @@ void addFieldsToSymbol(char* symbol, Fields *fields){
 	} 
 }
 
-/*void clearCurrentFields(){
-	Fields *aux = currentFields;
-	while(camposNoTipoAtual > 0){
-		int contador = 0;
-		while(aux != NULL){
-			printf("Avanca pro proximo ponteiro 1   ");
-			printf("%s (zorzo)\n", aux->field->fieldName);
-			printf("%d fields numb\n", camposNoTipoAtual);
-			aux = aux->next;
-			contador++;
-		}
-		free(aux);
-		aux = currentFields;
-		while(contador-1 > 0){
-			printf("Avanca pro proximo ponteiro 2   ");
-			printf("%s (zorzo)\n", aux->field->fieldName);
-			aux = aux->next;
-			contador--;
-		}
-		aux->next = NULL;
-		camposNoTipoAtual--;
-	}
-	free(currentFields);
-	currentFields = NULL;
-	printf("campos: %d\n", contaCampos)
-}*/
 
 void clearCurrentFields(){
 	Fields *aux = currentFields;

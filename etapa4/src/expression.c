@@ -50,34 +50,7 @@ Operands *criaOperando(Node *ast){
 				}
 			}
 			else if(ast->token->tokenType == SPEC_CHAR){
-				/*if(openedParenthesis == 0){
-					if(ast->token->value.c == '('){
-						newOperand = malloc(sizeof(Operands));
-						newOperand->identifier = NULL;
-						newOperand->next = NULL;
-						newOperand->previous = NULL;
-						newOperand->character =  ast->token->value.c;
-						newOperand->originalType = ast->kids[0]->type;
-						//printf("tipo: %d\n",newOperand->originalType );
-						newOperand->type = newOperand->originalType;
-						//printf("ok1\n");
-					}
-					else{
-						newOperand = malloc(sizeof(Operands));
-						newOperand->identifier = NULL;
-						newOperand->next = NULL;
-						newOperand->previous = NULL;
-						newOperand->originalType = SPEC_CHAR;
-						newOperand->type = newOperand->originalType;
-						newOperand->character =  ast->token->value.c;
-					}
-				}
-				if(ast->token->value.c == '('){
-						openedParenthesis++;
-				}
-				else if(ast->token->value.c == ')'){
-						openedParenthesis--;
-				}*/			
+				
 			}
 			else if(ast->token->tokenType == COMP_OPER && openedParenthesis == 0 ){
 				newOperand = malloc(sizeof(Operands));
@@ -102,9 +75,7 @@ void adicionaOperando(Operands *newOperand){
 				aux = aux->next;
 			}
 			aux->next = newOperand;
-			//printf("ops\n");
 			newOperand->previous = aux;
-			//printf("uepa\n");
 			newOperand->next = NULL;
 		}	
 		operandosNaExpAtual++;
@@ -113,31 +84,7 @@ void adicionaOperando(Operands *newOperand){
 
 void parseOperands(Node *ast){
 	int i = 0;
-	/*if(ast!=NULL){
-		Operands *newOperand= criaOperando(ast);
-
-		//excecoes especificas para tratar o caso de variaveis do tipo do usuario com campos (exemplo: tipousuario$campo); sem esses ifs acabamos adicionando tanto a variavel quanto o campo como operandos
-		if( (ast->kidsNumber == 2 || ast->kidsNumber == 4) && ast->kids[0]->token->tokenType == SPEC_CHAR){
-			if(ast->kids[0]->token->value.c != '$'){
-				adicionaOperando(newOperand);
-			}else{
-				free(newOperand);
-			}
-		}
-		else if( (ast->kidsNumber == 7 || ast->kidsNumber == 5) && ast->kids[3]->token->tokenType == SPEC_CHAR){
-			if(ast->kids[3]->token->value.c != '$'){
-				adicionaOperando(newOperand);
-			}
-			else{
-				free(newOperand);
-			}
-		}
-		else adicionaOperando(newOperand);
-		while(i < ast->kidsNumber){ // enquanto houver filhos, os explora e os imprime
-			parseOperands(ast->kids[i]);
-			i++;
-		}
-	}*/
+	
 }
 
 void printCurrentOperands(){
@@ -194,7 +141,6 @@ int wrongTypeInExpression(){
 		if(aux->originalType == COMP_OPER){
 			if(aux->originalType == USER) return ERR_WRONG_TYPE;
 			if(strcmp(aux->identifier, "==") == 0 || strcmp(aux->identifier, "!=") == 0 ){
-				//printf("%d %d\n", aux->previous->type, aux->next->type);
 				if(!(aux->previous->type == aux->next->type || ( (aux->previous->type == INT || aux->previous->type == FLOAT || aux->previous->type == BOOL) && (aux->next->type == INT || aux->next->type == FLOAT || aux->next->type == BOOL) ) ))
 					return ERR_WRONG_TYPE;
 				else{
@@ -202,7 +148,7 @@ int wrongTypeInExpression(){
 					aux->previous->type = BOOL;
 				}
 
-				//printf("previous coercion type:%d next original type:%d next coercion type: %d\n", aux->previous->type, aux->next->originalType, aux->next->type);
+				
 			}
 			else if( strcmp(aux->identifier, "&&") == 0 || strcmp(aux->identifier, "||") == 0 ){
 					if(aux->previous->type == CHAR || aux->previous->type == STRING || aux->next->type == CHAR || aux->next->type == STRING) return ERR_WRONG_TYPE;
@@ -250,12 +196,6 @@ int typeInference(){
 	type = aux->type;
 	aux = currentOperands;
 	while(aux != NULL){
-		/*if(contador == 0){
-			if(aux->type != SPEC_CHAR && aux->type != COMP_OPER){
-				contador++;
-				type = aux->type;
-			}
-		}*/
 		if(type == INT && aux->type == FLOAT)
 			type = FLOAT;
 		else if(type == BOOL && aux->type == INT)
@@ -292,12 +232,9 @@ void clearCurrentOperands(){
 }
 
 int coercion(int expectedType, Node *expressionNode){
-	//int correctOperands =  wrongTypeInExpression(); // 1 eh pq soh tem operadores de comparacao na expressao, entao seu tipo deve ser booleano; 0 indica que a expressao pode ter tipos diversos
-	//if (correctOperands > 1) return correctOperands;
-
-	int expressionType = expressionNode->type;//typeInference();	
-	//if(correctOperands == 1) expressionType = BOOL;
-
+	
+	int expressionType = expressionNode->type;	
+	
 	if(expectedType != NONE){ // se estou esperando qualquer tipo nao ha erro de coercao
 		if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
 		else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
@@ -426,7 +363,7 @@ int bitwiseCoercion(Node *ss, Node *s1, Node *s3){
 	else if(s1->type == s3->type){
 		ss->type = s1->type;
 		
-		printf("chegoulhe\n\n");
+		//printf("chegoulhe\n\n");
 	}
 	return 0;
 }

@@ -381,12 +381,9 @@ int getFieldSize(char* ut, char* field){
 }
 
 void setFieldSize(char* ut, char* field, int size){
-	//printf("Usertype = %s, field = %s, expSize = %d\n", ut, field, size);
 	Hash* usr = getSymbol(ut);
 	Hash* usrType = getSymbol(usr->userType);
-	//printf("fieldNum = %d\n", usrType->fieldsNum);
 	for(int i = 0; i<usrType->fieldsNum; i++){
-		//printf("field = %s\n", usrType->fields[i]->fieldName);
 		if(strcmp(usrType->fields[i]->fieldName, field) == 0){
 			if(size > usrType->fields[i]->size){
 				usrType->size = usrType->size + size - usrType->fields[i]->size;			

@@ -86,15 +86,7 @@ void adicionaArg(Args *newArg){
 	}	
 	argsNaFuncaoAtual++;
 }
-/*
-void addArgsToSymbol(char* symbol, Args *args){
-	Args *aux = args;
-	while(aux != NULL){
-		if(aux->arg != NULL)
-			addFuncArg(symbol, aux->arg);
-		aux = aux->next;
-	} 
-}*/
+
 
 void addArgsToSymbol(char* symbol, Args *args){
 	Args *aux = currentArgs;
@@ -120,13 +112,11 @@ void addArgsToSymbol(char* symbol, Args *args){
 
 int verifyReturn(struct node* returnExpression){
 	Hash* func = getSymbol(currentFunc);
-	//printf("tipo: %d\n", returnExpression->type);
 	if(func == NULL){
 		//tem algo errado com o tratamento se chegar aqui
 		return ERR_WRONG_PAR_RETURN;
 	}
 	parseOperands(returnExpression);
-	//returnExpression->type = typeInference();
 	int retType = getCurrentFuncReturnType();
 	int correctOperands =  coercion(retType, returnExpression);
 	if (correctOperands != 0){ return ERR_WRONG_PAR_RETURN;}
