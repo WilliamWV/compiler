@@ -174,7 +174,8 @@ int verifyArguments(char* symbol, struct node* argsCall){
 %token <valor_lexico> TK_IDENTIFICADOR
 %token <valor_lexico> TOKEN_ERRO
 //tokens para caracteres especiais, declarados para poder usar seu valor semântico atribuido no scanner
-%token <valor_lexico> ',' ';' ':' '(' ')' '[' ']' '{' '}' '+' '-' '|' '?' '*' '/' '<' '>' '=' '!' '&' '%' '#' '^' '.' '$'
+%token <valor_lexico> ',' ';' ':' '(' ')' '[' ']' '{' '}' '-' '|' '?' '<' '>' '=' '!' '&' '%' '#' '^' '.' '$' '*' '+' '/'
+
 %start programa
 
 //Regras, em ordem alfabética, cujo tipo será ast, ou seja, seu valor semântico é representado como uma árvore
@@ -1150,6 +1151,7 @@ assignment:
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printExpression($3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		printExpression($3);
 		if(identifierType($1->value.str) == STRING){
 			//atualizar tamanho
 			updateStringSize($1->value.str, $3, IDENT, NULL);			
@@ -1580,7 +1582,7 @@ operands:
 		$$->type = fieldType($1->value.str, $6->value.str);
 
 	}
-	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT;}
+	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT; printf("Uepa: %d\n", $1->value.i);}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT;}
 	| TK_LIT_TRUE		{$$ = criaNodo($1); $$->type = BOOL;}
 	| TK_LIT_FALSE		{$$ = criaNodo($1); $$->type = BOOL;}

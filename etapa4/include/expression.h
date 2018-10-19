@@ -22,6 +22,8 @@ int relationalCoercion(Node *ss, Node *s1, Node *s3);
 int logicCoercion(Node *ss, Node *s1, Node *s3);
 void printExpression(Node *expression);
 void printOperand(Node *operand);
+void printOperandsWithoutInfo(Node *expression);
+void printAllOperands(Node *expression);
 
 void adicionaOperando(Operands *newOperand);
 

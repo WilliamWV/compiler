@@ -1256,12 +1256,12 @@ State 81
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 133
@@ -1285,12 +1285,12 @@ State 82
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 138
@@ -1313,12 +1313,12 @@ State 83
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 139
@@ -1666,12 +1666,12 @@ State 115
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 165
@@ -1694,12 +1694,12 @@ State 116
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 166
@@ -1787,12 +1787,12 @@ State 125
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 170
@@ -1805,32 +1805,6 @@ State 125
 
 State 126
 
-  158 parenthesisOrOperand: '+' . parenthesisOrOperand
-
-    TK_LIT_INT        shift, and go to state 118
-    TK_LIT_FLOAT      shift, and go to state 119
-    TK_LIT_FALSE      shift, and go to state 120
-    TK_LIT_TRUE       shift, and go to state 121
-    TK_LIT_CHAR       shift, and go to state 122
-    TK_LIT_STRING     shift, and go to state 123
-    TK_IDENTIFICADOR  shift, and go to state 124
-    '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
-
-    funcCall              go to state 132
-    savePipe              go to state 113
-    pipe                  go to state 135
-    parenthesisOrOperand  go to state 171
-    operands              go to state 137
-
-
-State 127
-
   157 parenthesisOrOperand: '-' . parenthesisOrOperand
 
     TK_LIT_INT        shift, and go to state 118
@@ -1841,47 +1815,21 @@ State 127
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall              go to state 132
     savePipe              go to state 113
     pipe                  go to state 135
-    parenthesisOrOperand  go to state 172
+    parenthesisOrOperand  go to state 171
     operands              go to state 137
 
 
-State 128
-
-  160 parenthesisOrOperand: '*' . parenthesisOrOperand
-
-    TK_LIT_INT        shift, and go to state 118
-    TK_LIT_FLOAT      shift, and go to state 119
-    TK_LIT_FALSE      shift, and go to state 120
-    TK_LIT_TRUE       shift, and go to state 121
-    TK_LIT_CHAR       shift, and go to state 122
-    TK_LIT_STRING     shift, and go to state 123
-    TK_IDENTIFICADOR  shift, and go to state 124
-    '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
-
-    funcCall              go to state 132
-    savePipe              go to state 113
-    pipe                  go to state 135
-    parenthesisOrOperand  go to state 173
-    operands              go to state 137
-
-
-State 129
+State 127
 
   159 parenthesisOrOperand: '!' . parenthesisOrOperand
 
@@ -1893,21 +1841,21 @@ State 129
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall              go to state 132
     savePipe              go to state 113
     pipe                  go to state 135
-    parenthesisOrOperand  go to state 174
+    parenthesisOrOperand  go to state 172
     operands              go to state 137
 
 
-State 130
+State 128
 
   161 parenthesisOrOperand: '&' . parenthesisOrOperand
 
@@ -1919,21 +1867,21 @@ State 130
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall              go to state 132
     savePipe              go to state 113
     pipe                  go to state 135
-    parenthesisOrOperand  go to state 175
+    parenthesisOrOperand  go to state 173
     operands              go to state 137
 
 
-State 131
+State 129
 
   162 parenthesisOrOperand: '#' . parenthesisOrOperand
 
@@ -1945,12 +1893,64 @@ State 131
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
+
+    funcCall              go to state 132
+    savePipe              go to state 113
+    pipe                  go to state 135
+    parenthesisOrOperand  go to state 174
+    operands              go to state 137
+
+
+State 130
+
+  160 parenthesisOrOperand: '*' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 118
+    TK_LIT_FLOAT      shift, and go to state 119
+    TK_LIT_FALSE      shift, and go to state 120
+    TK_LIT_TRUE       shift, and go to state 121
+    TK_LIT_CHAR       shift, and go to state 122
+    TK_LIT_STRING     shift, and go to state 123
+    TK_IDENTIFICADOR  shift, and go to state 124
+    '('               shift, and go to state 125
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
+
+    funcCall              go to state 132
+    savePipe              go to state 113
+    pipe                  go to state 135
+    parenthesisOrOperand  go to state 175
+    operands              go to state 137
+
+
+State 131
+
+  158 parenthesisOrOperand: '+' . parenthesisOrOperand
+
+    TK_LIT_INT        shift, and go to state 118
+    TK_LIT_FLOAT      shift, and go to state 119
+    TK_LIT_FALSE      shift, and go to state 120
+    TK_LIT_TRUE       shift, and go to state 121
+    TK_LIT_CHAR       shift, and go to state 122
+    TK_LIT_STRING     shift, and go to state 123
+    TK_IDENTIFICADOR  shift, and go to state 124
+    '('               shift, and go to state 125
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall              go to state 132
     savePipe              go to state 113
@@ -1981,16 +1981,16 @@ State 133
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 126 (input)
 
@@ -2050,16 +2050,16 @@ State 138
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ','        shift, and go to state 196
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 128 (output)
 
@@ -2079,16 +2079,16 @@ State 139
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 143 (return)
 
@@ -2169,12 +2169,12 @@ State 146
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 205
@@ -2227,13 +2227,13 @@ State 151
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
     ')'               shift, and go to state 207
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
     '.'               shift, and go to state 208
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     argsCall               go to state 209
@@ -2261,12 +2261,12 @@ State 152
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 212
@@ -2289,12 +2289,12 @@ State 153
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 213
@@ -2325,12 +2325,12 @@ State 155
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 215
@@ -2431,16 +2431,16 @@ State 165
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ')'        shift, and go to state 223
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
@@ -2458,16 +2458,16 @@ State 166
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ')'        shift, and go to state 224
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
@@ -2492,12 +2492,12 @@ State 168
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 226
@@ -2528,60 +2528,60 @@ State 170
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ')'        shift, and go to state 228
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
 
 State 171
 
-  158 parenthesisOrOperand: '+' parenthesisOrOperand .
-
-    $default  reduce using rule 158 (parenthesisOrOperand)
-
-
-State 172
-
   157 parenthesisOrOperand: '-' parenthesisOrOperand .
 
     $default  reduce using rule 157 (parenthesisOrOperand)
 
 
-State 173
-
-  160 parenthesisOrOperand: '*' parenthesisOrOperand .
-
-    $default  reduce using rule 160 (parenthesisOrOperand)
-
-
-State 174
+State 172
 
   159 parenthesisOrOperand: '!' parenthesisOrOperand .
 
     $default  reduce using rule 159 (parenthesisOrOperand)
 
 
-State 175
+State 173
 
   161 parenthesisOrOperand: '&' parenthesisOrOperand .
 
     $default  reduce using rule 161 (parenthesisOrOperand)
 
 
-State 176
+State 174
 
   162 parenthesisOrOperand: '#' parenthesisOrOperand .
 
     $default  reduce using rule 162 (parenthesisOrOperand)
+
+
+State 175
+
+  160 parenthesisOrOperand: '*' parenthesisOrOperand .
+
+    $default  reduce using rule 160 (parenthesisOrOperand)
+
+
+State 176
+
+  158 parenthesisOrOperand: '+' parenthesisOrOperand .
+
+    $default  reduce using rule 158 (parenthesisOrOperand)
 
 
 State 177
@@ -2628,72 +2628,72 @@ State 182
 
 State 183
 
-  175 operators: '+' .
-
-    $default  reduce using rule 175 (operators)
-
-
-State 184
-
   176 operators: '-' .
 
     $default  reduce using rule 176 (operators)
 
 
-State 185
+State 184
 
   183 operators: '|' .
 
     $default  reduce using rule 183 (operators)
 
 
-State 186
-
-  177 operators: '*' .
-
-    $default  reduce using rule 177 (operators)
-
-
-State 187
-
-  178 operators: '/' .
-
-    $default  reduce using rule 178 (operators)
-
-
-State 188
+State 185
 
   189 operators: '<' .
 
     $default  reduce using rule 189 (operators)
 
 
-State 189
+State 186
 
   190 operators: '>' .
 
     $default  reduce using rule 190 (operators)
 
 
-State 190
+State 187
 
   184 operators: '&' .
 
     $default  reduce using rule 184 (operators)
 
 
-State 191
+State 188
 
   179 operators: '%' .
 
     $default  reduce using rule 179 (operators)
 
 
-State 192
+State 189
 
   180 operators: '^' .
 
     $default  reduce using rule 180 (operators)
+
+
+State 190
+
+  177 operators: '*' .
+
+    $default  reduce using rule 177 (operators)
+
+
+State 191
+
+  175 operators: '+' .
+
+    $default  reduce using rule 175 (operators)
+
+
+State 192
+
+  178 operators: '/' .
+
+    $default  reduce using rule 178 (operators)
 
 
 State 193
@@ -2709,12 +2709,12 @@ State 193
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     infiniteQuestionMarks  go to state 229
@@ -2751,12 +2751,12 @@ State 196
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 231
@@ -2852,16 +2852,16 @@ State 205
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ')'        shift, and go to state 237
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
@@ -2915,16 +2915,16 @@ State 211
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 135 (argCall)
 
@@ -2947,16 +2947,16 @@ State 212
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ']'        shift, and go to state 240
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
@@ -2973,16 +2973,16 @@ State 213
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 122 (assignment)
 
@@ -3013,16 +3013,16 @@ State 215
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 139 (shift)
 
@@ -3083,8 +3083,8 @@ State 217
     TK_LIT_CHAR       shift, and go to state 250
     TK_LIT_STRING     shift, and go to state 251
     TK_IDENTIFICADOR  shift, and go to state 252
-    '+'               shift, and go to state 253
-    '-'               shift, and go to state 254
+    '-'               shift, and go to state 253
+    '+'               shift, and go to state 254
 
     literais                      go to state 255
     negativeOrPositiveIdentifier  go to state 256
@@ -3153,12 +3153,12 @@ State 225
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 260
@@ -3183,16 +3183,16 @@ State 226
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ']'        shift, and go to state 261
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
@@ -3245,16 +3245,16 @@ State 231
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ','        shift, and go to state 196
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 129 (continueOutput)
 
@@ -3276,8 +3276,8 @@ State 232
     TK_LIT_CHAR       shift, and go to state 250
     TK_LIT_STRING     shift, and go to state 251
     TK_IDENTIFICADOR  shift, and go to state 263
-    '+'               shift, and go to state 253
-    '-'               shift, and go to state 254
+    '-'               shift, and go to state 253
+    '+'               shift, and go to state 254
 
     literais                      go to state 264
     negativeOrPositiveIdentifier  go to state 265
@@ -3318,8 +3318,8 @@ State 235
     TK_LIT_CHAR       shift, and go to state 250
     TK_LIT_STRING     shift, and go to state 251
     TK_IDENTIFICADOR  shift, and go to state 268
-    '+'               shift, and go to state 253
-    '-'               shift, and go to state 254
+    '-'               shift, and go to state 253
+    '+'               shift, and go to state 254
 
     literais                      go to state 269
     negativeOrPositiveIdentifier  go to state 270
@@ -3338,12 +3338,12 @@ State 236
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     foreachList            go to state 272
     funcCall               go to state 132
@@ -3376,13 +3376,13 @@ State 238
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
     '.'               shift, and go to state 208
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     argCall                go to state 275
@@ -3428,12 +3428,12 @@ State 241
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 279
@@ -3456,12 +3456,12 @@ State 242
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 280
@@ -3546,17 +3546,17 @@ State 252
 
 State 253
 
-  114 negativeOrPositiveIdentifier: '+' . negativeOrPositiveIdentifier
-  115                             | '+' . TK_IDENTIFICADOR
-  119 negativeOrPositiveLiteral: '+' . negativeOrPositiveLiteral
-  120                          | '+' . TK_LIT_INT
-  121                          | '+' . TK_LIT_FLOAT
+  112 negativeOrPositiveIdentifier: '-' . negativeOrPositiveIdentifier
+  113                             | '-' . TK_IDENTIFICADOR
+  116 negativeOrPositiveLiteral: '-' . negativeOrPositiveLiteral
+  117                          | '-' . TK_LIT_INT
+  118                          | '-' . TK_LIT_FLOAT
 
     TK_LIT_INT        shift, and go to state 283
     TK_LIT_FLOAT      shift, and go to state 284
     TK_IDENTIFICADOR  shift, and go to state 285
-    '+'               shift, and go to state 253
-    '-'               shift, and go to state 254
+    '-'               shift, and go to state 253
+    '+'               shift, and go to state 254
 
     negativeOrPositiveIdentifier  go to state 286
     negativeOrPositiveLiteral     go to state 287
@@ -3564,17 +3564,17 @@ State 253
 
 State 254
 
-  112 negativeOrPositiveIdentifier: '-' . negativeOrPositiveIdentifier
-  113                             | '-' . TK_IDENTIFICADOR
-  116 negativeOrPositiveLiteral: '-' . negativeOrPositiveLiteral
-  117                          | '-' . TK_LIT_INT
-  118                          | '-' . TK_LIT_FLOAT
+  114 negativeOrPositiveIdentifier: '+' . negativeOrPositiveIdentifier
+  115                             | '+' . TK_IDENTIFICADOR
+  119 negativeOrPositiveLiteral: '+' . negativeOrPositiveLiteral
+  120                          | '+' . TK_LIT_INT
+  121                          | '+' . TK_LIT_FLOAT
 
     TK_LIT_INT        shift, and go to state 288
     TK_LIT_FLOAT      shift, and go to state 289
     TK_IDENTIFICADOR  shift, and go to state 290
-    '+'               shift, and go to state 253
-    '-'               shift, and go to state 254
+    '-'               shift, and go to state 253
+    '+'               shift, and go to state 254
 
     negativeOrPositiveIdentifier  go to state 291
     negativeOrPositiveLiteral     go to state 292
@@ -3632,16 +3632,16 @@ State 260
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ')'        shift, and go to state 295
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
@@ -3705,8 +3705,8 @@ State 267
     TK_LIT_CHAR       shift, and go to state 250
     TK_LIT_STRING     shift, and go to state 251
     TK_IDENTIFICADOR  shift, and go to state 297
-    '+'               shift, and go to state 253
-    '-'               shift, and go to state 254
+    '-'               shift, and go to state 253
+    '+'               shift, and go to state 254
 
     literais                      go to state 298
     negativeOrPositiveIdentifier  go to state 299
@@ -3762,16 +3762,16 @@ State 273
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 82 (foreachList)
 
@@ -3804,12 +3804,12 @@ State 276
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 303
@@ -3840,12 +3840,12 @@ State 278
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 305
@@ -3868,16 +3868,16 @@ State 279
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 124 (assignment)
 
@@ -3896,16 +3896,16 @@ State 280
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 140 (shift)
 
@@ -3963,12 +3963,12 @@ State 282
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 307
@@ -3981,72 +3981,72 @@ State 282
 
 State 283
 
-  120 negativeOrPositiveLiteral: '+' TK_LIT_INT .
-
-    $default  reduce using rule 120 (negativeOrPositiveLiteral)
-
-
-State 284
-
-  121 negativeOrPositiveLiteral: '+' TK_LIT_FLOAT .
-
-    $default  reduce using rule 121 (negativeOrPositiveLiteral)
-
-
-State 285
-
-  115 negativeOrPositiveIdentifier: '+' TK_IDENTIFICADOR .
-
-    $default  reduce using rule 115 (negativeOrPositiveIdentifier)
-
-
-State 286
-
-  114 negativeOrPositiveIdentifier: '+' negativeOrPositiveIdentifier .
-
-    $default  reduce using rule 114 (negativeOrPositiveIdentifier)
-
-
-State 287
-
-  119 negativeOrPositiveLiteral: '+' negativeOrPositiveLiteral .
-
-    $default  reduce using rule 119 (negativeOrPositiveLiteral)
-
-
-State 288
-
   117 negativeOrPositiveLiteral: '-' TK_LIT_INT .
 
     $default  reduce using rule 117 (negativeOrPositiveLiteral)
 
 
-State 289
+State 284
 
   118 negativeOrPositiveLiteral: '-' TK_LIT_FLOAT .
 
     $default  reduce using rule 118 (negativeOrPositiveLiteral)
 
 
-State 290
+State 285
 
   113 negativeOrPositiveIdentifier: '-' TK_IDENTIFICADOR .
 
     $default  reduce using rule 113 (negativeOrPositiveIdentifier)
 
 
-State 291
+State 286
 
   112 negativeOrPositiveIdentifier: '-' negativeOrPositiveIdentifier .
 
     $default  reduce using rule 112 (negativeOrPositiveIdentifier)
 
 
-State 292
+State 287
 
   116 negativeOrPositiveLiteral: '-' negativeOrPositiveLiteral .
 
     $default  reduce using rule 116 (negativeOrPositiveLiteral)
+
+
+State 288
+
+  120 negativeOrPositiveLiteral: '+' TK_LIT_INT .
+
+    $default  reduce using rule 120 (negativeOrPositiveLiteral)
+
+
+State 289
+
+  121 negativeOrPositiveLiteral: '+' TK_LIT_FLOAT .
+
+    $default  reduce using rule 121 (negativeOrPositiveLiteral)
+
+
+State 290
+
+  115 negativeOrPositiveIdentifier: '+' TK_IDENTIFICADOR .
+
+    $default  reduce using rule 115 (negativeOrPositiveIdentifier)
+
+
+State 291
+
+  114 negativeOrPositiveIdentifier: '+' negativeOrPositiveIdentifier .
+
+    $default  reduce using rule 114 (negativeOrPositiveIdentifier)
+
+
+State 292
+
+  119 negativeOrPositiveLiteral: '+' negativeOrPositiveLiteral .
+
+    $default  reduce using rule 119 (negativeOrPositiveLiteral)
 
 
 State 293
@@ -4121,12 +4121,12 @@ State 301
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 311
@@ -4158,16 +4158,16 @@ State 303
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 123 (assignment)
 
@@ -4198,16 +4198,16 @@ State 305
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 141 (shift)
 
@@ -4234,16 +4234,16 @@ State 307
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
     ':'        shift, and go to state 315
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     operators  go to state 193
 
@@ -4283,16 +4283,16 @@ State 311
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 83 (foreachList)
 
@@ -4318,12 +4318,12 @@ State 313
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 317
@@ -4346,12 +4346,12 @@ State 314
     TK_LIT_STRING     shift, and go to state 123
     TK_IDENTIFICADOR  shift, and go to state 124
     '('               shift, and go to state 125
-    '+'               shift, and go to state 126
-    '-'               shift, and go to state 127
-    '*'               shift, and go to state 128
-    '!'               shift, and go to state 129
-    '&'               shift, and go to state 130
-    '#'               shift, and go to state 131
+    '-'               shift, and go to state 126
+    '!'               shift, and go to state 127
+    '&'               shift, and go to state 128
+    '#'               shift, and go to state 129
+    '*'               shift, and go to state 130
+    '+'               shift, and go to state 131
 
     funcCall               go to state 132
     expression             go to state 318
@@ -4421,16 +4421,16 @@ State 317
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 125 (assignment)
 
@@ -4449,16 +4449,16 @@ State 318
     TK_OC_NE   shift, and go to state 180
     TK_OC_AND  shift, and go to state 181
     TK_OC_OR   shift, and go to state 182
-    '+'        shift, and go to state 183
-    '-'        shift, and go to state 184
-    '|'        shift, and go to state 185
-    '*'        shift, and go to state 186
-    '/'        shift, and go to state 187
-    '<'        shift, and go to state 188
-    '>'        shift, and go to state 189
-    '&'        shift, and go to state 190
-    '%'        shift, and go to state 191
-    '^'        shift, and go to state 192
+    '-'        shift, and go to state 183
+    '|'        shift, and go to state 184
+    '<'        shift, and go to state 185
+    '>'        shift, and go to state 186
+    '&'        shift, and go to state 187
+    '%'        shift, and go to state 188
+    '^'        shift, and go to state 189
+    '*'        shift, and go to state 190
+    '+'        shift, and go to state 191
+    '/'        shift, and go to state 192
 
     $default  reduce using rule 142 (shift)
 

@@ -457,12 +457,59 @@ int arithmeticCoercion(Node *ss, Node *s1, Node *s3){
 
 	return 0;
 }
+
+void printAllOperands(Node *expression){
+	int i = 0;
+	if(expression!=NULL){
+		if(expression->token != NULL)
+			printOperandsWithoutInfo(expression);
+		while(i < expression->kidsNumber){ // enquanto houver filhos, os explora e os imprime
+			printAllOperands(expression->kids[i]);
+			i++;
+		}
+	}
+}
+
+void printOperandsWithoutInfo(Node *expression){
+	switch(expression->token->tokenType) // impressao especifica para cada token
+	{
+		case KEYWORD: printf("%s ", expression->token->value.str); break;
+		case SPEC_CHAR: 
+			switch(expression->token->value.c) // deixa a descompila um pouco mais formatada
+			{
+				case ';': printf("%c\n", expression->token->value.c); break;
+				case '{': printf("%c\n", expression->token->value.c); break;
+
+				case '}': printf("%c", expression->token->value.c); break;
+				default: printf("%c", expression->token->value.c); break;
+			}
+			break;
+		case COMP_OPER: printf("%s", expression->token->value.str); break;
+		case IDS: printf("%s", expression->token->value.str); break;
+		case LITERAL:
+			switch(expression->token->literType)
+			{
+				case INT: printf("%d", expression->token->value.i); break;
+				case FLOAT: printf("%f", expression->token->value.f); break;
+				case CHAR: printf("\'%c\'", expression->token->value.c); break;
+				case BOOL: 
+					if(expression->token->value.b == TRUE)
+						printf("true");
+					else printf("false");
+					break;
+				case STRING: printf("%s", expression->token->value.str); break;		
+			}
+			break;
+	}
+}
+
 void printOperand(Node *operand){
 	int type = operand->type;
 	int coercion = operand->coercion;
-	if(operand->token == NULL) return;
-	
-	switch(operand->token->tokenType)
+	if(operand->token == NULL){
+		printf("Operacao intermediaria.");
+	}
+	else switch(operand->token->tokenType)
 	{
 		case SPEC_CHAR: printf("Operando SPEC_CHAR: \"%c\".", operand->token->value.c); break;
 		case COMP_OPER: printf("Operando COMP_OPER: \"%s\".", operand->token->value.str); break;
@@ -504,6 +551,18 @@ void printOperand(Node *operand){
 		case BOOL_TO_INT: printf(" Coercao de BOOL para INT.\n"); break;
 		case NONE: printf(" Nao sofreu coercao.\n"); break;
 		default: printf(" Coercao desconhecida.\n"); break;
+	}
+	if(operand->token == NULL){
+		printf("	Operando da esquerda: ");
+		printAllOperands(operand->kids[0]);
+		printf("\n");
+		if(operand->kids[1]->token->tokenType == SPEC_CHAR)
+			printf("	Operando: %c", operand->kids[1]->token->value.c);
+		else printf("	Operando: %s", operand->kids[1]->token->value.str);
+		printf("\n");
+		printf("	Operando da direita: ");
+		printAllOperands(operand->kids[2]);
+		printf("\n");
 	}
 }
 void printExpression(Node *expression){
