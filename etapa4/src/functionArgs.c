@@ -126,7 +126,7 @@ int verifyReturn(struct node* returnExpression){
 		return ERR_WRONG_PAR_RETURN;
 	}
 	parseOperands(returnExpression);
-	returnExpression->type = typeInference();
+	//returnExpression->type = typeInference();
 	int retType = getCurrentFuncReturnType();
 	int correctOperands =  coercion(retType, returnExpression);
 	if (correctOperands != 0){ return ERR_WRONG_PAR_RETURN;}

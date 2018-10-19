@@ -82,7 +82,7 @@ int verifyArguments(char* symbol, struct node* argsCall){
 				  argsCall->kids[i]->token->value.c == '.') )
 			{		
 				parseOperands(argsCall->kids[i]);
-				argsCall->kids[i]->type = typeInference();
+				//argsCall->kids[i]->type = typeInference();
 				int correctOperands =  coercion(func->args[currentArg]->argType, argsCall->kids[i]);
 				if (correctOperands != 0){ return ERR_WRONG_TYPE_ARGS; }
 				clearCurrentOperands();
@@ -1223,7 +1223,7 @@ output:
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
 		parseOperands($2);
-		$2->type = typeInference();
+		//$2->type = typeInference();
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1240,7 +1240,7 @@ output:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
 		parseOperands($2);
-		$2->type = typeInference();
+		//$2->type = typeInference();
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1579,7 +1579,10 @@ operands: // TODO: PIPE
 	| TK_LIT_CHAR		{$$ = criaNodo($1); $$->type = CHAR;}		
 	| TK_LIT_STRING		{$$ = criaNodo($1); $$->type = STRING;}
 	| funcCall			{$$ = $1; $$->type = identifierType($$->token->value.str);}
-	| pipe				{$$ = $1;} //TODO: TYPE
+	//o tipo do pipe é o tipo da última função, que é sempre o último filho desse nodo
+	
+	| pipe				{$$ = $1; $$->type = identifierType($$->kids[$$->kidsNumber-1]->token->value.str);}
+	
 ;
 operators:
 	'+'				{$$ = criaNodo($1);}

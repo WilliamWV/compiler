@@ -403,33 +403,51 @@ int getStringExpressionSize(struct node* expression){
 	// 2) Literal
 	// 3) elemento de vetor
 	// 4) campo de tipo de usuário
-	// 5) campo de um elemento de um vetor de tipo de usuário	
-	if (expression->token->tokenType == LITERAL){//literal
-		return strlen(expression->token->value.str) - 2; 
-	}
-	else if(expression->kidsNumber==0){//identificador
-		Hash* expSymb = getSymbol(expression->token->value.str);		
-		return expSymb->size;
-	}
-	else if(expression->kidsNumber==3){//elemento de vetor
-		Hash* expSymb = getSymbol(expression->token->value.str);
-		if(expSymb->vecSize > 0)
-			return expSymb->size /expSymb->vecSize; 
-	}
-	else if(expression->kidsNumber==2){//campo de tipo de usuário
-		return getFieldSize(expression->token->value.str, expression->kids[1]->token->value.str);
-	}
-	else if(expression->kidsNumber==5){//campo de um elemento de um vetor de tipo de usuário
+	// 5) campo de um elemento de um vetor de tipo de usuário
+	if(expression->token != NULL){
 		
+			
+		if (expression->token->tokenType == LITERAL){//literal
+			return strlen(expression->token->value.str) - 2; 
+		}
+		else if(expression->kidsNumber==0){//identificador
+			Hash* expSymb = getSymbol(expression->token->value.str);		
+			return expSymb->size;
+		}
+		else if(expression->kidsNumber==3 &&
+			expression->kids[0]->token->tokenType == SPEC_CHAR &&
+			expression->kids[0]->token->value.c == '$'){//elemento de vetor
+			printf("Entrou\n");
+			Hash* expSymb = getSymbol(expression->token->value.str);
+			if(expSymb->vecSize > 0)
+				return expSymb->size /expSymb->vecSize; 
+		}
+		else if(expression->kidsNumber==2 && 
+			expression->kids[0]->token->tokenType == SPEC_CHAR &&
+			expression->kids[0]->token->value.c == '$')
+		{//campo de tipo de usuário
+			return getFieldSize(expression->token->value.str, expression->kids[1]->token->value.str);
+		}
+		else if(expression->kidsNumber==5){//campo de um elemento de um vetor de tipo de usuário
+			return -1;
+		}
+	}
+	else{
+		//expressão com nodo nulo
+		return -1;
 	}
 }
 
 void updateStringSize(char* id, struct node* expression, int type, char* field){
 	
 	Hash* idSymb = getSymbol(id);	
+	int size;
 	switch(type){
 		case IDENT: 
-			idSymb->size = getStringExpressionSize(expression);
+		 	size = getStringExpressionSize(expression);
+			if(size >= 0){
+				idSymb->size = size;
+			}
 			break;
 		case VECTOR:
 			if(idSymb->vecSize>0){
