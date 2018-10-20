@@ -47,6 +47,7 @@ void liberaArgs(int index){
 	if (tabelas->currentTable[index]->args!=NULL){
 		int i; 
 		for(i = 0; i < tabelas->currentTable[index]->argsNum; i++){
+			//free(tabelas->currentTable[index]->args[i]->arg);
 			free(tabelas->currentTable[index]->args[i]);
 			tabelas->currentTable[index]->args[i] = NULL;
 		}

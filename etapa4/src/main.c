@@ -47,7 +47,7 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 
 	clearCurrentOperands();
 	clearCurrentFields();
-	clearCurrentArgs();	
+	clearCurrentArgsError();	
 
 	liberaTodasTabelas();	
 	

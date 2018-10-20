@@ -130,6 +130,30 @@ void saveFunc(char* symbol){
 	
 }
 
+void clearCurrentArgsError(){
+	Args *aux = currentArgs;
+	Args *temp = aux;
+	while(argsNaFuncaoAtual > 0){
+		int contador = 0;
+		aux = currentArgs;
+		while(aux != NULL){
+			aux = aux->next;
+			contador++;
+		}
+		aux = currentArgs;
+		while(contador-1 > 0){
+			temp = aux;
+			aux = aux->next;
+			contador--;
+		}		
+		temp->next = NULL;
+		free(aux->arg);
+		free(aux);
+		argsNaFuncaoAtual--;
+	}
+	currentArgs = NULL;
+}
+
 void clearCurrentArgs(){
 	Args *aux = currentArgs;
 	Args *temp = aux;

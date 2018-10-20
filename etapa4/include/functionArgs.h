@@ -19,6 +19,8 @@ void adicionaInfoAArg(Node* arg, Args *newArg);
 //vou chamar sempre ao fim da definicao de uma funcao
 void clearCurrentArgs();
 
+void clearCurrentArgsError();
+
 void addArgsToSymbol(char* symbol, Args *args);
 
 int verifyReturn(struct node* returnExpression);
