@@ -99,10 +99,8 @@ int verifyArguments(char* symbol, struct node* argsCall){
 				   argsCall->kids[i]->token->value.c == '.')) )
 			{		
 				
-				parseOperands(argsCall->kids[i]);
 				int correctOperands =  coercion(func->args[currentArg]->argType, argsCall->kids[i]);
 				if (correctOperands != 0){ return ERR_WRONG_TYPE_ARGS; }
-				clearCurrentOperands();
 				
 			}else{ // verifica argumentos em uma expressão em pipe
 				if(inpPipe==NULL) return ERR_WRONG_TYPE_ARGS;
@@ -1272,7 +1270,6 @@ output:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
-		parseOperands($2);
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1283,12 +1280,10 @@ output:
 		}
 		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
 	}
 	| TK_PR_OUTPUT expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
-		parseOperands($2);
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1299,8 +1294,7 @@ output:
 		}
 		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
-		clearCurrentOperands();
-	}
+		}
 ;
 continueOutput: 
 	',' expression {

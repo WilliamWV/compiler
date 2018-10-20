@@ -82,10 +82,6 @@ void adicionaOperando(Operands *newOperand){
 	}
 }
 
-void parseOperands(Node *ast){
-	int i = 0;
-	
-}
 
 void printCurrentOperands(){
 	Operands *aux = currentOperands;
@@ -206,29 +202,6 @@ int typeInference(){
 	}
 	
 	return type;
-}
-
-void clearCurrentOperands(){
-	Operands *aux = currentOperands;
-	Operands *temp = aux;
-	while(operandosNaExpAtual > 0){
-		int contador = 0;
-		aux = currentOperands;
-		while(aux != NULL){
-			aux = aux->next;
-			contador++;
-		}
-		aux = currentOperands;
-		while(contador-1 > 0){
-			temp = aux;
-			aux = aux->next;
-			contador--;
-		}		
-		temp->next = NULL;
-		free(aux);
-		operandosNaExpAtual--;
-	}
-	currentOperands = NULL;
 }
 
 int coercion(int expectedType, Node *expressionNode){

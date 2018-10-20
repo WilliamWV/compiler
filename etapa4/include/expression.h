@@ -29,11 +29,9 @@ void adicionaOperando(Operands *newOperand);
 
 Operands *criaOperando(Node *ast);
 
-void parseOperands(Node *ast);
 
 void printCurrentOperands();
 
-void clearCurrentOperands();
 
 
 //chamo essa funcao pra expressoes aritmeticas ou booleanas; se houver char ou string retorno ERR_WRONG_TYPE

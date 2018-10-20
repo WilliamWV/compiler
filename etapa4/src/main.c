@@ -45,7 +45,6 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 		default: printf("Unknown error.\n"); break;
 	}
 
-	clearCurrentOperands();
 	clearCurrentFields();
 	clearCurrentArgsError();	
 

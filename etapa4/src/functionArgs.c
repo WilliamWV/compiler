@@ -116,11 +116,9 @@ int verifyReturn(struct node* returnExpression){
 		//tem algo errado com o tratamento se chegar aqui
 		return ERR_WRONG_PAR_RETURN;
 	}
-	parseOperands(returnExpression);
 	int retType = getCurrentFuncReturnType();
 	int correctOperands =  coercion(retType, returnExpression);
 	if (correctOperands != 0){ return ERR_WRONG_PAR_RETURN;}
-	clearCurrentOperands();
 	return TRUE;
 		
 }
