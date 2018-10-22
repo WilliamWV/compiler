@@ -117,9 +117,24 @@ int verifyReturn(struct node* returnExpression){
 		return ERR_WRONG_PAR_RETURN;
 	}
 	int retType = getCurrentFuncReturnType();
-	int correctOperands =  coercion(retType, returnExpression);
-	if (correctOperands != 0){ return ERR_WRONG_PAR_RETURN;}
-	return TRUE;
+	if(retType!=USER){
+		int correctOperands =  coercion(retType, returnExpression);
+		if (correctOperands != 0){ return ERR_WRONG_PAR_RETURN;}
+		return TRUE;
+	}
+	else{
+		//Se for tipo de usuário a expressão será ou um identificador
+		//ou um elemento de vetor, ambos terão como nodo raiz da expressão
+		//o identificador que possui o tipo de usuário em userType
+		if(returnExpression->type != USER) return ERR_WRONG_PAR_RETURN;
+		else{
+			Hash* exp = getSymbol(returnExpression->token->value.str);
+			if(strcmp(func->userType, exp->userType) == 0)
+				return TRUE;
+			else return ERR_WRONG_PAR_RETURN;
+		}
+		
+	}
 		
 }
 

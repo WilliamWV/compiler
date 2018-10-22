@@ -196,6 +196,7 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 %type <ast> argsCall
 %type <ast> assignment
 %type <ast> blocoComandos
+%type <ast> blocoSemEscopo
 %type <ast> case
 %type <ast> campo
 %type <ast> comando
@@ -400,7 +401,7 @@ componente:
 		}
 	}
 	// Funções
-	| funcName scopeOpenner funcArgs blocoComandos {
+	| funcName scopeOpenner funcArgs blocoSemEscopo {
 		$$ = $1; 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, $4);
@@ -442,7 +443,7 @@ depoisDeIdent:
 ;
 fechaVarOuFunc:
 	  ';'									{$$ = criaNodo($1);}
-	| userTypeFunc scopeOpenner funcArgs blocoComandos	{
+	| userTypeFunc scopeOpenner funcArgs blocoSemEscopo	{
 		$$ = $3;
 		adicionaFilho($$, $4);
 		closeTable();
@@ -624,6 +625,15 @@ blocoComandos:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
 		closeTable();                     //Fecha escopo local
+	}
+;
+
+//Útil para não abrir novo escopo em função
+blocoSemEscopo:
+	'{'comandos'}'{
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		adicionaFilho($$, criaNodo($3));
 	}
 ;
 comando:
@@ -1426,6 +1436,7 @@ return:
 		int verifRet = verifyReturn($2);
 		if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}
 	}
+	
 ;
 
 expression:
