@@ -108,17 +108,11 @@ void addField(char* symbol, UserTypeField* utf);
 Hash* getSymbol(char* symbol);
 
 
-int isVariable(char *symbol);
+int symbolUse(char* symbol);
 
-int isVector(char *symbol);
+int errorOf(int symbUse);
 
-int isFunction(char *symbol);
-
-int isDefined(char *symbol);
-
-int isUserType(char *symbol);
-
-int isUserVar(char *symbol);
+int verifyUse(char* symbol, int expectedUse);
 
 int hasField (char* symbol, char* field);
 

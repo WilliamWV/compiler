@@ -187,7 +187,7 @@ void closeTable(){
 //O erro que pode ocorrer é o símbolo já estar definido no escopo atual
 int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType, int vecSize, int isFunction, int flags){
 	
-	if (isUserType(valor_lexico->value.str) == TRUE) return ERR_DECLARED;
+	if (verifyUse(valor_lexico->value.str, UTN) == TRUE) return ERR_DECLARED;
 
 	int hashIndex = hashFunction(valor_lexico->value.str);
 	while (tabelas->currentTable[hashIndex]!=NULL){
@@ -291,66 +291,39 @@ int isDefined(char *symbol){
 	else return 0;
 }
 
-int isFunction(char *symbol){
-	int defined = isDefined(symbol);
-	if (defined == 0){
-		Hash *symbolContent = getSymbol(symbol);
-		if(symbolContent->isFunction == TRUE)
-			return TRUE;
-		else return ERR_FUNCTION;
+int symbolUse(char* symbol){
+	Hash* symbolContent = getSymbol(symbol);
+	if (symbolContent->isFunction) return FUN;
+	if (symbolContent->vecSize > 0) return VET;
+	if (symbolContent->type == USER){
+		if(symbolContent->userType == NULL) return UTN;
+		else return UTV;	
 	}
-	else return defined;
+	return VAR;
 }
 
-int isVector(char *symbol){
-	int defined = isDefined(symbol);
-	if (defined == 0){
-		Hash *symbolContent = getSymbol(symbol);
-		if(symbolContent->vecSize > 0)
-			return TRUE;
-		else return ERR_VECTOR;
+int errorOf(int symbUse){
+	switch(symbUse){
+		case VAR: return ERR_VARIABLE;
+		case VET: return ERR_VECTOR;
+		case FUN: return ERR_FUNCTION;
+		case UTN: return ERR_USER;
+		case UTV: return ERR_USER;
 	}
-	else return defined;
 }
 
-int isVariable(char *symbol){
+int verifyUse(char* symbol, int expectedUse){
 	int defined = isDefined(symbol);
-	if (defined == 0){
-		Hash *symbolContent = getSymbol(symbol);
-		if(isVector(symbol) != TRUE && isFunction(symbol) != TRUE)
-			return TRUE;
-		else return ERR_VARIABLE;
-	}
-	else return defined;
-}
-
-int isUserType(char *symbol){
-	int defined = isDefined(symbol);
-	if (defined == 0){
-		Hash *symbolContent = getSymbol(symbol);
-		//identificador de tipo de usuário tem tipo = USER e userType = NULL
-		// para poder diferenciar de variável de tipo de usuário
-		if(symbolContent->type == USER && symbolContent->userType == NULL)
-			return TRUE;
-		else return ERR_USER;
-	}
-	else return defined;
-}
-
-int isUserVar(char *symbol){
-	int defined = isDefined(symbol);
-	if (defined == 0){
-		Hash *symbolContent = getSymbol(symbol);
-		//variável de tipo de usuário tem tipo = USER e userType =  id do tipo
-		if(symbolContent->type == USER && symbolContent->userType != NULL)
-			return TRUE;
-		else return ERR_USER;
+	if(defined == 0){
+		int symbUse = symbolUse(symbol);
+		if(symbUse==expectedUse) return TRUE;
+		else return errorOf(symbUse);
 	}
 	else return defined;
 }
 
 int hasField (char* symbol, char* field){
-	int isUT = isUserVar(symbol);
+	int isUT = verifyUse(symbol, UTV);
 	if(isUT == TRUE){
 		//símbolo da variável de tipo de usuário
 		Hash* varSymbolContent = getSymbol(symbol);

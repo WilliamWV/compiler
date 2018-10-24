@@ -1,6 +1,6 @@
 
-var int;
+int fun(){}
 int main(){
-	var();
+	fun = 2;
 }
 

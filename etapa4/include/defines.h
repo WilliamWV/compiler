@@ -92,3 +92,11 @@
 #define VECTOR   2001
 #define USR      2002
 #define VEC_USR  2003
+
+//Uso correto dos identificadores:
+#define VAR 600 //variável
+#define VET 601 //vetor
+#define FUN 602 //função
+#define UTN 603 //nome de tipo de usuário
+#define UTV 604 // variável de tipo de usuário
+
