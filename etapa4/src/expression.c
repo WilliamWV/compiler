@@ -208,10 +208,14 @@ int coercion(int expectedType, Node *expressionNode){
 	
 	int expressionType = expressionNode->type;	
 
-	if(expressionType == USER){ printf("meu deus\n"); return ERR_USER;}
+	if(expressionType == USER) return ERR_USER;
 	
 	if(expectedType != NONE){ // se estou esperando qualquer tipo nao ha erro de coercao
-		if(expectedType == CHAR && expressionType != CHAR) return ERR_WRONG_TYPE;
+		if(expectedType == CHAR && expressionType == STRING) return ERR_STRING_TO_X;
+		else if(expectedType == STRING && expressionType == CHAR) return ERR_CHAR_TO_X;
+		else if(expectedType == USER && expressionType == CHAR) return ERR_CHAR_TO_X;
+		else if(expectedType == USER && expressionType == STRING) return ERR_STRING_TO_X;
+		else if(expectedType == CHAR && expressionType != CHAR) return ERR_WRONG_TYPE;
 		else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
 		else if(expectedType == STRING && expressionType != STRING) return ERR_WRONG_TYPE;
 		else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
