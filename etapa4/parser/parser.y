@@ -1118,7 +1118,6 @@ negativeOrPositiveIdentifier:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
 		$$->type = $2->type;
-		//printf("N deu segfault aqui\n");
 	}
 	| '-' TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 

@@ -399,15 +399,12 @@ int arithRelationalCoercion(Node *ss, Node *s1, Node *s3){
 
 int arithmeticCoercion(Node *ss, Node *s1, Node *s3){
 	//printf("Tipo da esquerda: %d   Tipo da direita: %d\n\n", s1->type, s3->type );
-	printf("wat\n");
 	if(s1->type == CHAR || s3->type == CHAR)
 		return ERR_CHAR_TO_X;
 	else if(s1->type == STRING || s3->type == STRING)
 		return ERR_STRING_TO_X;
-	else if(s1->type == USER || s3->type == USER){
-		printf("\nTESTE\n");
+	else if(s1->type == USER || s3->type == USER)
 		return ERR_USER_TO_X;
-	}
 	else if(s1->type == INT && s3->type == FLOAT){
 		s1->coercion = INT_TO_FLOAT;
 		ss->type = FLOAT;
