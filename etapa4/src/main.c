@@ -34,7 +34,8 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 		case ERR_WRONG_TYPE: printf("Char, string or user type used in expression on line %d.\n", get_line_number()); break;
 		case ERR_STRING_TO_X: printf("Tried to assign string to a non-string or non-string to a string on line %d.\n", get_line_number()); break;
 		case ERR_CHAR_TO_X: printf("Tried to assign char to a non-char or non-char to char on line %d.\n", get_line_number()); break;
-		case ERR_USER_TO_X: printf("Tried to assign a user type to another type or another type to a user type on line %d.\n", get_line_number()); break;
+		case ERR_USER_TO_X: printf("User type used in expression on line %d.\n", get_line_number()); break;
+		case ERR_USER: printf("Tried to assign a user type to another type or another type to a user type on line %d.\n", get_line_number()); break;
 		case ERR_MISSING_ARGS: printf("Missing arguments on line %d.\n", get_line_number()); break;
 		case ERR_EXCESS_ARGS: printf("Excessive arguments on line %d.\n", get_line_number()); break;
 		case ERR_WRONG_TYPE_ARGS: printf("Wrong argument type on line %d.\n", get_line_number()); break;

@@ -207,13 +207,15 @@ int typeInference(){
 int coercion(int expectedType, Node *expressionNode){
 	
 	int expressionType = expressionNode->type;	
+
+	if(expressionType == USER){ printf("meu deus\n"); return ERR_USER;}
 	
 	if(expectedType != NONE){ // se estou esperando qualquer tipo nao ha erro de coercao
-		if(expectedType == CHAR && expressionType != CHAR) return ERR_CHAR_TO_X;
+		if(expectedType == CHAR && expressionType != CHAR) return ERR_WRONG_TYPE;
 		else if(expectedType != CHAR && expressionType == CHAR) return ERR_CHAR_TO_X;
-		else if(expectedType == STRING && expressionType != STRING) return ERR_STRING_TO_X;
+		else if(expectedType == STRING && expressionType != STRING) return ERR_WRONG_TYPE;
 		else if(expectedType != STRING && expressionType == STRING) return ERR_STRING_TO_X;
-		else if(expectedType == USER || expressionType == USER) return ERR_USER_TO_X;
+		//else if(expectedType == USER || expressionType == USER){ printf("meu deus\n"); return ERR_USER;}
 	}
 	
 
@@ -393,8 +395,15 @@ int arithRelationalCoercion(Node *ss, Node *s1, Node *s3){
 
 int arithmeticCoercion(Node *ss, Node *s1, Node *s3){
 	//printf("Tipo da esquerda: %d   Tipo da direita: %d\n\n", s1->type, s3->type );
-	if(s1->type == CHAR || s1->type == STRING || s3->type == CHAR || s3->type == STRING || s1->type == USER || s3->type == USER)
-		return ERR_WRONG_TYPE;
+	printf("wat\n");
+	if(s1->type == CHAR || s3->type == CHAR)
+		return ERR_CHAR_TO_X;
+	else if(s1->type == STRING || s3->type == STRING)
+		return ERR_STRING_TO_X;
+	else if(s1->type == USER || s3->type == USER){
+		printf("\nTESTE\n");
+		return ERR_USER_TO_X;
+	}
 	else if(s1->type == INT && s3->type == FLOAT){
 		s1->coercion = INT_TO_FLOAT;
 		ss->type = FLOAT;

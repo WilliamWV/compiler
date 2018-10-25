@@ -1,8 +1,7 @@
 //O comando input somente aceita identificadores de qualquer tipo como parâmetro
-class AST_t [ public int a : public int b ];
-AST_t main()
+int main()
 {
-  AST_t a;
+  int a;
   input a;
   return a;
 }
