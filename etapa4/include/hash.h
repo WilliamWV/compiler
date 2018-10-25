@@ -107,6 +107,7 @@ void addField(char* symbol, UserTypeField* utf);
 //pela tabela do escopo atual, subindo até o escopo global
 Hash* getSymbol(char* symbol);
 
+int isDefined(char* symbol);
 
 int symbolUse(char* symbol);
 

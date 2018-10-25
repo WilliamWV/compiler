@@ -52,6 +52,9 @@ int returnError = 1;
 Node *nodeNotAdded = NULL;
 char *identifierError;
 extern Node *danglingNodes;
+//necessários para casos especiais na verificação de expressões
+int isInput = FALSE;
+int isReturn = FALSE;
 
 //Retorna constante representando o tipo, o nodo da ast passado deve ser ou da
 //regra tipo, ou da regra tipoPrimitivo
@@ -1262,12 +1265,16 @@ assignment:
 	}	
 ;
 input:
-	TK_PR_INPUT expression		{
-		$$ = criaNodo($1); adicionaFilho($$, $2);
-		if($2->token->tokenType!=IDS){ returnError = ERR_WRONG_PAR_INPUT; nodeNotAdded = $$; YYABORT;}	
-		int isVar = verifyUse($2->token->value.str, VAR);	
-		if (isVar != TRUE){ returnError = ERR_VARIABLE; nodeNotAdded = $$; YYABORT;}
+	inputHelper TK_PR_INPUT expression		{
+		$$ = criaNodo($2); adicionaFilho($$, $3);
+		if($3->token->tokenType!=IDS){ returnError = ERR_WRONG_PAR_INPUT; nodeNotAdded = $$; YYABORT;}	
+		isInput = FALSE;
 	}
+;
+
+//Necessário para permitir que expressões possam ser identificador de vetor ou de variável de tipo de usuário
+inputHelper:
+	%empty {isInput = TRUE;}
 ;
 /**
 	Considera que expressão aritmética tem tipo:
@@ -1430,12 +1437,17 @@ shift:
 
 
 return:
-	TK_PR_RETURN expression		{
-		$$ = criaNodo($1); adicionaFilho($$, $2);
-		int verifRet = verifyReturn($2);
+	returnHelper TK_PR_RETURN expression		{
+		$$ = criaNodo($2); adicionaFilho($$, $3);
+		int verifRet = verifyReturn($3);
 		if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}
+		isReturn = FALSE;
 	}
 	
+;
+
+returnHelper:
+	%empty {isReturn = TRUE;}
 ;
 
 expression:
@@ -1587,10 +1599,21 @@ operands:
 	}
 	| TK_IDENTIFICADOR							{
 		$$ = criaNodo($1);
-		int isVar = verifyUse($1->value.str, VAR);
-		if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
+		if(isInput == TRUE){
+			int use = symbolUse($1->value.str);
+			if(use != VET && use != VAR && use != UTV){returnError = ERR_WRONG_PAR_INPUT; nodeNotAdded = $$; YYABORT;}
+		}
+		else if(isReturn == TRUE){
+			int use = symbolUse($1->value.str);
+			if(use != VAR && use!= UTV){returnError = ERR_WRONG_PAR_RETURN; nodeNotAdded = $$; YYABORT;}
+		}
+		else{
+			int isVar = verifyUse($1->value.str, VAR);
+			if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
 
+		}
 		$$->type = identifierType($1->value.str);
+
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR		{
 		$$ = criaNodo($1); 
