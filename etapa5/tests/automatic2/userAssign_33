@@ -1,0 +1,7 @@
+class pessoa[int idade];
+var int;
+int main(){
+	pessoa a;
+	a = 1;
+}
+

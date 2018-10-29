@@ -1,0 +1,4 @@
+int main(){
+string teste;
+teste = "string" & "string";
+}

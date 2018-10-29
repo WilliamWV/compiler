@@ -1,0 +1,4 @@
+int main(){
+bool teste;
+teste = "string" == "string";
+}

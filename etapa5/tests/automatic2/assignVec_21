@@ -1,0 +1,6 @@
+
+vec [12] int;
+int main(){
+	vec = 2;
+}
+

@@ -1,0 +1,8 @@
+class zorzo [private float idade];
+int main(){
+	int schnorr;
+	int will;
+	zorzo var;
+	schnorr = 1 + 3 + 4 + will + var$idade;
+	//schnorr = 'c';
+}

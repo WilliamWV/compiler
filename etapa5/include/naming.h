@@ -1,0 +1,2 @@
+char* getNewRegister();
+char* getNewLabel();
