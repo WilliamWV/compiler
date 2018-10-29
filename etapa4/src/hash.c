@@ -308,7 +308,7 @@ int errorOf(int symbUse){
 		case VET: return ERR_VECTOR;
 		case FUN: return ERR_FUNCTION;
 		case UTN: return ERR_USER;
-		case UTV: return ERR_USER;
+		case UTV: return ERR_USER_TO_X;
 	}
 }
 
