@@ -35,7 +35,7 @@ char* getNewRegister(){
 
 	int digits = digitsOfInt(currentRegister);
 	int temp = currentRegister;
-	char* reg = (char*) malloc(sizeof(digits + 1 + 1));
+	char* reg = (char*) aloca(sizeof(digits + 1 + 1));
 	reg[0] = 'r';
 	for(int i = digits; i>0; i--){
 		reg[i] = '0' + temp % 10;
@@ -50,7 +50,7 @@ char* getNewLabel(){
 	int digits = digitsOfInt(currentRegister);
 	int temp = currentRegister;
 
-	char* lab = (char*) malloc(sizeof(digits + 1 + 1));
+	char* lab = (char*) aloca(sizeof(digits + 1 + 1));
 	lab[0] = 'L';
 	for(int i = digits; i>0; i--){
 		lab[i] = '0' + temp % 10;

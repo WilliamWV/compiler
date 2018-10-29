@@ -1,3 +1,4 @@
-#include <stdlib.h>
+#include "everybodyHateLeaks.h"
+
 char* getNewRegister();
 char* getNewLabel();
