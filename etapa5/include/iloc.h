@@ -1,3 +1,5 @@
+#ifndef ILOC
+#define ILOC 2
 #include "lexVal.h" //útil para union Value
 #include "everybodyHateLeaks.h"
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +54,7 @@ typedef struct ilocList{
 
 ILOC_LIST* createILOCList ();
 void addILOCToList(ILOC_LIST* l, ILOC_OP* oper);
-void concatILOC(ILOC_LIST* dest, ILOC_LIST* l1, ILOC_LIST* l2);
+ILOC_LIST* concatILOC(ILOC_LIST* l1, ILOC_LIST* l2);
 void addILOCArg(ILOC_OP* oper, ILOC_ARG* arg);
 
+#endif

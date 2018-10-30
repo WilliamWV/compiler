@@ -1,7 +1,7 @@
 CC=gcc #C compiler
 EXEC=namingTest #Nome do executável
 
-hash:
+naming:
 	$(CC) -c testNaming.c ../../src/naming.c ../../src/everybodyHateLeaks.c
 	$(CC) -o $(EXEC) testNaming.o naming.o everybodyHateLeaks.o -lfl
 

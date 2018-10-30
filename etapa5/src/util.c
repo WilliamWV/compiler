@@ -51,3 +51,32 @@ ILOC_ARG* createILOCArg(int argType, void* value)
 		ans->value.str = (char*) value;	
 	}
 }
+
+void printILOCArg(ILOC_ARG* arg)
+{
+	printf("argumento de tipo %d com valor", arg->argType);
+	if(arg->argType == IMED){
+		printf(" %d\n", arg->value.i);
+	}
+	else{
+		printf(" \'%s\'\n", arg->value.str);
+	}	
+}
+
+void printILOCOper(ILOC_OP* op)
+{
+	printf("Operação = \'%s\', opcode = %d, quantidade de argumentos = %d, que são:\n", op->opSpelling, op->opcode, op->argsNum);
+	
+	for(int i = 0; i<op->argsNum; i++){
+		printILOCArg(op->args[i]);
+	}
+}
+
+void printILOCList(ILOC_LIST* l)
+{
+	printf("Lista contém %d operações que são\n", l->operations);
+	for(int i = 0; i<l->operations; i++){
+		printILOCOper(l->list[i]);
+	}
+}
+

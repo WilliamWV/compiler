@@ -19,3 +19,10 @@ ILOC_OP* createILOCOper(int opcode, char* opSpelling);
 
 ILOC_ARG* createILOCArg(int argType, void* value);
 
+void printILOCArg(ILOC_ARG* arg);
+
+void printILOCOper(ILOC_OP* op);
+
+void printILOCList(ILOC_LIST* l);
+
+
