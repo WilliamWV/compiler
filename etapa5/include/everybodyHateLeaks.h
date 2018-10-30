@@ -10,6 +10,8 @@ struct ptrs{
 
 void* aloca(size_t s);
 
+void* realoca(void* ptr, size_t size);
+
 void liberaTudo();
 
 #endif //EHL

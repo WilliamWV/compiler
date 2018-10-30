@@ -19,6 +19,29 @@ void addPointer(void* p){
 	}
 }
 
+void removePointer(void* p){
+	struct ptrs* aux = pointers;
+	struct ptrs* temp = pointers;
+	if(aux!=NULL){
+		if(aux->ptr == p){
+			pointers = pointers->next;
+			free(aux);
+		}
+		else{
+			aux = aux->next;
+			
+			while(aux!= NULL && aux->ptr != p){
+				temp = aux;
+				aux = aux->next;
+			}	
+			if(aux!=NULL && aux->ptr == p){
+				temp->next = aux->next;
+				free(aux);
+			}
+		}
+	}
+}
+
 void* aloca(size_t s)
 {
 	void* p = malloc(s);	
@@ -26,6 +49,15 @@ void* aloca(size_t s)
 	return p;
 }
 
+
+
+void* realoca(void* ptr, size_t size)
+{
+	void* p = realloc(ptr, size);
+	removePointer(ptr);
+	addPointer(p);
+	return p;
+}
 
 void liberaTudo()
 {

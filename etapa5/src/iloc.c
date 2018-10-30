@@ -15,7 +15,7 @@ void addILOCToList(ILOC_LIST* l, ILOC_OP* oper)
 		l->list[0] = oper;
 	}
 	else{
-		l->list = (ILOC_OP**)realloc(l->list, l->operations * sizeof(ILOC_OP*));
+		l->list = (ILOC_OP**)realoca(l->list, l->operations * sizeof(ILOC_OP*));
 		l->list[l->operations-1] = oper;
 	}
 }
@@ -33,6 +33,6 @@ ILOC_LIST* concatILOC(ILOC_LIST* l1, ILOC_LIST* l2)
 
 void addILOCArg(ILOC_OP* oper, ILOC_ARG* arg){
 	oper->argsNum = oper->argsNum + 1;
-	oper->args = (ILOC_ARG**) realloc(oper->args, oper->argsNum * sizeof(ILOC_ARG*));
+	oper->args = (ILOC_ARG**) realoca(oper->args, oper->argsNum * sizeof(ILOC_ARG*));
 	oper->args[oper->argsNum - 1] = arg;
 }
