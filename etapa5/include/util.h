@@ -1,5 +1,7 @@
-#include "../include/lexVal.h"
-#include "../include/hash.h"
+#include "lexVal.h"
+#include "hash.h"
+#include "iloc.h"
+#include "everybodyHateLeaks.h"
 #include "defines.h"
 
 /**
@@ -12,4 +14,8 @@ struct lexval* createLexval(int lineNumber, int tokenType, int literType, void* 
 FuncArg* createFuncArg(int argType, char* userType, char* argName, bool isConst);
 
 UserTypeField* createUserTypeField(int fieldEncaps, int fieldType, char* fieldName);
+
+ILOC_OP* createILOCOper(int opcode, char* opSpelling);
+
+ILOC_ARG* createILOCArg(int argType, void* value);
 

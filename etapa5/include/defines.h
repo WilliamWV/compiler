@@ -88,10 +88,10 @@
 #define BOOL_TO_INT   1005
 
 //mudança dinâmica de tamanho
-#define IDENT    2000
-#define VECTOR   2001
-#define USR      2002
-#define VEC_USR  2003
+#define IDENT    800
+#define VECTOR   801
+#define USR      802
+#define VEC_USR  803
 
 //Uso correto dos identificadores:
 #define VAR 600 //variável
@@ -99,4 +99,79 @@
 #define FUN 602 //função
 #define UTN 603 //nome de tipo de usuário
 #define UTV 604 // variável de tipo de usuário
+
+
+//Tipos de argumento de operações ILOC
+#define IMED 700   // valor constante imediato
+#define REG  701   // registrador
+#define LAB  702   // rótulos
+
+/////////////////////////////
+///OPCODE de operaçõs ILOC///
+/////////////////////////////
+
+//Aritmética 0x10xx
+
+#define ADD        0x1000
+#define SUB        0x1001
+#define MULT       0x1002
+#define DIV        0x1003
+#define ADDI       0x1004
+#define SUBI       0x1005
+#define RSUBI      0x1006
+#define MULTI      0x1007
+#define DIVI       0x1008
+#define RDIVI      0x1009
+
+//Shifts 0x11xx
+#define LSHIFT     0x1100
+#define LSHIFTI    0x1101
+#define RSHIFT     0x1102
+#define RSHIFTI    0x1103
+
+//Operações sobre a memória 0x12xx
+#define LOAD       0x1200
+#define LOADAI     0x1201
+#define LOADA0     0x1203
+#define CLOAD      0x1204
+#define CLOADAI    0x1205
+#define CLOADA0    0x1206
+#define LOADI      0x1207
+#define STORE      0x1208
+#define STOREAI    0x1209
+#define STOREA0    0x120A
+#define CSTORE     0x120B
+#define CSTOREAI   0x120C
+#define CSTOREA0   0x120D
+
+//Operações de Cópia entre registradores 0x13xx
+#define I2I        0x1300
+#define C2C        0x1301
+#define C2I        0x1302
+#define I2C        0x1303
+
+//Operações de fluxo de controle 0x14xx
+#define CMP_LT     0x1400
+#define CMP_LE     0x1401
+#define CMP_EQ     0x1402
+#define CMP_GE     0x1403
+#define CMP_GT     0x1404
+#define CMP_NE     0x1405
+#define CBR        0x1406
+
+//Saltos 0x15xx
+#define JUMPI      0x1500
+#define JUMP       0x1501
+
+//Operações booleanas 0x16xx
+#define AND        0x1600
+#define ANDI       0x1601
+#define OR         0x1602
+#define ORI        0x1603
+#define XOR        0x1604
+#define XORI       0x1605
+//NOP 0x1700
+#define NOP        0x1700
+
+
 
