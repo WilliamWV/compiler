@@ -48,9 +48,23 @@ int main(){
 	printILOCList(l2);
 	printf("criando lista l3 como concatenação de l1 com l2\n");
 	ILOC_LIST* l3 = concatILOC(l1, l2);
+	
+	printf("Adicionando operação divI r1, 12 => r3 em l3\n");	
+	int doze = 12;
+	createOperation(l3, DIVI, "divI", "r1", (void*) &doze, "r3");
+	printf("Adicionando operação load r1 => r2\n");
+	createOperation(l3, LOAD, "load", "r1", NULL, "r2");
+	printf("Adicionando operação jump -> r1\n");
+	createOperation(l3, JUMP, "jump", "r1", NULL, NULL);
+	printf("Adicionando operação nop\n");
+	createOperation(l3, NOP, "nop", NULL, NULL, NULL);
+	printf("Adicionando operação jumpI -> L1\n");
+	createOperation(l3, JUMPI, "jumpI", "L1", NULL, NULL);
+
 	printf("l3:\n");
 	printILOCList(l3);	
-	
+
+
 	liberaTudo();
 	printf("Teste concluído\n");
 }

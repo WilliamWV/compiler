@@ -33,24 +33,7 @@ UserTypeField* createUserTypeField(int fieldEncaps, int fieldType, char* fieldNa
 	return utf;
 }
 
-ILOC_OP* createILOCOper(int opcode, char* opSpelling)
-{
-	ILOC_OP* ans = (ILOC_OP*) aloca (sizeof(ILOC_OP));
-	ans->opcode = opcode;
-	ans->opSpelling = opSpelling;
-}
 
-ILOC_ARG* createILOCArg(int argType, void* value)
-{
-	ILOC_ARG* ans = (ILOC_ARG*) aloca (sizeof(ILOC_ARG));
-	ans->argType = argType;
-	if(argType == IMED){
-		ans->value.i = *((int*)value);
-	}
-	else{
-		ans->value.str = (char*) value;	
-	}
-}
 
 void printILOCArg(ILOC_ARG* arg)
 {

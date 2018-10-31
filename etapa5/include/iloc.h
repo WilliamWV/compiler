@@ -43,6 +43,8 @@ typedef struct ilocList{
 	int operations;       // quantidade de operações ILOC nessa lista
 } ILOC_LIST;
 
+
+
 ////////////////////////////////////////////////////////////////////////////////
 /// DEFINIÇÃO DE FUNÇÕES                                                     ///
 /// Funções necessárias:                                                     ///
@@ -52,9 +54,25 @@ typedef struct ilocList{
 ///   * adicionar argumentos à operação
 ////////////////////////////////////////////////////////////////////////////////
 
+//Funçõe Básicas
 ILOC_LIST* createILOCList ();
 void addILOCToList(ILOC_LIST* l, ILOC_OP* oper);
 ILOC_LIST* concatILOC(ILOC_LIST* l1, ILOC_LIST* l2);
 void addILOCArg(ILOC_OP* oper, ILOC_ARG* arg);
 
+//Função extra
+////////////////////////////////////////////////////////////////////////////////
+/// Função criada para diminuir quantidade de código necessário para         ///
+/// adicionar uma operação a uma lista, essa função recebe informações       ///
+/// necessárias para criar uma operação, criar seus argumentos e adicionar a ///
+/// operação em uma lista de operações                                       ///
+/// considera que uma operação tem no máximo três argumentos e que os        ///
+/// argumentos obedecem as convenções de nomeação, se existem menos de três  ///
+/// argumentos na operação basta deixar os que sobram NULL
+////////////////////////////////////////////////////////////////////////////////
+void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* arg2, void* arg3);
+
+//Funções auxiliares
+ILOC_OP* createILOCOper(int opcode, char* opSpelling);
+ILOC_ARG* createILOCArg(int argType, void* value);
 #endif
