@@ -56,6 +56,7 @@ extern Node *danglingNodes;
 int isInput = FALSE;
 int isReturn = FALSE;
 
+
 //Retorna constante representando o tipo, o nodo da ast passado deve ser ou da
 //regra tipo, ou da regra tipoPrimitivo
 int getType(struct node* type){
@@ -102,8 +103,10 @@ int verifyArguments(char* symbol, struct node* argsCall){
 				   argsCall->kids[i]->token->value.c == '.')) )
 			{		
 				
+				parseOperands(argsCall->kids[i]);
 				int correctOperands =  coercion(func->args[currentArg]->argType, argsCall->kids[i]);
 				if (correctOperands != 0){ return ERR_WRONG_TYPE_ARGS; }
+				clearCurrentOperands();
 				
 			}else{ // verifica argumentos em uma expressão em pipe
 				if(inpPipe==NULL) return ERR_WRONG_TYPE_ARGS;
@@ -180,30 +183,41 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 %token <valor_lexico> TK_IDENTIFICADOR
 %token <valor_lexico> TOKEN_ERRO
 //tokens para caracteres especiais, declarados para poder usar seu valor semântico atribuido no scanner
-
-//precedence doesnt matter:
-%left <valor_lexico> ','
-%left <valor_lexico> '='
-%left <valor_lexico> '.'
-%left <valor_lexico> '}'
-%left <valor_lexico> '{'
-%left <valor_lexico> ':'
-%left <valor_lexico> ';'
-//precedence matters:
-%left <valor_lexico> TK_OC_OR
+//%left <valor_lexico> ',' ';' ':' '(' ')' '[' ']' '{' '}' '-' '|' '?' '<' '>' '=' '!' '&' '%' '#' '^' '.' '$' '*' '+'
+%left <valor_lexico> TK_OC_LE
+%left <valor_lexico> TK_OC_GE
+%left <valor_lexico> TK_OC_EQ
+%left <valor_lexico> TK_OC_NE
 %left <valor_lexico> TK_OC_AND
-%left <valor_lexico> '|'
+%left <valor_lexico> TK_OC_OR
+%left <valor_lexico> ','
+%left <valor_lexico> ';'
+%left <valor_lexico> ':'
+%left <valor_lexico> '('
+%left <valor_lexico> ')'
+%left <valor_lexico> '['
+%left <valor_lexico> ']'
+%left <valor_lexico> '{'
+%left <valor_lexico> '}'
+%left <valor_lexico> '-'
+%left <valor_lexico> '?'
+%left <valor_lexico> '<'
+%left <valor_lexico> '>'
+%left <valor_lexico> '='
+%left <valor_lexico> '!'
 %left <valor_lexico> '&'
-%left <valor_lexico> TK_OC_EQ TK_OC_NE
-%left <valor_lexico> TK_OC_LE '<' TK_OC_GE '>'
-%left <valor_lexico> '+' '-'
-%left <valor_lexico> '*' '%' '/'
-%right <valor_lexico> '^'
-%left <valor_lexico> UMINUS UPLUS UPOINTER UADDRESS '!' '?' '#' //operadores unarios. os aliases 'UMINUS' e etc podem ser
-												 //utilizados para mudar a precedencia de um operando conforme o contexto:
-												 //https://www.gnu.org/software/bison/manual/html_node/Contextual-Precedence.html
-%left <valor_lexico> '(' ')' '[' ']' '$'
+%left <valor_lexico> '|'
+%left <valor_lexico> '%'
+%left <valor_lexico> '#'
+%left <valor_lexico> '^'
+%left <valor_lexico> '.'
+%left <valor_lexico> '$'
+%left <valor_lexico> '*'
+%left <valor_lexico> '+'
+//%left <valor_lexico> '/'
+%left <valor_lexico> '/' DIVISION
 
+%debug
 %start programa
 
 //Regras, em ordem alfabética, cujo tipo será ast, ou seja, seu valor semântico é representado como uma árvore
@@ -215,7 +229,6 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 %type <ast> argsCall
 %type <ast> assignment
 %type <ast> blocoComandos
-%type <ast> blocoSemEscopo
 %type <ast> case
 %type <ast> campo
 %type <ast> comando
@@ -238,7 +251,6 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 %type <ast> idThatCanBeFuncType
 %type <ast> idThatCanBeFuncName
 %type <ast> ifThenElse
-//%type <ast> infiniteQuestionMarks
 %type <ast> input
 %type <ast> list
 %type <ast> listaCampos
@@ -248,12 +260,10 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 %type <ast> negativeOrPositiveLiteral
 %type <ast> novoTipo
 %type <ast> operands
-//%type <ast> operators
 %type <ast> optElse
 %type <ast> output
 %type <ast> parameter
 %type <ast> parameters
-//%type <ast> parenthesisOrOperand
 %type <ast> pipe
 %type <ast> programa
 %type <ast> return
@@ -354,7 +364,7 @@ componente:
 				flag = STATIC;
 			int type = getType($2->kids[3]);			
 			if (type == USER){
-				int isUsr = verifyUse($2->kids[3]->token->value.str, UTN);
+				int isUsr = isUserType($2->kids[3]->token->value.str);
 				if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 				int addSymb = addSymbol(
 					$1->token, NATUREZA_IDENTIFICADOR, USER, getUserType($2->kids[3]),
@@ -387,7 +397,7 @@ componente:
 				//var global estática
 				int type = getType($2->kids[0]);				
 				if (type == USER){
-					int isUsr = verifyUse($2->kids[0]->token->value.str, UTN);
+					int isUsr = isUserType($2->kids[0]->token->value.str);
 					if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 					int addSymb = addSymbol(
 						$1->token, NATUREZA_IDENTIFICADOR, USER, 
@@ -407,7 +417,7 @@ componente:
 			}else{
 				int type = getType($2);
 				if (type == USER){
-					int isUsr = verifyUse($2->token->value.str, UTN);
+					int isUsr = isUserType($2->token->value.str);
 					if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 					int addSymb = addSymbol($1->token, NATUREZA_IDENTIFICADOR, USER, getUserType($2), 0, FALSE, 0);
 					if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
@@ -420,7 +430,7 @@ componente:
 		}
 	}
 	// Funções
-	| funcName scopeOpenner funcArgs blocoSemEscopo {
+	| funcName scopeOpenner funcArgs blocoComandos {
 		$$ = $1; 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, $4);
@@ -462,7 +472,7 @@ depoisDeIdent:
 ;
 fechaVarOuFunc:
 	  ';'									{$$ = criaNodo($1);}
-	| userTypeFunc scopeOpenner funcArgs blocoSemEscopo	{
+	| userTypeFunc scopeOpenner funcArgs blocoComandos	{
 		$$ = $3;
 		adicionaFilho($$, $4);
 		closeTable();
@@ -471,7 +481,7 @@ fechaVarOuFunc:
 //regra que adiciona à tabela de símbolos o nome da função de tipo de usuário
 userTypeFunc:
 	%empty {
-		int isUsr = verifyUse(firstID->token->value.str, UTN);
+		int isUsr = isUserType(firstID->token->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; YYABORT;}
 		int addSymb = addSymbol(secondID->token, NATUREZA_IDENTIFICADOR, USER, getUserType(firstID), 0, TRUE, 0);
 		if(addSymb != 0){ returnError = addSymb; YYABORT;}
@@ -586,7 +596,7 @@ parameter: //nodo raiz vai ter ou um filho (TK_IDENTIFICADOR; tipo vai ser o nod
 		}
 		int type = getType(aux);
 		if (type == USER){
-			int isUsr = verifyUse(aux->token->value.str, UTN);
+			int isUsr = isUserType(aux->token->value.str);
 			if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 			int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, getUserType(aux), 0, FALSE, flag);		
 			if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
@@ -644,15 +654,6 @@ blocoComandos:
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
 		closeTable();                     //Fecha escopo local
-	}
-;
-
-//Útil para não abrir novo escopo em função
-blocoSemEscopo:
-	'{'comandos'}'{
-		$$ = criaNodo($1);
-		adicionaFilho($$, $2);
-		adicionaFilho($$, criaNodo($3));
 	}
 ;
 comando:
@@ -717,7 +718,7 @@ foreach:
 		adicionaFilho($$, $5); 
 		adicionaFilho($$, criaNodo($6)); 
 		adicionaFilho($$, $7);
-		int isVar = verifyUse($3->value.str, VAR);
+		int isVar = isVariable($3->value.str);
 		if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
 	}
 ;
@@ -824,7 +825,7 @@ localVarDefinition:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
-		int isUsr = verifyUse($2->value.str, UTN);
+		int isUsr = isUserType($2->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($$->kids[0]), 0, FALSE, STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
@@ -833,7 +834,7 @@ localVarDefinition:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
-		int isUsr = verifyUse($2->value.str, UTN);
+		int isUsr = isUserType($2->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, USER, getUserType($$->kids[0]), 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
@@ -843,7 +844,7 @@ localVarDefinition:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3)); 
 		adicionaFilho($$, criaNodo($4));
-		int isUsr = verifyUse($3->value.str, UTN);
+		int isUsr = isUserType($3->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, USER, getUserType($$->kids[1]), 0, FALSE, STATIC + CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
@@ -852,7 +853,7 @@ localVarDefinition:
 	| TK_IDENTIFICADOR TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2));
-		int isUsr = verifyUse($1->value.str, UTN);
+		int isUsr = isUserType($1->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, USER, getUserType($$), 0, FALSE, 0);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
@@ -896,7 +897,7 @@ localVarDefinition:
 		adicionaFilho($$, criaNodoTipado($5, identifierType($5->value.str)));
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		int isVar = verifyUse($5->value.str, VAR);
+		int isVar = isVariable($5->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($2), $$->kids[3]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -917,7 +918,7 @@ localVarDefinition:
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}
 				
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = verifyUse(getIdFromNegOrPosId($5), VAR);
+		int isVar = isVariable(getIdFromNegOrPosId($5));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -932,7 +933,7 @@ localVarDefinition:
 		
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		int isVar = verifyUse($5->value.str, VAR);
+		int isVar = isVariable($5->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 
 		int correctOperands =  coercion(getType($2), $$->kids[3]);
@@ -952,7 +953,7 @@ localVarDefinition:
 		int addSymb = addSymbol($3, NATUREZA_IDENTIFICADOR, getType($2), NULL, 0, FALSE, CONST);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = verifyUse(getIdFromNegOrPosId($5), VAR);
+		int isVar = isVariable(getIdFromNegOrPosId($5));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($2), $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -966,7 +967,7 @@ localVarDefinition:
 		adicionaFilho($$, criaNodoTipado($6, identifierType($6->value.str)));
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		int isVar = verifyUse($6->value.str, VAR);
+		int isVar = isVariable($6->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($3), $$->kids[4]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -986,7 +987,7 @@ localVarDefinition:
 		int addSymb = addSymbol($4, NATUREZA_IDENTIFICADOR, getType($3), NULL, 0, FALSE, CONST + STATIC);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = verifyUse(getIdFromNegOrPosId($6), VAR);
+		int isVar = isVariable(getIdFromNegOrPosId($6));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($3), $6);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -998,7 +999,7 @@ localVarDefinition:
 		adicionaFilho($$, criaNodoTipado($4, identifierType($4->value.str)));
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
-		int isVar = verifyUse($4->value.str, VAR);
+		int isVar = isVariable($4->value.str);
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($1), $$->kids[2]);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -1017,7 +1018,7 @@ localVarDefinition:
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, FALSE, 0);
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		// o identificador é sempre o útimo filho desse nodo
-		int isVar = verifyUse(getIdFromNegOrPosId($4), VAR);
+		int isVar = isVariable(getIdFromNegOrPosId($4));
 		if(isVar!=TRUE){returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(getType($1), $4);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT; }
@@ -1137,6 +1138,7 @@ negativeOrPositiveIdentifier:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
 		$$->type = $2->type;
+		//printf("N deu segfault aqui\n");
 	}
 	| '-' TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
@@ -1206,7 +1208,7 @@ assignment:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
-		int isVar = verifyUse($1->value.str, VAR);
+		int isVar = isVariable($1->value.str);
 		if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printExpression($3);
@@ -1224,7 +1226,7 @@ assignment:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6);
-		int isVec = verifyUse($1->value.str, VET);
+		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
 		
 		int correctOperands =  coercion(INT, $3);
@@ -1243,7 +1245,7 @@ assignment:
 		adicionaFilho($$, criaNodoCampo($3, $1->value.str)); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
-		int isUsr = verifyUse($1->value.str, UTV);
+		int isUsr = isUserVar($1->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int hasF = hasField($1->value.str, $3->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
@@ -1263,9 +1265,9 @@ assignment:
 		adicionaFilho($$, criaNodoCampo($6, $1->value.str)); 
 		adicionaFilho($$, criaNodo($7)); 
 		adicionaFilho($$, $8);
-		int isVec = verifyUse($1->value.str, VET);
+		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
-		int isUsr = verifyUse($1->value.str, UTV);
+		int isUsr = isUserVar($1->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int hasF = hasField($1->value.str, $6->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
@@ -1302,6 +1304,7 @@ output:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
+		parseOperands($2);
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1312,10 +1315,12 @@ output:
 		}
 		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
+		clearCurrentOperands();
 	}
 	| TK_PR_OUTPUT expression {
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2);
+		parseOperands($2);
 		if($2->type == BOOL){
 			int correctOperands =  coercion(INT, $2);
 			if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
@@ -1326,7 +1331,8 @@ output:
 		}
 		if($2->type != INT && $2->type != FLOAT && $2->type != BOOL && $2->token->literType!=STRING)
 			{ returnError = ERR_WRONG_PAR_OUTPUT; nodeNotAdded = $$; YYABORT;}
-		}
+		clearCurrentOperands();
+	}
 ;
 continueOutput: 
 	',' expression {
@@ -1349,7 +1355,7 @@ funcCall:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
-		int isFunc = verifyUse($1->value.str, FUN);
+		int isFunc = isFunction($1->value.str);
 		if (isFunc != TRUE){ returnError = isFunc; nodeNotAdded = $$; YYABORT;}
 		int correctArgs = verifyArguments($1->value.str, $3);
 		if (correctArgs != TRUE){ returnError = correctArgs; nodeNotAdded = $$; YYABORT;}
@@ -1358,7 +1364,7 @@ funcCall:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodo($3));
-		int isFunc = verifyUse($1->value.str, FUN);
+		int isFunc = isFunction($1->value.str);
 		if (isFunc != TRUE){ returnError = isFunc; nodeNotAdded = $$; YYABORT;}
 		int correctArgs = verifyArguments($1->value.str, NULL);
 		if (correctArgs != TRUE){ returnError = correctArgs; nodeNotAdded = $$; YYABORT;}
@@ -1391,7 +1397,7 @@ shift:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $2); 
 		adicionaFilho($$, $3);
-		int isVar = verifyUse($1->value.str, VAR);
+		int isVar = isVariable($1->value.str);
 		if (isVar != TRUE){ returnError = isVar; nodeNotAdded = $$; YYABORT;}
 
 		int correctOperands =  coercion(INT, $3);
@@ -1403,7 +1409,7 @@ shift:
 		adicionaFilho($$, criaNodoCampo($3, $1->value.str));
 		adicionaFilho($$, $4); 
 		adicionaFilho($$, $5);
-		int isUsr = verifyUse($1->value.str, UTV);
+		int isUsr = isUserVar($1->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int hasF = hasField($1->value.str, $3->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
@@ -1418,7 +1424,7 @@ shift:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, $5);
 		adicionaFilho($$, $6);
-		int isVec = verifyUse($1->value.str, VET);
+		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
 
 		int correctOperands =  coercion(INT, $3);
@@ -1436,9 +1442,9 @@ shift:
 		adicionaFilho($$, criaNodoCampo($6, $1->value.str));
 		adicionaFilho($$, $7); 
 		adicionaFilho($$, $8);
-		int isVec = verifyUse($1->value.str, VET);
+		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
-		int isUsr = verifyUse($1->value.str, UTV);
+		int isUsr = isUserVar($1->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int hasF = hasField($1->value.str, $6->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
@@ -1453,21 +1459,20 @@ shift:
 
 
 return:
-	returnHelper TK_PR_RETURN expression		{
-		$$ = criaNodo($2); adicionaFilho($$, $3);
-		int verifRet = verifyReturn($3);
-		if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}
-		isReturn = FALSE;
-	}
-	
+		returnHelper TK_PR_RETURN expression		{
+			$$ = criaNodo($2); adicionaFilho($$, $3);
+			int verifRet = verifyReturn($3);
+			if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}
+			isReturn = FALSE;
+		}
 ;
 
 returnHelper:
 	%empty {isReturn = TRUE;}
 ;
 
-expression: //TODO: operadores unarios
-			expression '^' expression {
+expression:
+	expression '^' expression {
 		$$ = criaNodo(NULL);
 		adicionaFilho($$, $1); 
 		adicionaFilho($$, criaNodo($2)); 
@@ -2068,7 +2073,7 @@ operands:
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
-		int isVec = verifyUse($1->value.str, VET);
+		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
 		
 		int correctOperands =  coercion(INT, $3);
@@ -2092,13 +2097,12 @@ operands:
 
 		}
 		$$->type = identifierType($1->value.str);
-
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR		{
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, criaNodoCampo($3, $1->value.str));
-		int isUsr = verifyUse($1->value.str, UTV);
+		int isUsr = isUserVar($1->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int hasF = hasField($1->value.str, $3->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
@@ -2112,9 +2116,9 @@ operands:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, criaNodoCampo($6, $1->value.str));
-		int isVec = verifyUse($1->value.str, VET);
+		int isVec = isVector($1->value.str);
 		if (isVec!=TRUE){ returnError = isVec; nodeNotAdded = $$; YYABORT;}
-		int isUsr = verifyUse($1->value.str, UTV);
+		int isUsr = isUserVar($1->value.str);
 		if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
 		int hasF = hasField($1->value.str, $6->value.str);
 		if (hasF!=TRUE){ returnError = hasF; nodeNotAdded = $$; YYABORT;}
@@ -2125,8 +2129,8 @@ operands:
 		$$->type = fieldType($1->value.str, $6->value.str);
 
 	}
-	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT;}
-	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT;}
+	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT; printf("Operando: %d\n", $1->value.i);}
+	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT; printf("Operando: %f\n", $1->value.f);}
 	| TK_LIT_TRUE		{$$ = criaNodo($1); $$->type = BOOL;}
 	| TK_LIT_FALSE		{$$ = criaNodo($1); $$->type = BOOL;}
 	| TK_LIT_CHAR		{$$ = criaNodo($1); $$->type = CHAR;}		

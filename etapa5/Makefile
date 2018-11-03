@@ -30,7 +30,7 @@ flex: bison $(FLEX_SRC)
 	flex $(FLEX_SRC)
 	mv lex.yy.c src
 bison: $(BISON_SRC)
-	bison -d $(BISON_SRC)
+	bison -d $(BISON_SRC) #--report-file=report
 	mv parser.tab.c src
 	mv parser.tab.h include
 	mv parser.output parser
