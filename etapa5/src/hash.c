@@ -293,13 +293,17 @@ int isDefined(char *symbol){
 
 int symbolUse(char* symbol){
 	Hash* symbolContent = getSymbol(symbol);
-	if (symbolContent->isFunction) return FUN;
-	if (symbolContent->vecSize > 0) return VET;
-	if (symbolContent->type == USER){
-		if(symbolContent->userType == NULL) return UTN;
-		else return UTV;	
+	
+	if(symbolContent != NULL){
+		if (symbolContent->isFunction) return FUN;
+		if (symbolContent->vecSize > 0) return VET;
+		if (symbolContent->type == USER){
+			if(symbolContent->userType == NULL) return UTN;
+			else return UTV;	
+		}
+		return VAR;
 	}
-	return VAR;
+	else return ERR_UNDECLARED;
 }
 
 int errorOf(int symbUse){

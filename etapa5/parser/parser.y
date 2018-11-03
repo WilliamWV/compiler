@@ -179,8 +179,8 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 %token <valor_lexico> TK_LIT_STRING
 %token <valor_lexico> TK_IDENTIFICADOR
 %token <valor_lexico> TOKEN_ERRO
-//tokens para caracteres especiais, declarados para poder usar seu valor semântico atribuido no scanner
 
+//tokens para caracteres especiais, declarados para poder usar seu valor semântico atribuido no scanner
 //precedence doesnt matter:
 %left <valor_lexico> ','
 %left <valor_lexico> '='
@@ -202,7 +202,7 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 %left <valor_lexico> UMINUS UPLUS UPOINTER UADDRESS '!' '?' '#' //operadores unarios. os aliases 'UMINUS' e etc podem ser
 												 //utilizados para mudar a precedencia de um operando conforme o contexto:
 												 //https://www.gnu.org/software/bison/manual/html_node/Contextual-Precedence.html
-%left <valor_lexico> '(' ')' '[' ']' '$'
+%token <valor_lexico> '(' ')' '[' ']' '$'
 
 %start programa
 
@@ -1211,7 +1211,7 @@ assignment:
 		int correctOperands =  coercion(identifierType($1->value.str), $3);
 		//printExpression($3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
-		printExpression($3);
+		//printExpression($3);
 		if(identifierType($1->value.str) == STRING){
 			//atualizar tamanho
 			updateStringSize($1->value.str, $3, IDENT, NULL);			
@@ -2084,6 +2084,7 @@ operands:
 		}
 		else if(isReturn == TRUE){
 			int use = symbolUse($1->value.str);
+			if(use == ERR_UNDECLARED){returnError = ERR_UNDECLARED; nodeNotAdded = $$; YYABORT;}
 			if(use != VAR && use!= UTV){returnError = ERR_WRONG_PAR_RETURN; nodeNotAdded = $$; YYABORT;}
 		}
 		else{

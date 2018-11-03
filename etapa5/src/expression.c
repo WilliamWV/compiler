@@ -408,12 +408,12 @@ int arithmeticCoercion(Node *ss, Node *s1, Node *s3){
 	else if(s1->type == INT && s3->type == FLOAT){
 		s1->coercion = INT_TO_FLOAT;
 		ss->type = FLOAT;
-		//printf("\nINT TO FLOAT\n");
+		//printf("\nINT TO FLOAT1\n");
 	}
 	else if(s3->type == INT && s1->type == FLOAT){
 		s3->coercion = INT_TO_FLOAT;
 		ss->type = FLOAT;
-		//printf("\nINT TO FLOAT\n");
+		//printf("\nINT TO FLOAT2\n");
 	}
 	else if(s1->type == BOOL && s3->type == FLOAT){
 		s1->coercion = BOOL_TO_FLOAT;
