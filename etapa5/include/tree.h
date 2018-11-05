@@ -5,13 +5,6 @@
 #include "defines.h"
 #include "iloc.h"
 
-typedef struct listOfLabels{
-	int numberOfLabels;
-	char **labels;
-} Labels;
-
-void addNewLabel(Labels list, char *label);
-
 typedef struct node{
 	struct lexval* token;
 	int kidsNumber;
@@ -20,8 +13,8 @@ typedef struct node{
 	char *fieldOf;
 	char *reg;
 	ILOC_LIST* opList;
-	Labels trueList;
-	Labels falseList;
+	Labels *trueList;
+	Labels *falseList;
 	struct node **kids; // lista de ponteiros
 } Node;
 

@@ -46,6 +46,11 @@ typedef struct ilocList{
 } ILOC_LIST;
 
 
+//lista de labels a serem patcheadas
+typedef struct listOfLabels{
+	int numberOfLabels;
+	char **labels;
+} Labels;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// DEFINIÇÃO DE FUNÇÕES                                                     ///
@@ -78,9 +83,14 @@ void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* 
 ILOC_OP* createILOCOper(int opcode, char* opSpelling);
 ILOC_ARG* createILOCArg(int argType, void* value);
 
+//Adiciona nova label a uma lista de labels a serem patcheadas
+void addNewLabel(Labels *list, char *label);
 
 void printListOfOperations(ILOC_LIST *list);
 void printOperation(ILOC_OP *oper);
 int operationSpellType(int opcode);
 void printArg(ILOC_ARG* arg);
+void patch(ILOC_LIST *listOp, char *newLabel, Labels *targetedLabels);
+void substituteLabels(char *newLabel, char *targetLabel, ILOC_OP *oper);
+
 #endif

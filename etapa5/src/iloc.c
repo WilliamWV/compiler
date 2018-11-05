@@ -84,6 +84,12 @@ void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* 
 	addILOCToList(l, oper);
 }
 
+void addNewLabel(Labels *list, char *label){
+	list->numberOfLabels = list->numberOfLabels + 1;
+	list->labels = (char**)realoca(list->labels, list->numberOfLabels * sizeof(char*));
+	list->labels[list->numberOfLabels - 1] = label;
+}
+
 void printListOfOperations(ILOC_LIST *listOp){
 	for(int i = 0; i< listOp->operations; i++){
 		printOperation(listOp->list[i]);
@@ -216,5 +222,23 @@ void printArg(ILOC_ARG* arg){
 		printf("%d",arg->value.i);
 	else
 		printf("%s", arg->value.str);
+}
+
+void substituteLabels(char *newLabel, char *targetLabel, ILOC_OP *oper){
+	for(int i = 0; i < oper->argsNum; i++){
+		if(oper->args[i]->argType == LAB){
+			if(strcmp(oper->args[i]->value.str, targetLabel) == 0){
+				oper->args[i]->value.str = newLabel;
+			}
+		}
+	}
+}
+
+void patch(ILOC_LIST *listOp, char *newLabel, Labels *targetedLabels){
+	for(int i = 0; i < targetedLabels->numberOfLabels; i++){
+		for(int j = 0; j < listOp->operations; j++){
+			substituteLabels(newLabel, targetedLabels->labels[i], listOp->list[j]);
+		}
+	}
 }
 
