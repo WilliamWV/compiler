@@ -9,6 +9,7 @@
 #include "../include/parser.tab.h" 
 #include "../include/iloc.h"
 #include "../include/naming.h"
+#include "../include/util.h"
 
 int yylex(void);
 extern int get_line_number(void);
@@ -1219,6 +1220,7 @@ assignment:
 			//atualizar tamanho
 			updateStringSize($1->value.str, $3, IDENT, NULL);			
 		}
+		printListOfOperations($3->opList);
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
 		$$ = criaNodo($1); 
@@ -1784,9 +1786,16 @@ expression: //TODO: operadores unarios
 				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 			}
 		}	
-
-			
-
+		
+		$$->reg = getNewRegister();
+		char *trueLabel = getNewLabel();
+		char *falseLabel = getNewLabel();
+		addNewLabel($$->trueList, trueLabel);
+		addNewLabel($$->falseList, falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_EQ", $1->reg, $3->reg , $$->reg);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		$1->opList = concatILOC($1->opList, $3->opList);
+		$$->opList = concatILOC($1->opList, $$->opList);
 	};
 	| expression TK_OC_NE expression {
 		$$ = criaNodo(NULL);
@@ -2114,7 +2123,7 @@ operands:
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '$' TK_IDENTIFICADOR	{
 		$$ = criaNodo($1); 
-		adicionaFilho($$, criaNodo($2)); 
+		adicionaFilho($$, criaNodo($2));
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
@@ -2132,7 +2141,12 @@ operands:
 		$$->type = fieldType($1->value.str, $6->value.str);
 
 	}
-	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT; $$->reg = getNewRegister();}
+	| TK_LIT_INT		{
+		$$ = criaNodo($1);
+		$$->type = INT;
+		$$->reg = getNewRegister();
+		createOperation($$->opList, LOADI, "loadI", (void*) &($1->value.i), $$->reg, NULL);
+	}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT;}
 	| TK_LIT_TRUE		{$$ = criaNodo($1); $$->type = BOOL;}
 	| TK_LIT_FALSE		{$$ = criaNodo($1); $$->type = BOOL;}

@@ -106,7 +106,6 @@
 #define REG  701   // registrador
 #define LAB  702   // rótulos
 
-
 /////////////////////////////
 ///OPCODE de operaçõs ILOC///
 /////////////////////////////

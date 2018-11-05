@@ -28,6 +28,8 @@ ILOC_C=src/iloc.c
 ILOC_O=obj/iloc.o
 NOLEAK_C=src/everybodyHateLeaks.c
 NOLEAK_O=obj/everybodyHateLeaks.o
+UTIL_C=src/util.c
+UTIL_O=obj/util.o
 REPORT_FILE = report
 
 all: gen_bin
@@ -41,11 +43,11 @@ bison: $(BISON_SRC)
 	mv parser.tab.h include
 	mv parser.output parser
 gen_obj: flex
-	$(CC) -c $(FLEX_C) $(BISON_C) $(TREE_C) $(UTF_C) $(EXP_C) $(FARGS_C) $(HASH_C) $(NAMING_C) $(ILOC_C) $(NOLEAK_C) $(MAIN_C)
+	$(CC) -c $(FLEX_C) $(BISON_C) $(TREE_C) $(UTF_C) $(EXP_C) $(FARGS_C) $(HASH_C) $(NAMING_C) $(ILOC_C) $(NOLEAK_C) $(UTIL_C) $(MAIN_C)
 	mv *.o obj
 
 gen_bin: gen_obj
-	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) $(TREE_O) $(UTF_O) $(EXP_O) $(FARGS_C) $(HASH_O) $(NAMING_O) $(ILOC_O) $(NOLEAK_O) $(MAIN_O) -lfl
+	$(CC) -o $(EXEC) $(FLEX_O) $(BISON_O) $(TREE_O) $(UTF_O) $(EXP_O) $(FARGS_C) $(HASH_O) $(NAMING_O) $(ILOC_O) $(NOLEAK_O) $(UTIL_O) $(MAIN_O) -lfl
 
 
 clean:

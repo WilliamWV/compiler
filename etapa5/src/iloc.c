@@ -42,6 +42,8 @@ ILOC_OP* createILOCOper(int opcode, char* opSpelling)
 	ILOC_OP* ans = (ILOC_OP*) aloca (sizeof(ILOC_OP));
 	ans->opcode = opcode;
 	ans->opSpelling = opSpelling;
+	ans->argsNum = 0;
+	ans->args = NULL;
 }
 
 ILOC_ARG* createILOCArg(int argType, void* value)
@@ -82,4 +84,40 @@ void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* 
 	addILOCToList(l, oper);
 }
 
+void printListOfOperations(ILOC_LIST *listOp){
+	for(int i = 0; i< listOp->operations; i++){
+		printOperation(listOp->list[i]);
+	}
+}
 
+void printOperation(ILOC_OP *oper){
+	
+	printf("%s\t", oper->opSpelling);
+	for(int i = 0; i < oper->argsNum; i++){
+		printArg(oper->args[i], oper->opSpelling, i+1);
+	}
+	printf("\n");
+}
+
+void printArg(ILOC_ARG *arg, char *opName, int argIndex){
+	if(arg->argType != IMED)
+		printf("%s", arg->value.str);
+	else
+		printf("%d", arg->value.i);
+	if(strcmp(opName, "loadI") == 0){
+		if(argIndex == 1)
+			printf(" => ");
+	}
+	else if(strcmp(opName, "cmp_EQ") == 0){
+		if(argIndex == 1)
+			printf(", ");
+		if(argIndex == 2)
+			printf(" -> ");
+	}
+	else if(strcmp(opName, "cbr") == 0){
+		if(argIndex == 1)
+			printf(" -> ");
+		if(argIndex == 2)
+			printf(", ");
+	}
+}

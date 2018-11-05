@@ -70,6 +70,7 @@ typedef struct hashContent{
 	UserTypeField** fields;       // campos e seus tipos, se for tipo de usuário
 	struct lexval* valor_lexico;  // valores associados ao yylval do símbolo
 	int offset;                   // deslocamento do endereço da variável em relação ao registrador de referência
+
 }Hash;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -138,10 +139,14 @@ int currentScopeLevel();
 
 int scopeLevelOfID(char* id);
 
+
 ////////////////////////////////////////////////////////////////////////////////
 /// Adiciona operações ILOC a lista "l" para carregar valor da variável      ///
 /// "varName" em um registrador cujo nome é retornado pela função            ///
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 char* loadVarToRegister(ILOC_LIST* l, char* varName);
+	
+	
 
 #endif

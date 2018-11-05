@@ -27,6 +27,10 @@ Node* criaNodo(struct lexval* token){
 	node->kidsNumber = 0;
 	node->reg = NULL;
 	node->opList = createILOCList();
+	node->trueList.numberOfLabels = 0;
+	node->falseList.numberOfLabels = 0;
+	node->trueList.labels = (char**)aloca(sizeof(char*));
+	node->falseList.labels = (char**)aloca(sizeof(char*));
 	node->kids = (Node**)malloc(sizeof(Node*)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
 
 	return node;
@@ -44,6 +48,10 @@ Node* criaNodoTipado(struct lexval* token, int type){
 	node->kidsNumber = 0;
 	node->reg = NULL;
 	node->opList = createILOCList();
+	node->trueList.numberOfLabels = 0;
+	node->falseList.numberOfLabels = 0;
+	node->trueList.labels = (char**)aloca(sizeof(char*));
+	node->falseList.labels = (char**)aloca(sizeof(char*));
 	node->kids = (Node**)malloc(sizeof(Node*)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
 
 	return node;
@@ -61,6 +69,10 @@ Node* criaNodoCampo(struct lexval* token, char *fieldOf){
 	node->kidsNumber = 0;
 	node->reg = NULL;
 	node->opList = createILOCList();
+	node->trueList.numberOfLabels = 0;
+	node->falseList.numberOfLabels = 0;
+	node->trueList.labels = (char**)aloca(sizeof(char*));
+	node->falseList.labels = (char**)aloca(sizeof(char*));
 	node->kids = (Node**)malloc(sizeof(Node*)); // aloca espaço para o primeiro ponteiro para um ponteiro de Node
 
 	return node;
@@ -101,6 +113,13 @@ void adicionaFilho(Node *pai, Node *kid){
 	pai->kids = (Node**)realloc(pai->kids, pai->kidsNumber * sizeof(Node*)); // aloca espaço para mais um ponteiro para um ponteiro de Node
 	pai->kids[pai->kidsNumber - 1] = kid; // acessa o ponteiro recém alocado e guarda nele um ponteiro de Node
 }
+
+void addNewLabel(Labels list, char *label){
+	list.numberOfLabels = list.numberOfLabels + 1;
+	list.labels = (char**)realoca(list.labels, list.numberOfLabels * sizeof(char*));
+	list.labels[list.numberOfLabels - 1] = label;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 /// void imprimeToken(union Value value, int tokenType, int literType)       ///
 /// função chamada pela descompila com resposábilidade de imprimir um token  ///

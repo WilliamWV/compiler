@@ -6,6 +6,7 @@
 #include "../include/functionArgs.h"
 #include "../include/userTypeField.h"
 #include "../include/hash.h"
+#include "../include/everybodyHateLeaks.h"
 
 void *arvore = NULL;
 void descompila (void *arvore);
@@ -52,15 +53,17 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 	liberaTodasTabelas();	
 	
 	libera(danglingNode);
-	
+
+	liberaTudo();	
+
 	exit(exitCode);
 }
 
 int main (int argc, char **argv)
 {
 	int ret = yyparse(); 
-	descompila (arvore);
-
+	//descompila (arvore);
+	//printaCodigo(arvore->opList);
 	#if DEBUG == TRUE
 		contaNodosNaRaiz(arvore);
 		printf("\nTokens criados: %d\nNodos na raiz: %d\nNodos criados: %d\n", tokensCriados, contaNodosRaiz, nodosCriados);
@@ -70,5 +73,6 @@ int main (int argc, char **argv)
 	yylex_destroy();
 	arvore = NULL;
 	if(ret == 1) exitAndFree(returnError, identifierError, nodeNotAdded);
+	liberaTudo();
 	return ret;
 }

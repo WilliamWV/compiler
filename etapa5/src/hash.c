@@ -7,6 +7,7 @@ HashStack* tabelas = NULL;
 int localOffset = 0;
 int globalOffset = 0;
 
+
 int sizeOfType(int type, int vecSize){
 	int temp = vecSize;
 	if(vecSize == 0) temp = 1;	
@@ -237,6 +238,7 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 		tabelas->currentTable[hashIndex]->offset = localOffset;
 		localOffset+=tabelas->currentTable[hashIndex]->size;
 	}
+
 	return 0;
 }
 //adiciona um argumento a um símbolo
@@ -457,6 +459,7 @@ void updateStringSize(char* id, struct node* expression, int type, char* field){
 	//printf("Size of \'%s\' = %d\n", id, idSymb->size);
 	
 }
+
 // o nível de escopo depende de quantas tabelas estão empilhadas
 // quando se chega na base da pilha tem-se que tabelas->next = NULL
 int currentScopeLevel(){
@@ -527,3 +530,4 @@ char* loadVarToRegister(ILOC_LIST* l, char* varName){
 	else return NULL; // nunca deve ocorrer pois esse erro deve ser percebido pela
 					  // análise semântica
 }
+

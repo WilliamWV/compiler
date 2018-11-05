@@ -65,7 +65,7 @@ int main(){
 
 	printf("l3:\n");
 	printILOCList(l3);	
-	
+
 	printf("Criando lista l4 para testar cálculo de endereço de variáveis\n");
 	ILOC_LIST* l4 = createILOCList();
 	
@@ -101,6 +101,7 @@ int main(){
 	closeTable();
 	printf("l4:\n");
 	printILOCList(l4);
+
 
 	liberaTudo();
 	printf("Teste concluído\n");

@@ -47,8 +47,8 @@ char* getNewRegister(){
 }
 
 char* getNewLabel(){
-	int digits = digitsOfInt(currentRegister);
-	int temp = currentRegister;
+	int digits = digitsOfInt(currentLabel);
+	int temp = currentLabel;
 
 	char* lab = (char*) aloca(sizeof(digits + 1 + 1));
 	lab[0] = 'L';
