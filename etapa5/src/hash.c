@@ -4,6 +4,9 @@
 
 HashStack* tabelas = NULL;
 
+int localOffset = 0;
+int globalOffset = 0;
+
 int sizeOfType(int type, int vecSize){
 	int temp = vecSize;
 	if(vecSize == 0) temp = 1;	
@@ -224,6 +227,16 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 	tabelas->currentTable[hashIndex]->fields = (UserTypeField**)malloc(sizeof(UserTypeField*));
 	tabelas->currentTable[hashIndex]->valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	*(tabelas->currentTable[hashIndex]->valor_lexico) = *(valor_lexico);
+	int scopeLevel = currentScopeLevel();	
+	if(scopeLevel == 0){ // variável global
+		tabelas->currentTable[hashIndex]->offset = globalOffset;
+		globalOffset+=tabelas->currentTable[hashIndex]->size;
+		
+	}
+	else{ // variável loval
+		tabelas->currentTable[hashIndex]->offset = localOffset;
+		localOffset+=tabelas->currentTable[hashIndex]->size;
+	}
 	return 0;
 }
 //adiciona um argumento a um símbolo
@@ -443,4 +456,46 @@ void updateStringSize(char* id, struct node* expression, int type, char* field){
 	}
 	//printf("Size of \'%s\' = %d\n", id, idSymb->size);
 	
+}
+// o nível de escopo depende de quantas tabelas estão empilhadas
+// quando se chega na base da pilha tem-se que tabelas->next = NULL
+int currentScopeLevel(){
+	int scopeLevel = 0;
+	if (tabelas==NULL) return 0;
+	HashStack* aux = tabelas;
+	while (aux->next != NULL){
+		scopeLevel++;
+		aux = aux->next;
+	}
+	return scopeLevel;
+}
+
+// Função semelhante a getSymbol, mas retorna o nível do escopod e um identificador
+// onde 0 é escopo global, 1 é o primeiro escopo sobre o global e assim por diante
+
+int scopeLevelOfID(char* id){
+	int hashIndex = hashFunction(id);
+	int tempIndex = hashIndex; // será usado se for necessário buscar símbolo em caso
+                               // de colisão
+	Hash* symbolContent;
+	HashStack* aux = tabelas;
+	int scope = currentScopeLevel();
+	do{	
+		symbolContent = aux->currentTable[hashIndex];
+		while(symbolContent != NULL){	
+			if(strcmp(symbolContent->symbol, id) == 0)
+				return scope;
+			else{
+				tempIndex++;
+				symbolContent = aux->currentTable[tempIndex];
+			}
+		}
+		aux = aux->next;
+		tempIndex = hashIndex;
+		scope--;
+	}while(aux!=NULL);
+
+	return -1; // retorna -1 se não existir, NOTA: isso nunca deve ser executado pois
+	           // a análise semântica deve detectar esse erro e a geração de código
+	           // não seria iniciada
 }
