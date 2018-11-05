@@ -93,31 +93,128 @@ void printListOfOperations(ILOC_LIST *listOp){
 void printOperation(ILOC_OP *oper){
 	
 	printf("%s\t", oper->opSpelling);
-	for(int i = 0; i < oper->argsNum; i++){
-		printArg(oper->args[i], oper->opSpelling, i+1);
+	int opType = operationSpellType(oper->opcode);
+	switch(opType){
+		case TWO_EQ_ONE:
+			if(oper->argsNum == 3){
+				printArg(oper->args[0]);
+				printf(", ");
+				printArg(oper->args[1]);
+				printf(" => ");
+				printArg(oper->args[2]);
+			} 
+			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
+		break;     
+		case ONE_EQ_ONE: 
+			if(oper->argsNum == 2){
+				printArg(oper->args[0]);
+				printf(" => ");
+				printArg(oper->args[1]);
+			} 
+			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
+		break;          
+		case ONE_EQ_TWO:
+			if(oper->argsNum == 3){
+				printArg(oper->args[0]);
+				printf(" => ");
+				printArg(oper->args[1]);
+				printf(", ");
+				printArg(oper->args[2]);
+			} 
+			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
+		break;           
+		case ZERO_MINUS_ONE:
+			if(oper->argsNum == 1){
+				printf(" -> ");
+				printArg(oper->args[0]);
+			} 
+			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
+		break;       
+		case ONE_MINUS_TWO:
+			if(oper->argsNum == 3){
+				printArg(oper->args[0]);
+				printf(" -> ");
+				printArg(oper->args[1]);
+				printf(", ");				
+				printArg(oper->args[2]);
+			} 
+			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
+		break;        
+		case TWO_MINUS_ONE:  
+			if(oper->argsNum == 3){
+				printArg(oper->args[0]);
+				printf(", ");
+				printArg(oper->args[1]);
+				printf(" -> ");
+				printArg(oper->args[2]);
+			} 
+			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
+		break;      
 	}
 	printf("\n");
 }
-
-void printArg(ILOC_ARG *arg, char *opName, int argIndex){
-	if(arg->argType != IMED)
-		printf("%s", arg->value.str);
-	else
-		printf("%d", arg->value.i);
-	if(strcmp(opName, "loadI") == 0){
-		if(argIndex == 1)
-			printf(" => ");
-	}
-	else if(strcmp(opName, "cmp_EQ") == 0){
-		if(argIndex == 1)
-			printf(", ");
-		if(argIndex == 2)
-			printf(" -> ");
-	}
-	else if(strcmp(opName, "cbr") == 0){
-		if(argIndex == 1)
-			printf(" -> ");
-		if(argIndex == 2)
-			printf(", ");
+int operationSpellType(int opcode){
+	switch (opcode){
+		case ADD:
+		case SUB:
+		case MULT:
+		case DIV:
+		case ADDI:
+		case SUBI:
+		case RSUBI:
+		case MULTI:
+		case DIVI:
+		case RDIVI:
+		case LSHIFT:
+		case LSHIFTI:
+		case RSHIFT:
+		case RSHIFTI:
+		case AND:
+		case ANDI:
+		case OR:
+		case ORI:
+		case XOR:
+		case XORI:
+		case LOADAI:
+		case LOADA0:
+		case CLOADAI:
+		case CLOADA0:
+			return TWO_EQ_ONE;
+		case LOADI:
+		case LOAD:
+		case CLOAD:
+		case STORE:
+		case CSTORE:
+		case I2I:
+		case C2C:
+		case C2I:
+		case I2C:
+			return ONE_EQ_ONE;
+		case STOREAI:
+		case STOREA0:
+		case CSTOREAI:
+		case CSTOREA0:
+			return ONE_EQ_TWO; 
+		case JUMPI:
+		case JUMP:
+			return ZERO_MINUS_ONE;
+		case CBR:
+			return ONE_MINUS_TWO;
+		case CMP_LT:
+		case CMP_LE:
+		case CMP_EQ:
+		case CMP_GE:
+		case CMP_GT:
+		case CMP_NE:
+			return TWO_MINUS_ONE;
+		default: return NOP;
 	}
 }
+
+void printArg(ILOC_ARG* arg){
+	if(arg->argType == IMED)
+		printf("%d",arg->value.i);
+	else
+		printf("%s", arg->value.str);
+}
+

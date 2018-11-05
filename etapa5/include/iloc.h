@@ -81,5 +81,6 @@ ILOC_ARG* createILOCArg(int argType, void* value);
 
 void printListOfOperations(ILOC_LIST *list);
 void printOperation(ILOC_OP *oper);
-void printArg(ILOC_ARG *arg, char *opName, int argIndex);
+int operationSpellType(int opcode);
+void printArg(ILOC_ARG* arg);
 #endif

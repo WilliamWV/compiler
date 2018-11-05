@@ -101,10 +101,19 @@
 #define UTV 604 // variável de tipo de usuário
 
 
+//Tipos de operação ILOC segundo grafia
+#define TWO_EQ_ONE      900  // dois a esquerda seguidos de sinal => seguidos de um argumento a direita
+#define ONE_EQ_ONE      901
+#define ONE_EQ_TWO      902
+#define ZERO_MINUS_ONE  903  // nenhum a esquerda seguido de sinal -> seguido de um argumento a esquerda
+#define ONE_MINUS_TWO   904
+#define TWO_MINUS_ONE   905
+
 //Tipos de argumento de operações ILOC
 #define IMED 700   // valor constante imediato
 #define REG  701   // registrador
 #define LAB  702   // rótulos
+
 
 /////////////////////////////
 ///OPCODE de operaçõs ILOC///
