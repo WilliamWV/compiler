@@ -135,6 +135,37 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 	return aux->token->value.str;
 }
 
+int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
+	if(s2->tokenType == SPEC_CHAR){
+			if(s2->value.c == '+' || s2->value.c == '%' || s2->value.c == '/' || s2->value.c == '*' || s2->value.c == '-' || s2->value.c == '^'){
+				int coercion = arithmeticCoercion(ss, s1, s3);
+				return coercion;
+			}
+			else if(s2->value.c == '|' || s2->value.c == '&'){
+				int coercion = bitwiseCoercion(ss, s1, s3);
+				return coercion;
+			}
+			else if(s2->value.c == '<' || s2->value.c == '>'){
+				int coercion = arithRelationalCoercion(ss, s1, s3);
+				return coercion;
+			}
+		}
+		else if(s2->tokenType == COMP_OPER){
+			if(strcmp(s2->value.str, "<=") == 0 || strcmp(s2->value.str, ">=") == 0){
+				int coercion = arithRelationalCoercion(ss, s1, s3);
+				return coercion;
+			}
+			else if(strcmp(s2->value.str, "&&") == 0 || strcmp(s2->value.str, "||") == 0){
+				int coercion = logicCoercion(ss, s1, s3);
+				return coercion;
+			}
+			else if(strcmp(s2->value.str, "==") == 0 || strcmp(s2->value.str, "!=") == 0){
+				int coercion = relationalCoercion(ss, s1, s3);
+				return coercion;
+			}
+		}
+}
+
 
 %}
 %define parse.error verbose
@@ -1478,34 +1509,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}						
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}					
 	};
 	| expression '/' expression{
 		$$ = criaNodo(NULL);
@@ -1513,34 +1518,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
 	};
 	| expression '*' expression {
 		$$ = criaNodo(NULL);
@@ -1548,34 +1527,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}				
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}					
 	};
 | expression '%' expression {
 		$$ = criaNodo(NULL);
@@ -1583,34 +1536,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}		
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}				
 	};
 | expression TK_OC_AND expression {
 		$$ = criaNodo(NULL);
@@ -1618,34 +1545,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}			
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}				
 	};
 	| expression TK_OC_OR expression {
 		$$ = criaNodo(NULL);
@@ -1653,34 +1554,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}		
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}			
 	};
 	| expression '|' expression {
 		$$ = criaNodo(NULL);
@@ -1688,34 +1563,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}		
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}				
 	};
 	| expression '&' expression {
 		$$ = criaNodo(NULL);
@@ -1723,34 +1572,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}		
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
 	};
 	| expression TK_OC_EQ expression {
 		$$ = criaNodo(NULL);
@@ -1758,34 +1581,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}	
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
 		
 		$$->reg = getNewRegister();
 		char *trueLabel = getNewLabel();
@@ -1803,34 +1600,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}			
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}				
 	};
 	| expression TK_OC_GE expression {
 		$$ = criaNodo(NULL);
@@ -1838,34 +1609,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}		
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
 	};
 	| expression TK_OC_LE expression {
 		$$ = criaNodo(NULL);
@@ -1873,34 +1618,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}		
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
 	};
 	| expression '<' expression {
 		$$ = criaNodo(NULL);
@@ -1908,34 +1627,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}		
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}			
 	};
 	| expression '>' expression {
 		$$ = criaNodo(NULL);
@@ -1943,34 +1636,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}	
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
 	};
 	
 	
@@ -1980,34 +1647,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}	
 	};
 	| expression '-' expression {
 		$$ = criaNodo(NULL);
@@ -2015,34 +1656,8 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
 		
-		if($2->tokenType == SPEC_CHAR){
-			if($2->value.c == '+' || $2->value.c == '%' || $2->value.c == '/' || $2->value.c == '*' || $2->value.c == '-' || $2->value.c == '^'){
-				int coercion = arithmeticCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '|' || $2->value.c == '&'){
-				int coercion = bitwiseCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if($2->value.c == '<' || $2->value.c == '>'){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}
-		else if($2->tokenType == COMP_OPER){
-			if(strcmp($2->value.str, "<=") == 0 || strcmp($2->value.str, ">=") == 0){
-				int coercion = arithRelationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "&&") == 0 || strcmp($2->value.str, "||") == 0){
-				int coercion = logicCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-			else if(strcmp($2->value.str, "==") == 0 || strcmp($2->value.str, "!=") == 0){
-				int coercion = relationalCoercion($$, $1, $3);
-				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
-			}
-		}						
+		int coercion = expressionCoercion($$, $1, $2, $3);		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}							
 	}
 	| operands			{$$ = $1; $$->type = $1->type;}
 	| '(' expression ')' {
