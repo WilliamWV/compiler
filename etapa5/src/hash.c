@@ -503,6 +503,25 @@ int scopeLevelOfID(char* id){
 	           // não seria iniciada
 }
 
+char* calculateAddressOfVar(ILOC_LIST* l, char* varName){
+	Hash* varContent = getSymbol(varName);	
+	if(varContent!=NULL){	
+		int offset = varContent->offset;
+		int varScopeLevel = scopeLevelOfID(varName);
+		char* address = getNewRegister(); // registrador que vai conter o endereço final
+		if(varScopeLevel == 0){ // global - usa registrador rbss
+			createOperation(l, ADDI, "addI", "rbss", (void*) &offset, address);
+		}
+		else{//local - usa registrador rfp
+			createOperation(l, ADDI, "addI", "rfp", (void*) &offset, address);
+		}
+		
+		return address;
+	}
+	else return NULL; // nunca deve ocorrer pois esse erro deve ser percebido pela
+					  // análise semântica
+}
+
 // O carregamento de uma variável é feito nos seguintes passos:
 // 1 - Cálcula endereço da variável
 // 		1.1 - Determina qual o escopo da variável para saber o registrador de referência

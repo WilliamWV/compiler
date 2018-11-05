@@ -147,6 +147,7 @@ int scopeLevelOfID(char* id);
 
 char* loadVarToRegister(ILOC_LIST* l, char* varName);
 	
+char* calculateAddressOfVar(ILOC_LIST* l, char* varName);
 	
 
 #endif

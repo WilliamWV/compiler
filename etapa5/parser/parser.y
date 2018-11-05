@@ -711,7 +711,7 @@ comandoSimples:
 
 comandosSemVirgula: //comandos que são permitidos dentro das listas do for
 	localVarDefinition		{$$ = $1;}
-	| assignment			{$$ = $1;}
+	| assignment			{$$ = $1; printListOfOperations($1->opList);}
 	| input					{$$ = $1;}
 	| shift					{$$ = $1;}
 	| TK_PR_BREAK			{$$ = criaNodo($1);}
@@ -1251,7 +1251,17 @@ assignment:
 			//atualizar tamanho
 			updateStringSize($1->value.str, $3, IDENT, NULL);			
 		}
-		printListOfOperations($3->opList);
+		//printListOfOperations($3->opList);
+		//Geração de código 
+		if($3->reg!=NULL){
+			//Código de atribuição é o seguinte:
+			// 1) Calcular expressão
+			// 2) Cálcula endereço de variável 
+			// 3) Armazena conteúdo do registrador da expressão nesse endereço
+			$$->opList = concatILOC($$->opList, $3->opList);
+			char* address = calculateAddressOfVar($$->opList, $1->value.str);
+			createOperation($$->opList, STORE, "store", $3->reg, address, NULL);
+		}
 		
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
