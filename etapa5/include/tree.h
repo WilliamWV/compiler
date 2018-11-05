@@ -10,6 +10,7 @@ typedef struct node{
 	int coercion;
 	int type;
 	char *fieldOf;
+	char *reg;
 	struct node **kids; // lista de ponteiros
 } Node;
 

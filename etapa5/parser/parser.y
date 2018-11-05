@@ -1781,6 +1781,9 @@ expression: //TODO: operadores unarios
 				if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 			}
 		}	
+
+			
+
 	};
 	| expression TK_OC_NE expression {
 		$$ = criaNodo(NULL);
