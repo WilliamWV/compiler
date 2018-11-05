@@ -1252,6 +1252,7 @@ assignment:
 			updateStringSize($1->value.str, $3, IDENT, NULL);			
 		}
 		printListOfOperations($3->opList);
+		
 	}
 	| TK_IDENTIFICADOR '[' expression ']' '=' expression {
 		$$ = criaNodo($1); 
@@ -1519,7 +1520,16 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+		
+		if($1->reg!=NULL && $3->reg!=NULL){
+			$$->opList = concatILOC($$->opList, $1->opList);
+			$$->opList = concatILOC($$->opList, $3->opList);
+			$$->reg = getNewRegister();
+			createOperation($$->opList, DIV, "div", $1->reg, $3->reg, $$->reg);
+			//printf("Lista de operações na divisão:\n");
+			//printILOCList($$->opList); 
+		}		
 	};
 	| expression '*' expression {
 		$$ = criaNodo(NULL);
@@ -1528,7 +1538,16 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}					
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}	
+		
+		if($1->reg!=NULL && $3->reg!=NULL){
+			$$->opList = concatILOC($$->opList, $1->opList);
+			$$->opList = concatILOC($$->opList, $3->opList);
+			$$->reg = getNewRegister();
+			createOperation($$->opList, MULT, "mult", $1->reg, $3->reg, $$->reg); 
+			//printf("Lista de operações na multiplicação:\n");
+			//printILOCList($$->opList);
+		}					
 	};
 | expression '%' expression {
 		$$ = criaNodo(NULL);
@@ -1648,7 +1667,21 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}	
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+		//Se registrador de alguma das expressões for nulo significa que não foi
+		//gerado código pra ela portanto não se pode realizar a soma
+		if($1->reg!=NULL && $3->reg!=NULL){
+			//Para realizar uma operação precisamos:
+			// 1) Realizar o processamento das subexpressões
+			// 2) Criar registrador para conter resultado
+			// 3) Realizar operação específica
+			$$->opList = concatILOC($$->opList, $1->opList);
+			$$->opList = concatILOC($$->opList, $3->opList);
+			$$->reg = getNewRegister();
+			createOperation($$->opList, ADD, "add", $1->reg, $3->reg, $$->reg); 
+			//printf("Lista de operações na adição:\n");
+			//printILOCList($$->opList);
+		}	
 	};
 	| expression '-' expression {
 		$$ = criaNodo(NULL);
@@ -1657,7 +1690,16 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}							
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+		
+		if($1->reg!=NULL && $3->reg!=NULL){
+			$$->opList = concatILOC($$->opList, $1->opList);
+			$$->opList = concatILOC($$->opList, $3->opList);
+			$$->reg = getNewRegister();
+			createOperation($$->opList, SUB, "sub", $1->reg, $3->reg, $$->reg);
+			//printf("Lista de operações na subtração:\n");
+			//printILOCList($$->opList);
+		}								
 	}
 	| operands			{$$ = $1; $$->type = $1->type;}
 	| '(' expression ')' {
@@ -1723,6 +1765,10 @@ operands:
 
 		}
 		$$->type = identifierType($1->value.str);
+		//geração de código		
+		if($$->type == INT){
+			$$->reg = loadVarToRegister($$->opList, $1->value.str);
+		}
 
 	}
 	| TK_IDENTIFICADOR '$' TK_IDENTIFICADOR		{
