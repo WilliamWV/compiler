@@ -3,6 +3,7 @@
 
 #include "lexVal.h"
 #include "defines.h"
+#include "iloc.h"
 
 typedef struct node{
 	struct lexval* token;
@@ -11,6 +12,7 @@ typedef struct node{
 	int type;
 	char *fieldOf;
 	char *reg;
+	ILOC_LIST* opList;
 	struct node **kids; // lista de ponteiros
 } Node;
 

@@ -7,6 +7,9 @@
 #include "../include/expression.h"
 #include "../include/functionArgs.h"
 #include "../include/parser.tab.h" 
+#include "../include/iloc.h"
+#include "../include/naming.h"
+
 int yylex(void);
 extern int get_line_number(void);
 
@@ -2129,7 +2132,7 @@ operands:
 		$$->type = fieldType($1->value.str, $6->value.str);
 
 	}
-	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT;}
+	| TK_LIT_INT		{$$ = criaNodo($1); $$->type = INT; $$->reg = getNewRegister();}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT;}
 	| TK_LIT_TRUE		{$$ = criaNodo($1); $$->type = BOOL;}
 	| TK_LIT_FALSE		{$$ = criaNodo($1); $$->type = BOOL;}
