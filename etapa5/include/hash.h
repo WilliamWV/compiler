@@ -138,4 +138,10 @@ int currentScopeLevel();
 
 int scopeLevelOfID(char* id);
 
+////////////////////////////////////////////////////////////////////////////////
+/// Adiciona operações ILOC a lista "l" para carregar valor da variável      ///
+/// "varName" em um registrador cujo nome é retornado pela função            ///
+////////////////////////////////////////////////////////////////////////////////
+char* loadVarToRegister(ILOC_LIST* l, char* varName);
+
 #endif

@@ -499,3 +499,31 @@ int scopeLevelOfID(char* id){
 	           // a análise semântica deve detectar esse erro e a geração de código
 	           // não seria iniciada
 }
+
+// O carregamento de uma variável é feito nos seguintes passos:
+// 1 - Cálcula endereço da variável
+// 		1.1 - Determina qual o escopo da variável para saber o registrador de referência
+//		1.2 - Cria uma operação de addi do registrador de referência com o deslocamento
+//		      da variável em relação a esse registrador salvando o resultado em um 
+//		      novo registrador
+// 2 - Cria uma instrução de load para carregar o endereço da variável em um registrador
+//
+char* loadVarToRegister(ILOC_LIST* l, char* varName){
+	Hash* varContent = getSymbol(varName);	
+	if(varContent!=NULL){	
+		int offset = varContent->offset;
+		int varScopeLevel = scopeLevelOfID(varName);
+		char* address = getNewRegister(); // registrador que vai conter o endereço final
+		if(varScopeLevel == 0){ // global - usa registrador rbss
+			createOperation(l, ADDI, "addI", "rbss", (void*) &offset, address);
+		}
+		else{//local - usa registrador rfp
+			createOperation(l, ADDI, "addI", "rfp", (void*) &offset, address);
+		}
+		char* finalReg = getNewRegister();
+		createOperation(l, LOAD, "load", address, NULL, finalReg);
+		return finalReg;
+	}
+	else return NULL; // nunca deve ocorrer pois esse erro deve ser percebido pela
+					  // análise semântica
+}

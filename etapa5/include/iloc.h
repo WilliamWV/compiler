@@ -2,7 +2,6 @@
 #define ILOC 2
 #include "lexVal.h" //útil para union Value
 #include "everybodyHateLeaks.h"
-#include "hash.h"
 #include "naming.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,10 +79,5 @@ ILOC_OP* createILOCOper(int opcode, char* opSpelling);
 ILOC_ARG* createILOCArg(int argType, void* value);
 
 
-////////////////////////////////////////////////////////////////////////////////
-/// Adiciona operações ILOC a lista "l" para carregar valor da variável      ///
-/// "varName" em um registrador cujo nome é retornado pela função            ///
-////////////////////////////////////////////////////////////////////////////////
-char* loadVarToRegister(ILOC_LIST* l, char* varName);
 
 #endif
