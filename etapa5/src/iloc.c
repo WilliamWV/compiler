@@ -105,6 +105,8 @@ void printListOfOperations(ILOC_LIST *listOp){
 void printOperation(ILOC_OP *oper){
 	
 	printf("%s\t", oper->opSpelling);
+	if(oper->opcode == CBR || oper->opcode == SUB || oper->opcode == ADD || oper->opcode == DIV)
+		printf("\t");
 	int opType = operationSpellType(oper->opcode);
 	switch(opType){
 		case TWO_EQ_ONE:
