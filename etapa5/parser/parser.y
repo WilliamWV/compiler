@@ -1621,8 +1621,30 @@ returnHelper:
 	%empty {isReturn = TRUE;}
 ;
 
-expression: //TODO: operadores unarios
-			expression '^' expression {
+expression:
+	expression '?' {$$ = $1; adicionaFilho($$, criaNodo($2));}
+	| '#' expression {$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '&' expression {$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '*' expression {$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '-' expression {
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		int coercion = unaryArithCoercion($$, $2);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+	}
+	| '+' expression {
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		int coercion = unaryArithCoercion($$, $2);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+	}
+	| '!' expression {
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		int coercion = unaryLogicCoercion($$, $2);
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+	}
+	| 	expression '^' expression {
 		$$ = criaNodo(NULL);
 		adicionaFilho($$, $1); 
 		adicionaFilho($$, criaNodo($2)); 
