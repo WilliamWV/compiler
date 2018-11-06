@@ -887,6 +887,30 @@ do_while:
 
 		int correctOperands =  coercion(BOOL, $5);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+	
+		char *newLabelT = getNewLabel();
+		patch($5->opList, newLabelT, $5->trueList);		
+		int lenT = strlen(newLabelT);
+		char *newLabelTCopy = aloca((lenT+2)*sizeof(char));
+		strcpy(newLabelTCopy, newLabelT);
+		newLabelTCopy[lenT] = ':';
+		newLabelTCopy[lenT+1] = '\0';
+		ILOC_LIST* tempT = createILOCList();
+		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL);
+
+		char *newLabelF = getNewLabel();
+		patch($5->opList, newLabelF, $5->falseList);		
+		int lenF = strlen(newLabelF);
+		char *newLabelFCopy = aloca((lenF+2)*sizeof(char));
+		strcpy(newLabelFCopy, newLabelF);
+		newLabelFCopy[lenF] = ':';
+		newLabelFCopy[lenF+1] = '\0';
+		ILOC_LIST* tempF = createILOCList();
+		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL);
+
+		$$->opList = concatILOC(tempT, $2->opList);
+		$$->opList = concatILOC($$->opList, $5->opList);
+		$$->opList = concatILOC($$->opList, tempF);		
 	}
 ;
 
