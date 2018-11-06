@@ -737,6 +737,33 @@ ifThenElse:
 
 		int correctOperands =  coercion(BOOL, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+		
+		char *newLabelT = getNewLabel();
+		patch($3->opList, newLabelT, $3->trueList);		
+		int lenT = strlen(newLabelT);
+		char *newLabelTCopy = aloca((lenT+2)*sizeof(char));
+		strcpy(newLabelTCopy, newLabelT);
+		newLabelTCopy[lenT] = ':';
+		newLabelTCopy[lenT+1] = '\0';
+		ILOC_LIST* tempT = createILOCList();
+		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL);
+
+		char *newLabelF = getNewLabel();
+		patch($3->opList, newLabelF, $3->falseList);		
+		int lenF = strlen(newLabelF);
+		char *newLabelFCopy = aloca((lenF+2)*sizeof(char));
+		strcpy(newLabelFCopy, newLabelF);
+		newLabelFCopy[lenF] = ':';
+		newLabelFCopy[lenF+1] = '\0';
+		ILOC_LIST* tempF = createILOCList();
+		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL);
+		
+		$$->opList = concatILOC($3->opList, tempT);
+		$$->opList = concatILOC($$->opList, $6->opList);
+		$$->opList = concatILOC($$->opList, tempF);
+		$$->opList = concatILOC($$->opList, $7->opList);
+
+		printListOfOperations($$->opList);
 	}
 ;
 optElse:
@@ -1575,7 +1602,22 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}				
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
+		
+		char *newLabel = getNewLabel();
+		patch($1->opList, newLabel, $1->trueList);
+		$$->trueList = $3->trueList;
+		concatenateLabelsList($$->falseList, $1->falseList);
+		concatenateLabelsList($$->falseList, $3->falseList);
+		
+		int len = strlen(newLabel);
+		char *newLabelCopy = aloca((len+2)*sizeof(char));
+		strcpy(newLabelCopy, newLabel);
+		newLabelCopy[len] = ':';
+		newLabelCopy[len+1] = '\0';
+		createOperation($$->opList, LAB, newLabelCopy, NULL, NULL, NULL);
+		$$->opList = concatILOC($1->opList, $$->opList);
+		$$->opList = concatILOC($$->opList, $3->opList);				
 	};
 	| expression TK_OC_OR expression {
 		$$ = criaNodo(NULL);
@@ -1630,7 +1672,17 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}				
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}			
+		
+		$$->reg = getNewRegister();
+		char *trueLabel = getNewLabel();
+		char *falseLabel = getNewLabel();
+		addNewLabel($$->trueList, trueLabel);
+		addNewLabel($$->falseList, falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_NE", $1->reg, $3->reg , $$->reg);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		$1->opList = concatILOC($1->opList, $3->opList);
+		$$->opList = concatILOC($1->opList, $$->opList);			
 	};
 	| expression TK_OC_GE expression {
 		$$ = criaNodo(NULL);
@@ -1640,6 +1692,16 @@ expression: //TODO: operadores unarios
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
 		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
+		
+		$$->reg = getNewRegister();
+		char *trueLabel = getNewLabel();
+		char *falseLabel = getNewLabel();
+		addNewLabel($$->trueList, trueLabel);
+		addNewLabel($$->falseList, falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_GE", $1->reg, $3->reg , $$->reg);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		$1->opList = concatILOC($1->opList, $3->opList);
+		$$->opList = concatILOC($1->opList, $$->opList);		
 	};
 	| expression TK_OC_LE expression {
 		$$ = criaNodo(NULL);
@@ -1649,6 +1711,16 @@ expression: //TODO: operadores unarios
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
 		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
+		
+		$$->reg = getNewRegister();
+		char *trueLabel = getNewLabel();
+		char *falseLabel = getNewLabel();
+		addNewLabel($$->trueList, trueLabel);
+		addNewLabel($$->falseList, falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_LE", $1->reg, $3->reg , $$->reg);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		$1->opList = concatILOC($1->opList, $3->opList);
+		$$->opList = concatILOC($1->opList, $$->opList);		
 	};
 	| expression '<' expression {
 		$$ = criaNodo(NULL);
@@ -1657,7 +1729,17 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}			
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
+		
+		$$->reg = getNewRegister();
+		char *trueLabel = getNewLabel();
+		char *falseLabel = getNewLabel();
+		addNewLabel($$->trueList, trueLabel);
+		addNewLabel($$->falseList, falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_LT", $1->reg, $3->reg , $$->reg);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		$1->opList = concatILOC($1->opList, $3->opList);
+		$$->opList = concatILOC($1->opList, $$->opList);			
 	};
 	| expression '>' expression {
 		$$ = criaNodo(NULL);
@@ -1667,6 +1749,16 @@ expression: //TODO: operadores unarios
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
 		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}		
+		
+		$$->reg = getNewRegister();
+		char *trueLabel = getNewLabel();
+		char *falseLabel = getNewLabel();
+		addNewLabel($$->trueList, trueLabel);
+		addNewLabel($$->falseList, falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_GT", $1->reg, $3->reg , $$->reg);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		$1->opList = concatILOC($1->opList, $3->opList);
+		$$->opList = concatILOC($1->opList, $$->opList);		
 	};
 	
 	

@@ -85,6 +85,7 @@ ILOC_ARG* createILOCArg(int argType, void* value);
 
 //Adiciona nova label a uma lista de labels a serem patcheadas
 void addNewLabel(Labels *list, char *label);
+void concatenateLabelsList(Labels *list1, Labels *list2);
 
 void printListOfOperations(ILOC_LIST *list);
 void printOperation(ILOC_OP *oper);
@@ -92,5 +93,5 @@ int operationSpellType(int opcode);
 void printArg(ILOC_ARG* arg);
 void patch(ILOC_LIST *listOp, char *newLabel, Labels *targetedLabels);
 void substituteLabels(char *newLabel, char *targetLabel, ILOC_OP *oper);
-
+void printLabels(Labels *list);
 #endif

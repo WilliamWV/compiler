@@ -90,6 +90,12 @@ void addNewLabel(Labels *list, char *label){
 	list->labels[list->numberOfLabels - 1] = label;
 }
 
+void concatenateLabelsList(Labels *list1, Labels *list2){
+	for(int i = 0; i < list2->numberOfLabels; i++){
+		addNewLabel(list1, list2->labels[i]);
+	}
+}
+
 void printListOfOperations(ILOC_LIST *listOp){
 	for(int i = 0; i< listOp->operations; i++){
 		printOperation(listOp->list[i]);
@@ -240,5 +246,13 @@ void patch(ILOC_LIST *listOp, char *newLabel, Labels *targetedLabels){
 			substituteLabels(newLabel, targetedLabels->labels[i], listOp->list[j]);
 		}
 	}
+}
+
+void printLabels(Labels *list){
+	printf("Labels da lista atual:\n\t");
+	for(int i = 0; i < list->numberOfLabels; i++){
+		printf("%s ", list->labels[i]);
+	}
+	printf("\n");
 }
 
