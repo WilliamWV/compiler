@@ -469,6 +469,7 @@ componente:
 			
 		addArgsToSymbol($1->kids[kid]->token->value.str, currentArgs);
 		clearCurrentArgs();
+		$$->opList = $4->opList;
 		closeTable();
 		
 	}
@@ -678,6 +679,7 @@ blocoComandos:
 		$$ = criaNodo($1); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4));
+		$$->opList = $3->opList;
 		closeTable();                     //Fecha escopo local
 	}
 ;
@@ -688,6 +690,7 @@ blocoSemEscopo:
 		$$ = criaNodo($1);
 		adicionaFilho($$, $2);
 		adicionaFilho($$, criaNodo($3));
+		$$->opList = $2->opList;
 	}
 ;
 comando:
@@ -696,7 +699,7 @@ comando:
 ; //Coloquei a regra do case aqui pois na especificação ele não está atrelado ao switch, mas apenas como marcador de lugar além disso não possui ';' no final e não pode ser usado no for
 comandos :
 	%empty					{$$ = criaNodo(NULL);}
-	| comando comandos		{$$ = $1; adicionaFilho($$, $2);}
+	| comando comandos		{$$ = $1; adicionaFilho($$, $2); $$->opList = concatILOC($1->opList, $2->opList);}
 ;
 
 
@@ -711,15 +714,15 @@ comandoSimples:
 
 comandosSemVirgula: //comandos que são permitidos dentro das listas do for
 	localVarDefinition		{$$ = $1;}
-	| assignment			{$$ = $1; printListOfOperations($1->opList);}
+	| assignment			{$$ = $1; /*printListOfOperations($$->opList);*/}
 	| input					{$$ = $1;}
 	| shift					{$$ = $1;}
 	| TK_PR_BREAK			{$$ = criaNodo($1);}
 	| TK_PR_CONTINUE		{$$ = criaNodo($1);}
 	| return				{$$ = $1;}
-	| ifThenElse			{$$ = $1;}
-	| while_do				{$$ = $1;}
-	| do_while				{$$ = $1;}
+	| ifThenElse			{$$ = $1; /*printListOfOperations($$->opList);*/}
+	| while_do				{$$ = $1; /*printListOfOperations($$->opList);*/}
+	| do_while				{$$ = $1; /*printListOfOperations($$->opList);*/}
 	| switch				{$$ = $1;}
 	| pipe					{$$ = $1;}
 	| blocoComandos			{$$ = $1;}
@@ -748,6 +751,18 @@ ifThenElse:
 		ILOC_LIST* tempT = createILOCList();
 		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL);
 
+		char *newLabelAfterF = getNewLabel();		
+		int lenAfterF = strlen(newLabelAfterF);
+		char *newLabelAfterFCopy = aloca((lenAfterF+2)*sizeof(char));
+		strcpy(newLabelAfterFCopy, newLabelAfterF);
+		newLabelAfterFCopy[lenAfterF] = ':';
+		newLabelAfterFCopy[lenAfterF+1] = '\0';
+		ILOC_LIST* tempAfterF = createILOCList();
+		createOperation(tempAfterF, LAB, newLabelAfterFCopy, NULL, NULL, NULL);
+
+		ILOC_LIST* ignoreF = createILOCList();
+		createOperation(ignoreF, JUMPI, "jumpI", newLabelAfterF, NULL, NULL);
+
 		char *newLabelF = getNewLabel();
 		patch($3->opList, newLabelF, $3->falseList);		
 		int lenF = strlen(newLabelF);
@@ -760,15 +775,19 @@ ifThenElse:
 		
 		$$->opList = concatILOC($3->opList, tempT);
 		$$->opList = concatILOC($$->opList, $6->opList);
+		$$->opList = concatILOC($$->opList, ignoreF);
 		$$->opList = concatILOC($$->opList, tempF);
-		$$->opList = concatILOC($$->opList, $7->opList);
-
-		printListOfOperations($$->opList);
+		$$->opList = concatILOC($$->opList, $7->opList);		
+		$$->opList = concatILOC($$->opList, tempAfterF);
 	}
 ;
 optElse:
 	%empty							{$$ = criaNodo(NULL);}
-	| TK_PR_ELSE blocoComandos		{$$ = criaNodo($1); adicionaFilho($$, $2);}
+	| TK_PR_ELSE blocoComandos	{
+		$$ = criaNodo($1);
+		adicionaFilho($$, $2);
+		$$->opList = $2->opList;
+	}
 ;
 foreach:
 	TK_PR_FOREACH '(' TK_IDENTIFICADOR ':' foreachList ')' blocoComandos {
@@ -814,9 +833,47 @@ while_do:
 		adicionaFilho($$, criaNodo($4)); 
 		adicionaFilho($$, criaNodo($5)); 
 		adicionaFilho($$, $6);
-
 		int correctOperands =  coercion(BOOL, $3);
 		if (correctOperands != 0){ returnError = correctOperands; nodeNotAdded = $$; YYABORT;}
+	
+		char *newLabelT = getNewLabel();
+		patch($3->opList, newLabelT, $3->trueList);		
+		int lenT = strlen(newLabelT);
+		char *newLabelTCopy = aloca((lenT+2)*sizeof(char));
+		strcpy(newLabelTCopy, newLabelT);
+		newLabelTCopy[lenT] = ':';
+		newLabelTCopy[lenT+1] = '\0';
+		ILOC_LIST* tempT = createILOCList();
+		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL);
+
+		char *newLabelF = getNewLabel();
+		patch($3->opList, newLabelF, $3->falseList);		
+		int lenF = strlen(newLabelF);
+		char *newLabelFCopy = aloca((lenF+2)*sizeof(char));
+		strcpy(newLabelFCopy, newLabelF);
+		newLabelFCopy[lenF] = ':';
+		newLabelFCopy[lenF+1] = '\0';
+		ILOC_LIST* tempF = createILOCList();
+		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL);
+
+		char *newLabelWhile = getNewLabel();
+		int lenWhile = strlen(newLabelWhile);
+		char *newLabelWhileCopy = aloca((lenWhile+2)*sizeof(char));
+		strcpy(newLabelWhileCopy, newLabelWhile);
+		newLabelWhileCopy[lenWhile] = ':';
+		newLabelWhileCopy[lenWhile+1] = '\0';
+		ILOC_LIST* tempWhile = createILOCList();
+		createOperation(tempWhile, LAB, newLabelWhileCopy, NULL, NULL, NULL);
+
+		ILOC_LIST* tempGoto = createILOCList();		
+		createOperation(tempGoto, JUMPI, "jumpI", newLabelWhile, NULL, NULL);
+		
+		$$->opList = concatILOC(tempWhile, $3->opList);
+		$$->opList = concatILOC($$->opList, tempT);
+		$$->opList = concatILOC($$->opList, $6->opList);
+		$$->opList = concatILOC($$->opList, tempGoto);
+		$$->opList = concatILOC($$->opList, tempF);		
+
 	}
 ;
 do_while:
@@ -1626,7 +1683,22 @@ expression: //TODO: operadores unarios
 		adicionaFilho($$, $3);
 		
 		int coercion = expressionCoercion($$, $1, $2, $3);		
-		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}			
+		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+		
+		char *newLabel = getNewLabel();
+		patch($1->opList, newLabel, $1->falseList);
+		$$->falseList = $3->falseList;
+		concatenateLabelsList($$->trueList, $1->trueList);
+		concatenateLabelsList($$->trueList, $3->trueList);
+		
+		int len = strlen(newLabel);
+		char *newLabelCopy = aloca((len+2)*sizeof(char));
+		strcpy(newLabelCopy, newLabel);
+		newLabelCopy[len] = ':';
+		newLabelCopy[len+1] = '\0';
+		createOperation($$->opList, LAB, newLabelCopy, NULL, NULL, NULL);
+		$$->opList = concatILOC($1->opList, $$->opList);
+		$$->opList = concatILOC($$->opList, $3->opList);
 	};
 	| expression '|' expression {
 		$$ = criaNodo(NULL);

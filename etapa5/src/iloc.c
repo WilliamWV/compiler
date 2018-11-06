@@ -141,7 +141,14 @@ void printOperation(ILOC_OP *oper){
 				printArg(oper->args[0]);
 			} 
 			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
-		break;       
+		break;    
+		case ONE_MINUS_ONE:
+			if(oper->argsNum == 1){
+				printf(" -> ");
+				printArg(oper->args[0]);
+			} 
+			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
+		break;    
 		case ONE_MINUS_TWO:
 			if(oper->argsNum == 3){
 				printArg(oper->args[0]);
@@ -208,6 +215,7 @@ int operationSpellType(int opcode){
 		case CSTOREA0:
 			return ONE_EQ_TWO; 
 		case JUMPI:
+			return ONE_MINUS_ONE;
 		case JUMP:
 			return ZERO_MINUS_ONE;
 		case CBR:

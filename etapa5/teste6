@@ -1,0 +1,9 @@
+int f()
+{
+	while(1 < 2 || 3 == 4) do{
+		int a;
+		a = 5;
+	};
+	int b;
+	b = 6;
+}	

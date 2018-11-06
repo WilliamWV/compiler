@@ -62,8 +62,11 @@ void exitAndFree(int exitCode, char *identifier, Node *danglingNode){
 int main (int argc, char **argv)
 {
 	int ret = yyparse(); 
+
 	//descompila (arvore);
-	//printaCodigo(arvore->opList);
+	if(ret != 1)
+		printListOfOperations(((Node*)arvore)->opList);
+
 	#if DEBUG == TRUE
 		contaNodosNaRaiz(arvore);
 		printf("\nTokens criados: %d\nNodos na raiz: %d\nNodos criados: %d\n", tokensCriados, contaNodosRaiz, nodosCriados);

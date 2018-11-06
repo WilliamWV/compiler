@@ -1,0 +1,11 @@
+int f()
+{
+	if(1 < 2 || 3 == 4) then{
+		int a;
+		a = 5;
+	}
+	else{
+		int b;
+		b = 6;
+	};
+}	

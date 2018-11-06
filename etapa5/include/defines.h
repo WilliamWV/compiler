@@ -108,6 +108,7 @@
 #define ZERO_MINUS_ONE  903  // nenhum a esquerda seguido de sinal -> seguido de um argumento a esquerda
 #define ONE_MINUS_TWO   904
 #define TWO_MINUS_ONE   905
+#define ONE_MINUS_ONE	906
 
 //Tipos de argumento de operações ILOC
 #define IMED 700   // valor constante imediato
