@@ -67,18 +67,41 @@ ILOC_ARG* wellFormedArg(void* arg){
 	if(a[0] == 'L') return createILOCArg(LAB, arg);
 	else return createILOCArg(IMED, arg);
 }
-void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* arg2, void* arg3){
+//imed é uma flag que vai indicar se algum dos argumentos é intermediário,
+//a indicação é feita por bit ou seja, se o bit 1 estiver em 1 o argumento 1
+// é imediato:
+//ex: imed = 3 : argumento 1 e 2 imediatos
+//ex: imed = 6 : argumento 2 e 3 imediatos
+//ex: imed = 4 : argumento 3 imediato
+void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* arg2, void* arg3, int imed){
 	ILOC_OP* oper = createILOCOper(opcode, opSpell);
 	if(arg1 != NULL){
-		ILOC_ARG* a1 = wellFormedArg(arg1);
+		ILOC_ARG* a1;
+		if(imed%2 == 1){//imediato
+			a1 = createILOCArg(IMED, arg1);	
+		}else{
+			a1 = wellFormedArg(arg1);
+		}
 		addILOCArg(oper, a1);
 	}
 	if(arg2 != NULL){
-		ILOC_ARG* a2 = wellFormedArg(arg2);
+		ILOC_ARG* a2;
+		if((imed/2)%2 == 1){		
+			a2 = createILOCArg(IMED, arg2);		
+		}
+		else{
+			a2 = wellFormedArg(arg2);
+		}
 		addILOCArg(oper, a2);
 	}
 	if(arg3 != NULL){
-		ILOC_ARG* a3 = wellFormedArg(arg3);
+		ILOC_ARG* a3;
+		if((imed/4)%2 == 1){
+			a3 = createILOCArg(IMED, arg3);		
+		}		
+		else{
+			a3 = wellFormedArg(arg3);
+		}
 		addILOCArg(oper, a3);
 	}
 	addILOCToList(l, oper);

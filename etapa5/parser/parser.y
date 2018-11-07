@@ -749,7 +749,7 @@ ifThenElse:
 		newLabelTCopy[lenT] = ':';
 		newLabelTCopy[lenT+1] = '\0';
 		ILOC_LIST* tempT = createILOCList();
-		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL);
+		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL, 0);
 
 		char *newLabelAfterF = getNewLabel();		
 		int lenAfterF = strlen(newLabelAfterF);
@@ -758,10 +758,10 @@ ifThenElse:
 		newLabelAfterFCopy[lenAfterF] = ':';
 		newLabelAfterFCopy[lenAfterF+1] = '\0';
 		ILOC_LIST* tempAfterF = createILOCList();
-		createOperation(tempAfterF, LAB, newLabelAfterFCopy, NULL, NULL, NULL);
+		createOperation(tempAfterF, LAB, newLabelAfterFCopy, NULL, NULL, NULL, 0);
 
 		ILOC_LIST* ignoreF = createILOCList();
-		createOperation(ignoreF, JUMPI, "jumpI", newLabelAfterF, NULL, NULL);
+		createOperation(ignoreF, JUMPI, "jumpI", newLabelAfterF, NULL, NULL, 0);
 
 		char *newLabelF = getNewLabel();
 		patch($3->opList, newLabelF, $3->falseList);		
@@ -771,7 +771,7 @@ ifThenElse:
 		newLabelFCopy[lenF] = ':';
 		newLabelFCopy[lenF+1] = '\0';
 		ILOC_LIST* tempF = createILOCList();
-		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL);
+		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL, 0);
 		
 		$$->opList = concatILOC($3->opList, tempT);
 		$$->opList = concatILOC($$->opList, $6->opList);
@@ -844,7 +844,7 @@ while_do:
 		newLabelTCopy[lenT] = ':';
 		newLabelTCopy[lenT+1] = '\0';
 		ILOC_LIST* tempT = createILOCList();
-		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL);
+		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL, 0);
 
 		char *newLabelF = getNewLabel();
 		patch($3->opList, newLabelF, $3->falseList);		
@@ -854,7 +854,7 @@ while_do:
 		newLabelFCopy[lenF] = ':';
 		newLabelFCopy[lenF+1] = '\0';
 		ILOC_LIST* tempF = createILOCList();
-		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL);
+		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL, 0);
 
 		char *newLabelWhile = getNewLabel();
 		int lenWhile = strlen(newLabelWhile);
@@ -863,10 +863,10 @@ while_do:
 		newLabelWhileCopy[lenWhile] = ':';
 		newLabelWhileCopy[lenWhile+1] = '\0';
 		ILOC_LIST* tempWhile = createILOCList();
-		createOperation(tempWhile, LAB, newLabelWhileCopy, NULL, NULL, NULL);
+		createOperation(tempWhile, LAB, newLabelWhileCopy, NULL, NULL, NULL, 0);
 
 		ILOC_LIST* tempGoto = createILOCList();		
-		createOperation(tempGoto, JUMPI, "jumpI", newLabelWhile, NULL, NULL);
+		createOperation(tempGoto, JUMPI, "jumpI", newLabelWhile, NULL, NULL, 0);
 		
 		$$->opList = concatILOC(tempWhile, $3->opList);
 		$$->opList = concatILOC($$->opList, tempT);
@@ -896,7 +896,7 @@ do_while:
 		newLabelTCopy[lenT] = ':';
 		newLabelTCopy[lenT+1] = '\0';
 		ILOC_LIST* tempT = createILOCList();
-		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL);
+		createOperation(tempT, LAB, newLabelTCopy, NULL, NULL, NULL, 0);
 
 		char *newLabelF = getNewLabel();
 		patch($5->opList, newLabelF, $5->falseList);		
@@ -906,7 +906,7 @@ do_while:
 		newLabelFCopy[lenF] = ':';
 		newLabelFCopy[lenF+1] = '\0';
 		ILOC_LIST* tempF = createILOCList();
-		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL);
+		createOperation(tempF, LAB, newLabelFCopy, NULL, NULL, NULL, 0);
 
 		$$->opList = concatILOC(tempT, $2->opList);
 		$$->opList = concatILOC($$->opList, $5->opList);
@@ -1368,7 +1368,7 @@ assignment:
 			// 3) Armazena conteúdo do registrador da expressão nesse endereço
 			$$->opList = concatILOC($$->opList, $3->opList);
 			char* address = calculateAddressOfVar($$->opList, $1->value.str);
-			createOperation($$->opList, STORE, "store", $3->reg, address, NULL);
+			createOperation($$->opList, STORE, "store", $3->reg, address, NULL, 0);
 		}
 		
 	}
@@ -1669,7 +1669,7 @@ expression:
 			$$->opList = concatILOC($$->opList, $1->opList);
 			$$->opList = concatILOC($$->opList, $3->opList);
 			$$->reg = getNewRegister();
-			createOperation($$->opList, DIV, "div", $1->reg, $3->reg, $$->reg);
+			createOperation($$->opList, DIV, "div", $1->reg, $3->reg, $$->reg, 0);
 			//printf("Lista de operações na divisão:\n");
 			//printILOCList($$->opList); 
 		}		
@@ -1688,7 +1688,7 @@ expression:
 			$$->opList = concatILOC($$->opList, $1->opList);
 			$$->opList = concatILOC($$->opList, $3->opList);
 			$$->reg = getNewRegister();
-			createOperation($$->opList, MULT, "mult", $1->reg, $3->reg, $$->reg); 
+			createOperation($$->opList, MULT, "mult", $1->reg, $3->reg, $$->reg, 0); 
 			//printf("Lista de operações na multiplicação:\n");
 			//printILOCList($$->opList);
 		}					
@@ -1722,7 +1722,7 @@ expression:
 		strcpy(newLabelCopy, newLabel);
 		newLabelCopy[len] = ':';
 		newLabelCopy[len+1] = '\0';
-		createOperation($$->opList, LAB, newLabelCopy, NULL, NULL, NULL);
+		createOperation($$->opList, LAB, newLabelCopy, NULL, NULL, NULL, 0);
 		$$->opList = concatILOC($1->opList, $$->opList);
 		$$->opList = concatILOC($$->opList, $3->opList);				
 	};
@@ -1746,7 +1746,7 @@ expression:
 		strcpy(newLabelCopy, newLabel);
 		newLabelCopy[len] = ':';
 		newLabelCopy[len+1] = '\0';
-		createOperation($$->opList, LAB, newLabelCopy, NULL, NULL, NULL);
+		createOperation($$->opList, LAB, newLabelCopy, NULL, NULL, NULL, 0);
 		$$->opList = concatILOC($1->opList, $$->opList);
 		$$->opList = concatILOC($$->opList, $3->opList);
 	};
@@ -1782,8 +1782,8 @@ expression:
 		char *falseLabel = getNewLabel();
 		addNewLabel($$->trueList, trueLabel);
 		addNewLabel($$->falseList, falseLabel);
-		createOperation($$->opList, CMP_EQ, "cmp_EQ", $1->reg, $3->reg , $$->reg);
-		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_EQ", $1->reg, $3->reg , $$->reg, 0);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel, 0);
 		$1->opList = concatILOC($1->opList, $3->opList);
 		$$->opList = concatILOC($1->opList, $$->opList);
 	};
@@ -1801,8 +1801,8 @@ expression:
 		char *falseLabel = getNewLabel();
 		addNewLabel($$->trueList, trueLabel);
 		addNewLabel($$->falseList, falseLabel);
-		createOperation($$->opList, CMP_EQ, "cmp_NE", $1->reg, $3->reg , $$->reg);
-		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_NE", $1->reg, $3->reg , $$->reg, 0);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel, 0);
 		$1->opList = concatILOC($1->opList, $3->opList);
 		$$->opList = concatILOC($1->opList, $$->opList);			
 	};
@@ -1820,8 +1820,8 @@ expression:
 		char *falseLabel = getNewLabel();
 		addNewLabel($$->trueList, trueLabel);
 		addNewLabel($$->falseList, falseLabel);
-		createOperation($$->opList, CMP_EQ, "cmp_GE", $1->reg, $3->reg , $$->reg);
-		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_GE", $1->reg, $3->reg , $$->reg, 0);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel, 0);
 		$1->opList = concatILOC($1->opList, $3->opList);
 		$$->opList = concatILOC($1->opList, $$->opList);		
 	};
@@ -1839,8 +1839,8 @@ expression:
 		char *falseLabel = getNewLabel();
 		addNewLabel($$->trueList, trueLabel);
 		addNewLabel($$->falseList, falseLabel);
-		createOperation($$->opList, CMP_EQ, "cmp_LE", $1->reg, $3->reg , $$->reg);
-		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_LE", $1->reg, $3->reg , $$->reg, 0);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel, 0);
 		$1->opList = concatILOC($1->opList, $3->opList);
 		$$->opList = concatILOC($1->opList, $$->opList);		
 	};
@@ -1858,8 +1858,8 @@ expression:
 		char *falseLabel = getNewLabel();
 		addNewLabel($$->trueList, trueLabel);
 		addNewLabel($$->falseList, falseLabel);
-		createOperation($$->opList, CMP_EQ, "cmp_LT", $1->reg, $3->reg , $$->reg);
-		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_LT", $1->reg, $3->reg , $$->reg, 0);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel, 0);
 		$1->opList = concatILOC($1->opList, $3->opList);
 		$$->opList = concatILOC($1->opList, $$->opList);			
 	};
@@ -1877,8 +1877,8 @@ expression:
 		char *falseLabel = getNewLabel();
 		addNewLabel($$->trueList, trueLabel);
 		addNewLabel($$->falseList, falseLabel);
-		createOperation($$->opList, CMP_EQ, "cmp_GT", $1->reg, $3->reg , $$->reg);
-		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel);
+		createOperation($$->opList, CMP_EQ, "cmp_GT", $1->reg, $3->reg , $$->reg, 0);
+		createOperation($$->opList, CBR, "cbr", $$->reg, trueLabel , falseLabel, 0);
 		$1->opList = concatILOC($1->opList, $3->opList);
 		$$->opList = concatILOC($1->opList, $$->opList);		
 	};
@@ -1902,7 +1902,7 @@ expression:
 			$$->opList = concatILOC($$->opList, $1->opList);
 			$$->opList = concatILOC($$->opList, $3->opList);
 			$$->reg = getNewRegister();
-			createOperation($$->opList, ADD, "add", $1->reg, $3->reg, $$->reg); 
+			createOperation($$->opList, ADD, "add", $1->reg, $3->reg, $$->reg, 0); 
 			//printf("Lista de operações na adição:\n");
 			//printILOCList($$->opList);
 		}	
@@ -1920,7 +1920,7 @@ expression:
 			$$->opList = concatILOC($$->opList, $1->opList);
 			$$->opList = concatILOC($$->opList, $3->opList);
 			$$->reg = getNewRegister();
-			createOperation($$->opList, SUB, "sub", $1->reg, $3->reg, $$->reg);
+			createOperation($$->opList, SUB, "sub", $1->reg, $3->reg, $$->reg, 0);
 			//printf("Lista de operações na subtração:\n");
 			//printILOCList($$->opList);
 		}								
@@ -2030,7 +2030,7 @@ operands:
 		$$ = criaNodo($1);
 		$$->type = INT;
 		$$->reg = getNewRegister();
-		createOperation($$->opList, LOADI, "loadI", (void*) &($1->value.i), $$->reg, NULL);
+		createOperation($$->opList, LOADI, "loadI", (void*) &($1->value.i), $$->reg, NULL, ARG1_IMED);
 	}
 	| TK_LIT_FLOAT		{$$ = criaNodo($1); $$->type = FLOAT;}
 	| TK_LIT_TRUE		{$$ = criaNodo($1); $$->type = BOOL;}

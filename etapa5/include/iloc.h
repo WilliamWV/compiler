@@ -77,7 +77,7 @@ void addILOCArg(ILOC_OP* oper, ILOC_ARG* arg);
 /// argumentos obedecem as convenções de nomeação, se existem menos de três  ///
 /// argumentos na operação basta deixar os que sobram NULL
 ////////////////////////////////////////////////////////////////////////////////
-void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* arg2, void* arg3);
+void createOperation(ILOC_LIST* l, int opcode, char* opSpell, void* arg1, void* arg2, void* arg3, int imed);
 
 //Funções auxiliares
 ILOC_OP* createILOCOper(int opcode, char* opSpelling);

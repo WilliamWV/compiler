@@ -183,5 +183,8 @@
 //NOP 0x1700
 #define NOP        0x1700
 
-
+//argumentos são imediatos:
+#define ARG1_IMED 1
+#define ARG2_IMED 2
+#define ARG3_IMED 4
 

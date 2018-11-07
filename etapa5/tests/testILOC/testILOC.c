@@ -53,15 +53,15 @@ int main(){
 	
 	printf("Adicionando operação divI r1, 12 => r3 em l3\n");	
 	int doze = 12;
-	createOperation(l3, DIVI, "divI", "r1", (void*) &doze, "r3");
+	createOperation(l3, DIVI, "divI", "r1", (void*) &doze, "r3", ARG2_IMED);
 	printf("Adicionando operação load r1 => r2\n");
-	createOperation(l3, LOAD, "load", "r1", NULL, "r2");
+	createOperation(l3, LOAD, "load", "r1", NULL, "r2", 0);
 	printf("Adicionando operação jump -> r1\n");
-	createOperation(l3, JUMP, "jump", "r1", NULL, NULL);
+	createOperation(l3, JUMP, "jump", "r1", NULL, NULL, 0);
 	printf("Adicionando operação nop\n");
-	createOperation(l3, NOP, "nop", NULL, NULL, NULL);
+	createOperation(l3, NOP, "nop", NULL, NULL, NULL, 0);
 	printf("Adicionando operação jumpI -> L1\n");
-	createOperation(l3, JUMPI, "jumpI", "L1", NULL, NULL);
+	createOperation(l3, JUMPI, "jumpI", "L1", NULL, NULL, 0);
 
 	printf("l3:\n");
 	printILOCList(l3);	

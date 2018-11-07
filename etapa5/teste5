@@ -2,7 +2,7 @@ int f()
 {
 	if(1 < 2 || 3 == 4) then{
 		int a;
-		a = 5;
+		a = 114;
 	}
 	else{
 		int b;

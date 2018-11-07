@@ -510,10 +510,10 @@ char* calculateAddressOfVar(ILOC_LIST* l, char* varName){
 		int varScopeLevel = scopeLevelOfID(varName);
 		char* address = getNewRegister(); // registrador que vai conter o endereço final
 		if(varScopeLevel == 0){ // global - usa registrador rbss
-			createOperation(l, ADDI, "addI", "rbss", (void*) &offset, address);
+			createOperation(l, ADDI, "addI", "rbss", (void*) &offset, address, ARG2_IMED);
 		}
 		else{//local - usa registrador rfp
-			createOperation(l, ADDI, "addI", "rfp", (void*) &offset, address);
+			createOperation(l, ADDI, "addI", "rfp", (void*) &offset, address, ARG2_IMED);
 		}
 		
 		return address;
@@ -537,13 +537,13 @@ char* loadVarToRegister(ILOC_LIST* l, char* varName){
 		int varScopeLevel = scopeLevelOfID(varName);
 		char* address = getNewRegister(); // registrador que vai conter o endereço final
 		if(varScopeLevel == 0){ // global - usa registrador rbss
-			createOperation(l, ADDI, "addI", "rbss", (void*) &offset, address);
+			createOperation(l, ADDI, "addI", "rbss", (void*) &offset, address, ARG2_IMED);
 		}
 		else{//local - usa registrador rfp
-			createOperation(l, ADDI, "addI", "rfp", (void*) &offset, address);
+			createOperation(l, ADDI, "addI", "rfp", (void*) &offset, address, ARG2_IMED);
 		}
 		char* finalReg = getNewRegister();
-		createOperation(l, LOAD, "load", address, NULL, finalReg);
+		createOperation(l, LOAD, "load", address, NULL, finalReg, 0);
 		return finalReg;
 	}
 	else return NULL; // nunca deve ocorrer pois esse erro deve ser percebido pela
