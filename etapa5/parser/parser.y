@@ -1635,6 +1635,16 @@ expression:
 		adicionaFilho($$, $2);
 		int coercion = unaryArithCoercion($$, $2);
 		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+		//gera código inverte o sinal fazendo subtraindo de zero o valor do registrador
+		if($2->reg!=NULL){
+			$$->opList = concatILOC($$->opList, $2->opList);
+			$$->reg = getNewRegister();
+			//rsubI   r1, c2  =>  r3    // r3 = c2 - r1
+			int zero = 0;
+			createOperation($$->opList, RSUBI, "rsubI", $2->reg, (void*) &zero, $$->reg, ARG2_IMED);
+			//printf("Lista de operações na divisão:\n");
+			//printILOCList($$->opList); 
+		}
 	}
 	| '+' expression %prec UNARY {
 		//printf("unario\n");
@@ -1642,6 +1652,13 @@ expression:
 		adicionaFilho($$, $2);
 		int coercion = unaryArithCoercion($$, $2);
 		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
+		
+		if($2->reg!=NULL){
+			$$->opList = concatILOC($$->opList, $2->opList);
+			$$->reg = $2->reg; // apenas copia o registrador já que essa operação não muda o valor			
+			//printf("Lista de operações na divisão:\n");
+			//printILOCList($$->opList); 
+		}
 	}
 	| '!' expression {
 		//printf("unario\n");

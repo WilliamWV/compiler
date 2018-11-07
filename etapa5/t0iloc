@@ -15,57 +15,61 @@ addI	rfp, 4 => r9
 load	r9 => r10
 addI	rbss, 4 => r11
 store	r10 => r11
-addI	rbss, 0 => r13
-load	r13 => r14
-addI	rbss, 4 => r15
+loadI	10 => r12
+rsubI	r12, 0 => r13
+addI	rbss, 8 => r14
+store	r13 => r14
+addI	rbss, 0 => r15
 load	r15 => r16
-cmp_GT	r14, r16 -> r17
-cbr		r17 -> L5, L4
+addI	rbss, 4 => r17
+load	r17 => r18
+cmp_GT	r16, r18 -> r19
+cbr		r19 -> L5, L4
 L4:	
-addI	rbss, 8 => r18
-load	r18 => r19
-addI	rfp, 4 => r20
+addI	rbss, 8 => r20
 load	r20 => r21
-cmp_LT	r19, r21 -> r22
-cbr		r22 -> L5, L7
+addI	rfp, 4 => r22
+load	r22 => r23
+cmp_LT	r21, r23 -> r24
+cbr		r24 -> L5, L7
 L5:	
-loadI	0 => r23
-addI	rfp, 0 => r24
-store	r23 => r24
-jumpI	 -> L6
-L7:	
-loadI	2 => r25
+loadI	0 => r25
 addI	rfp, 0 => r26
 store	r25 => r26
-L6:	
-loadI	4 => r27
-addI	rfp, 12 => r28
+jumpI	 -> L6
+L7:	
+loadI	2 => r27
+addI	rfp, 0 => r28
 store	r27 => r28
+L6:	
+loadI	4 => r29
+addI	rfp, 12 => r30
+store	r29 => r30
 L15:	
-addI	rfp, 8 => r29
-load	r29 => r30
-loadI	0 => r31
-cmp_GE	r30, r31 -> r32
-cbr		r32 -> L12, L14
+addI	rfp, 8 => r31
+load	r31 => r32
+loadI	0 => r33
+cmp_GE	r32, r33 -> r34
+cbr		r34 -> L12, L14
 L12:	
-addI	rfp, 12 => r33
-load	r33 => r34
-addI	rfp, 4 => r35
+addI	rfp, 12 => r35
 load	r35 => r36
-cmp_LT	r34, r36 -> r37
-cbr		r37 -> L13, L14
+addI	rfp, 4 => r37
+load	r37 => r38
+cmp_LT	r36, r38 -> r39
+cbr		r39 -> L13, L14
 L13:	
-addI	rfp, 8 => r38
-load	r38 => r39
-loadI	1 => r40
-sub		r39, r40 => r41
-addI	rfp, 8 => r42
-store	r41 => r42
-addI	rfp, 4 => r43
-load	r43 => r44
-loadI	1 => r45
-add		r44, r45 => r46
-addI	rfp, 4 => r47
-store	r46 => r47
+addI	rfp, 8 => r40
+load	r40 => r41
+loadI	1 => r42
+sub		r41, r42 => r43
+addI	rfp, 8 => r44
+store	r43 => r44
+addI	rfp, 4 => r45
+load	r45 => r46
+loadI	1 => r47
+add		r46, r47 => r48
+addI	rfp, 4 => r49
+store	r48 => r49
 jumpI	 -> L15
 L14:	
