@@ -1695,7 +1695,7 @@ expression:
 		}		
 	};
 	| expression '*' expression {
-		printf("mult\n");
+		//printf("mult\n");
 		$$ = criaNodo(NULL);
 		adicionaFilho($$, $1); 
 		adicionaFilho($$, criaNodo($2)); 

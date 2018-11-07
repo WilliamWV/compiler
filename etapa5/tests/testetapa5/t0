@@ -27,3 +27,13 @@ int main(){
 		y = y + 1;
 	};
 }
+/*
+	Ao final espera-se:
+	a = 2;
+	b = 8;
+	c = -10;
+	x = 0;
+	y = 11;
+	z = -1;
+	w = 4;
+*/

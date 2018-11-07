@@ -1,0 +1,18 @@
+loadI	0 => r0
+addI	rfp, 0 => r1
+store	r0 => r1
+L4:	
+addI	rfp, 0 => r2
+load	r2 => r3
+loadI	10 => r4
+cmp_LT	r3, r4 -> r5
+cbr		r5 -> L2, L3
+L2:	
+addI	rfp, 0 => r6
+load	r6 => r7
+loadI	1 => r8
+add		r7, r8 => r9
+addI	rfp, 0 => r10
+store	r9 => r10
+jumpI	 -> L4
+L3:	
