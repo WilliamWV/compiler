@@ -63,9 +63,9 @@ int main (int argc, char **argv)
 {
 	int ret = yyparse(); 
 
-	//descompila (arvore);
-	if(ret != 1)
-		printListOfOperations(((Node*)arvore)->opList);
+	descompila (arvore);
+	//if(ret != 1)
+		//printListOfOperations(((Node*)arvore)->opList);
 
 	#if DEBUG == TRUE
 		contaNodosNaRaiz(arvore);

@@ -1,10 +1,6 @@
 Terminals unused in grammar
 
    TOKEN_ERRO
-   UMINUS
-   UPLUS
-   UPOINTER
-   UADDRESS
 
 
 Grammar
@@ -335,143 +331,140 @@ TK_OC_NE (298) 163
 TK_OC_LE (299) 97 98 99 100 101 102 103 104 105 106 107 108 109 110
     111 112 165
 TK_OC_GE (300) 164
-UMINUS (301)
-UPLUS (302)
-UPOINTER (303)
-UADDRESS (304)
+UNARY (301)
 
 
 Nonterminals, with rules where they appear
 
-$accept (75)
+$accept (72)
     on left: 0
-programa (76)
+programa (73)
     on left: 1, on right: 0
-scopeOpenner (77)
+scopeOpenner (74)
     on left: 2, on right: 1 9 15 52 80
-componentes (78)
+componentes (75)
     on left: 3 4, on right: 1 4
-idThatCanBeFuncType (79)
+idThatCanBeFuncType (76)
     on left: 5, on right: 8
-idThatCanBeFuncName (80)
+idThatCanBeFuncName (77)
     on left: 6, on right: 13
-componente (81)
+componente (78)
     on left: 7 8 9, on right: 4
-depoisDeIdent (82)
+depoisDeIdent (79)
     on left: 10 11 12 13, on right: 8
-fechaVarOuFunc (83)
+fechaVarOuFunc (80)
     on left: 14 15, on right: 13
-userTypeFunc (84)
+userTypeFunc (81)
     on left: 16, on right: 15
-encapsulamento (85)
+encapsulamento (82)
     on left: 17 18 19 20, on right: 42
-tiposPrimitivos (86)
+tiposPrimitivos (83)
     on left: 21 22 23 24 25, on right: 12 26 42 49 93 94 95 96 97 98
     99 100 101 102 103 104 105 106 107 108 109 110 111 112
-tipo (87)
+tipo (84)
     on left: 26 27, on right: 10 11 30 31 50
-static (88)
+static (85)
     on left: 28 29, on right: 10
-tipoConst (89)
+tipoConst (86)
     on left: 30 31, on right: 48
-literais (90)
+literais (87)
     on left: 32 33 34 35 36 37, on right: 105 107 109 111
-novoTipo (91)
+novoTipo (88)
     on left: 38, on right: 7
-listaCampos (92)
+listaCampos (89)
     on left: 39, on right: 38
-list (93)
+list (90)
     on left: 40 41, on right: 39 41
-campo (94)
+campo (91)
     on left: 42, on right: 40 41
-tamanhoVetor (95)
+tamanhoVetor (92)
     on left: 43, on right: 10
-args (96)
+args (93)
     on left: 44 45, on right: 51
-parameters (97)
+parameters (94)
     on left: 46 47, on right: 45 46
-parameter (98)
+parameter (95)
     on left: 48, on right: 46 47
-funcName (99)
+funcName (96)
     on left: 49 50, on right: 9
-funcArgs (100)
+funcArgs (97)
     on left: 51, on right: 9 15
-blocoComandos (101)
+blocoComandos (98)
     on left: 52, on right: 75 76 78 79 80 81 82 87
-blocoSemEscopo (102)
+blocoSemEscopo (99)
     on left: 53, on right: 9 15
-comando (103)
+comando (100)
     on left: 54 55, on right: 57
-comandos (104)
+comandos (101)
     on left: 56 57, on right: 52 53 57
-comandoSimples (105)
+comandoSimples (102)
     on left: 58 59 60 61 62, on right: 54
-comandosSemVirgula (106)
+comandosSemVirgula (103)
     on left: 63 64 65 66 67 68 69 70 71 72 73 74 75, on right: 58 85
     86
-ifThenElse (107)
+ifThenElse (104)
     on left: 76, on right: 70
-optElse (108)
+optElse (105)
     on left: 77 78, on right: 76
-foreach (109)
+foreach (106)
     on left: 79, on right: 61
-for (110)
+for (107)
     on left: 80, on right: 62
-while_do (111)
+while_do (108)
     on left: 81, on right: 71
-do_while (112)
+do_while (109)
     on left: 82, on right: 72
-foreachList (113)
+foreachList (110)
     on left: 83 84, on right: 79 84
-forList (114)
+forList (111)
     on left: 85 86, on right: 80 86
-switch (115)
+switch (112)
     on left: 87, on right: 73
-case (116)
+case (113)
     on left: 88, on right: 55
-localVarDefinition (117)
+localVarDefinition (114)
     on left: 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105
     106 107 108 109 110 111 112, on right: 63
-negativeOrPositiveIdentifier (118)
+negativeOrPositiveIdentifier (115)
     on left: 113 114 115 116, on right: 98 100 102 104 113 115
-negativeOrPositiveLiteral (119)
+negativeOrPositiveLiteral (116)
     on left: 117 118 119 120 121 122, on right: 106 108 110 112 117
     120
-assignment (120)
+assignment (117)
     on left: 123 124 125 126, on right: 64
-input (121)
+input (118)
     on left: 127, on right: 65
-inputHelper (122)
+inputHelper (119)
     on left: 128, on right: 127
-output (123)
+output (120)
     on left: 129 130, on right: 59
-continueOutput (124)
+continueOutput (121)
     on left: 131 132, on right: 129 132
-funcCall (125)
+funcCall (122)
     on left: 133 134, on right: 60 172 173 174 175 176 187
-argsCall (126)
+argsCall (123)
     on left: 135 136, on right: 133 136
-argCall (127)
+argCall (124)
     on left: 137 138, on right: 135 136
-shiftOp (128)
+shiftOp (125)
     on left: 139 140, on right: 141 142 143 144
-shift (129)
+shift (126)
     on left: 141 142 143 144, on right: 66
-return (130)
+return (127)
     on left: 145, on right: 69
-returnHelper (131)
+returnHelper (128)
     on left: 146, on right: 145
-expression (132)
+expression (129)
     on left: 147 148 149 150 151 152 153 154 155 156 157 158 159 160
     161 162 163 164 165 166 167 168 169 170 171, on right: 76 80 81
     82 83 84 87 123 124 125 126 127 129 130 131 132 137 141 142 143
     144 145 147 148 149 150 151 152 153 154 155 156 157 158 159 160
     161 162 163 164 165 166 167 168 169 171 177 180
-savePipe (133)
+savePipe (130)
     on left: 172, on right: 173 175
-pipe (134)
+pipe (131)
     on left: 173 174 175 176, on right: 74 174 176 188
-operands (135)
+operands (132)
     on left: 177 178 179 180 181 182 183 184 185 186 187 188, on right:
     170
 
@@ -2558,20 +2551,6 @@ State 169
   168           | expression . '+' expression
   169           | expression . '-' expression
 
-    TK_OC_EQ  shift, and go to state 181
-    TK_OC_NE  shift, and go to state 182
-    TK_OC_LE  shift, and go to state 183
-    '<'       shift, and go to state 184
-    TK_OC_GE  shift, and go to state 185
-    '>'       shift, and go to state 186
-    '+'       shift, and go to state 187
-    '-'       shift, and go to state 188
-    '*'       shift, and go to state 189
-    '%'       shift, and go to state 190
-    '/'       shift, and go to state 191
-    '^'       shift, and go to state 192
-    '?'       shift, and go to state 193
-
     $default  reduce using rule 149 (expression)
 
 
@@ -2595,12 +2574,6 @@ State 170
   167           | expression . '>' expression
   168           | expression . '+' expression
   169           | expression . '-' expression
-
-    '*'  shift, and go to state 189
-    '%'  shift, and go to state 190
-    '/'  shift, and go to state 191
-    '^'  shift, and go to state 192
-    '?'  shift, and go to state 193
 
     $default  reduce using rule 152 (expression)
 
@@ -2626,12 +2599,6 @@ State 171
   168           | expression . '+' expression
   169           | expression . '-' expression
 
-    '*'  shift, and go to state 189
-    '%'  shift, and go to state 190
-    '/'  shift, and go to state 191
-    '^'  shift, and go to state 192
-    '?'  shift, and go to state 193
-
     $default  reduce using rule 151 (expression)
 
 
@@ -2655,9 +2622,6 @@ State 172
   167           | expression . '>' expression
   168           | expression . '+' expression
   169           | expression . '-' expression
-
-    '^'  shift, and go to state 192
-    '?'  shift, and go to state 193
 
     $default  reduce using rule 150 (expression)
 

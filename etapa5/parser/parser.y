@@ -234,8 +234,8 @@ int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
 %left <valor_lexico> '+' '-'
 %left <valor_lexico> '*' '%' '/'
 %right <valor_lexico> '^'
-%left <valor_lexico> UMINUS UPLUS UPOINTER UADDRESS '!' '?' '#' //operadores unarios. os aliases 'UMINUS' e etc podem ser
-												 //utilizados para mudar a precedencia de um operando conforme o contexto:
+%left <valor_lexico> UNARY '!' '?' '#' //operadores unarios. o alias unary pode ser
+												 //utilizado para mudar a precedencia de um operando conforme o contexto:
 												 //https://www.gnu.org/software/bison/manual/html_node/Contextual-Precedence.html
 %token <valor_lexico> '(' ')' '[' ']' '$'
 
@@ -1622,23 +1622,26 @@ returnHelper:
 ;
 
 expression:
-	expression '?' {$$ = $1; adicionaFilho($$, criaNodo($2));}
-	| '#' expression {$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
-	| '&' expression {$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
-	| '*' expression {$$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
-	| '-' expression {
+	expression '?' {/*printf("unario\n");*/ $$ = $1; adicionaFilho($$, criaNodo($2));}
+	| '#' expression {/*printf("unario\n");*/ $$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '&' expression %prec UNARY {/*printf("unario\n");*/ $$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '*' expression %prec UNARY {/*printf("unario\n");*/ $$ = criaNodo($1); adicionaFilho($$, $2); $$->type = $2->type;}
+	| '-' expression %prec UNARY {
+		//printf("unario\n");
 		$$ = criaNodo($1);
 		adicionaFilho($$, $2);
 		int coercion = unaryArithCoercion($$, $2);
 		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
-	| '+' expression {
+	| '+' expression %prec UNARY {
+		//printf("unario\n");
 		$$ = criaNodo($1);
 		adicionaFilho($$, $2);
 		int coercion = unaryArithCoercion($$, $2);
 		if(coercion!=0){ returnError = coercion; nodeNotAdded = $$; YYABORT;}
 	}
 	| '!' expression {
+		//printf("unario\n");
 		$$ = criaNodo($1);
 		adicionaFilho($$, $2);
 		int coercion = unaryLogicCoercion($$, $2);
@@ -1672,6 +1675,7 @@ expression:
 		}		
 	};
 	| expression '*' expression {
+		printf("mult\n");
 		$$ = criaNodo(NULL);
 		adicionaFilho($$, $1); 
 		adicionaFilho($$, criaNodo($2)); 
