@@ -193,66 +193,61 @@ void printOperation(ILOC_OP *oper){
 				printArg(oper->args[2]);
 			} 
 			else printf("Operação %s com quantidade de argumentos incorreta", oper->opSpelling);
-		break;      
+		break;    
+		case ZERO_ZERO: break;  
 	}
 	printf("\n");
 }
 int operationSpellType(int opcode){
 	switch (opcode){
-		case ADD:
-		case SUB:
-		case MULT:
-		case DIV:
-		case ADDI:
-		case SUBI:
-		case RSUBI:
-		case MULTI:
-		case DIVI:
-		case RDIVI:
-		case LSHIFT:
-		case LSHIFTI:
-		case RSHIFT:
-		case RSHIFTI:
-		case AND:
-		case ANDI:
-		case OR:
-		case ORI:
-		case XOR:
-		case XORI:
-		case LOADAI:
-		case LOADA0:
-		case CLOADAI:
-		case CLOADA0:
-			return TWO_EQ_ONE;
-		case LOADI:
-		case LOAD:
-		case CLOAD:
-		case STORE:
-		case CSTORE:
-		case I2I:
-		case C2C:
-		case C2I:
-		case I2C:
-			return ONE_EQ_ONE;
-		case STOREAI:
-		case STOREA0:
-		case CSTOREAI:
-		case CSTOREA0:
-			return ONE_EQ_TWO; 
-		case JUMPI:
-			return ONE_MINUS_ONE;
-		case JUMP:
-			return ZERO_MINUS_ONE;
-		case CBR:
-			return ONE_MINUS_TWO;
-		case CMP_LT:
-		case CMP_LE:
-		case CMP_EQ:
-		case CMP_GE:
-		case CMP_GT:
-		case CMP_NE:
-			return TWO_MINUS_ONE;
-		default: return NOP;
+		case ADD: return TWO_EQ_ONE; break;
+		case SUB: return TWO_EQ_ONE; break;
+		case MULT: return TWO_EQ_ONE; break;
+		case DIV: return TWO_EQ_ONE; break;
+		case ADDI: return TWO_EQ_ONE; break;
+		case SUBI: return TWO_EQ_ONE; break;
+		case RSUBI: return TWO_EQ_ONE; break;
+		case MULTI: return TWO_EQ_ONE; break;
+		case DIVI: return TWO_EQ_ONE; break;
+		case RDIVI: return TWO_EQ_ONE; break;
+		case LSHIFT: return TWO_EQ_ONE; break;
+		case LSHIFTI: return TWO_EQ_ONE; break;
+		case RSHIFT: return TWO_EQ_ONE; break;
+		case RSHIFTI: return TWO_EQ_ONE; break;
+		case AND: return TWO_EQ_ONE; break;
+		case ANDI: return TWO_EQ_ONE; break;
+		case OR: return TWO_EQ_ONE; break;
+		case ORI: return TWO_EQ_ONE; break;
+		case XOR: return TWO_EQ_ONE; break;
+		case XORI: return TWO_EQ_ONE; break;
+		case LOADAI: return TWO_EQ_ONE; break;
+		case LOADA0: return TWO_EQ_ONE; break;
+		case CLOADAI: return TWO_EQ_ONE; break;
+		case CLOADA0: return TWO_EQ_ONE; break;
+		case LOADI: return ONE_EQ_ONE; break;
+		case LOAD: return ONE_EQ_ONE; break;
+		case CLOAD: return ONE_EQ_ONE; break;
+		case STORE: return ONE_EQ_ONE; break;
+		case CSTORE: return ONE_EQ_ONE; break;
+		case I2I: return ONE_EQ_ONE; break;
+		case C2C: return ONE_EQ_ONE; break;
+		case C2I: return ONE_EQ_ONE; break;
+		case I2C: return ONE_EQ_ONE; break;
+		case STOREAI: return ONE_EQ_TWO; break;
+		case STOREA0: return ONE_EQ_TWO; break;
+		case CSTOREAI: return ONE_EQ_TWO; break;
+		case CSTOREA0: return ONE_EQ_TWO; break;
+		case JUMPI: return ONE_MINUS_ONE; break;			
+		case JUMP: return ZERO_MINUS_ONE; break;
+		case CBR: return ONE_MINUS_TWO; break;		
+		case CMP_LT: return TWO_MINUS_ONE; break;
+		case CMP_LE: return TWO_MINUS_ONE; break;
+		case CMP_EQ: return TWO_MINUS_ONE; break;
+		case CMP_GE: return TWO_MINUS_ONE; break;
+		case CMP_GT: return TWO_MINUS_ONE; break;
+		case CMP_NE: return TWO_MINUS_ONE; break;	
+		case HALT: return ZERO_ZERO; break;		
+		default: return NOP; break;
 	}
 }
 

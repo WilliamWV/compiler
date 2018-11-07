@@ -339,6 +339,11 @@ programa:
 	scopeOpenner componentes	{
 		$$ = $2; arvore = $$; 
 		parsingSucceded = TRUE;
+
+		ILOC_LIST* halt = createILOCList();
+		createOperation(halt, HALT, "halt", NULL, NULL, NULL, 0);
+		$$->opList = concatILOC($$->opList, halt);
+
 		closeTable(); // fecha escopo global
 	}
 ;

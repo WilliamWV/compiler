@@ -109,6 +109,7 @@
 #define ONE_MINUS_TWO   904
 #define TWO_MINUS_ONE   905
 #define ONE_MINUS_ONE	906
+#define ZERO_ZERO		907
 
 //Tipos de argumento de operações ILOC
 #define IMED 700   // valor constante imediato
@@ -182,6 +183,9 @@
 #define XORI       0x1605
 //NOP 0x1700
 #define NOP        0x1700
+
+//HALT 0x1800
+#define HALT        17777
 
 //argumentos são imediatos:
 #define ARG1_IMED 1
