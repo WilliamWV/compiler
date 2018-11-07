@@ -349,7 +349,10 @@ scopeOpenner:                  //Regra usada quando um escopo deve ser aberto
 
 componentes: 
 	%empty 						{$$ = criaNodo(NULL);}
-	| componente componentes 	{ $$ = $1; adicionaFilho($$, $2);}
+	| componente componentes 	{ 
+		$$ = $1; adicionaFilho($$, $2);
+		$$->opList = concatILOC($1->opList, $2->opList);
+	}
 ;
 
 //As duas regras abaixo servem para a eventual possibilidade do código possuir
