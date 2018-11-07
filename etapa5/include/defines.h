@@ -185,7 +185,7 @@
 #define NOP        0x1700
 
 //HALT 0x1800
-#define HALT        17777
+#define HALT        0x1800
 
 //argumentos são imediatos:
 #define ARG1_IMED 1
