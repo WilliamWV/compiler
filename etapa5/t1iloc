@@ -28,3 +28,4 @@ loadI	4 => r23
 sub		r22, r23 => r24
 addI	rbss, 0 => r25
 store	r24 => r25
+halt	

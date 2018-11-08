@@ -1,0 +1,50 @@
+/**
+	Espera 
+		a = 2
+		b = 3
+		c = 4
+		x = 1
+		y = 3
+		z = 0;
+*/
+
+int main(){
+	int a;
+	int b;
+	int c;
+	int x;
+	int y;
+	int z;
+	a = 2;
+	b = 3;
+	c = 4;
+	if (a > b || b == b) then {
+		if(a == c) then {
+			x = 0;
+		}
+		else{
+			x = 1;
+		};
+	};
+	
+	if(a<b && a == c) then{
+		if(b == b) then {
+			y = 1;
+		}
+		else{
+			y = 2;
+		};
+	}
+	else{
+		y = 3;
+	};
+	if (a == a) then {
+		z = 0;
+		if (a == c) then {
+			z = 1;
+		};
+	}
+	else{
+		z = 2;
+	};
+}

@@ -73,3 +73,4 @@ addI	rfp, 4 => r49
 store	r48 => r49
 jumpI	 -> L15
 L14:	
+halt	

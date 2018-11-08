@@ -1,0 +1,20 @@
+loadI	1 => r0
+loadI	2 => r1
+cmp_LT	r0, r1 -> r2
+cbr		r2 -> L5, L4
+L4:	
+loadI	3 => r3
+loadI	4 => r4
+cmp_EQ	r3, r4 -> r5
+cbr		r5 -> L5, L7
+L5:	
+loadI	114 => r6
+addI	rfp, 0 => r7
+store	r6 => r7
+jumpI	 -> L6
+L7:	
+loadI	6 => r8
+addI	rfp, 4 => r9
+store	r8 => r9
+L6:	
+halt	

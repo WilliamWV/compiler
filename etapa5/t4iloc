@@ -1,0 +1,108 @@
+loadI	2 => r0
+addI	rfp, 0 => r1
+store	r0 => r1
+loadI	3 => r2
+addI	rfp, 4 => r3
+store	r2 => r3
+loadI	4 => r4
+addI	rfp, 8 => r5
+store	r4 => r5
+addI	rfp, 0 => r6
+load	r6 => r7
+addI	rfp, 4 => r8
+load	r8 => r9
+cmp_GT	r7, r9 -> r10
+cbr		r10 -> L10, L4
+L4:	
+addI	rfp, 4 => r11
+load	r11 => r12
+addI	rfp, 4 => r13
+load	r13 => r14
+cmp_EQ	r12, r14 -> r15
+cbr		r15 -> L10, L12
+L10:	
+addI	rfp, 0 => r16
+load	r16 => r17
+addI	rfp, 8 => r18
+load	r18 => r19
+cmp_EQ	r17, r19 -> r20
+cbr		r20 -> L7, L9
+L7:	
+loadI	0 => r21
+addI	rfp, 12 => r22
+store	r21 => r22
+jumpI	 -> L8
+L9:	
+loadI	1 => r23
+addI	rfp, 12 => r24
+store	r23 => r24
+L8:	
+jumpI	 -> L11
+L12:	
+L11:	
+addI	rfp, 0 => r25
+load	r25 => r26
+addI	rfp, 4 => r27
+load	r27 => r28
+cmp_LT	r26, r28 -> r29
+cbr		r29 -> L17, L25
+L17:	
+addI	rfp, 0 => r30
+load	r30 => r31
+addI	rfp, 8 => r32
+load	r32 => r33
+cmp_EQ	r31, r33 -> r34
+cbr		r34 -> L23, L25
+L23:	
+addI	rfp, 4 => r35
+load	r35 => r36
+addI	rfp, 4 => r37
+load	r37 => r38
+cmp_EQ	r36, r38 -> r39
+cbr		r39 -> L20, L22
+L20:	
+loadI	1 => r40
+addI	rfp, 16 => r41
+store	r40 => r41
+jumpI	 -> L21
+L22:	
+loadI	2 => r42
+addI	rfp, 16 => r43
+store	r42 => r43
+L21:	
+jumpI	 -> L24
+L25:	
+loadI	3 => r44
+addI	rfp, 16 => r45
+store	r44 => r45
+L24:	
+addI	rfp, 0 => r46
+load	r46 => r47
+addI	rfp, 0 => r48
+load	r48 => r49
+cmp_EQ	r47, r49 -> r50
+cbr		r50 -> L33, L35
+L33:	
+loadI	0 => r51
+addI	rfp, 20 => r52
+store	r51 => r52
+addI	rfp, 0 => r53
+load	r53 => r54
+addI	rfp, 8 => r55
+load	r55 => r56
+cmp_EQ	r54, r56 -> r57
+cbr		r57 -> L30, L32
+L30:	
+loadI	1 => r58
+addI	rfp, 20 => r59
+store	r58 => r59
+jumpI	 -> L31
+L32:	
+L31:	
+jumpI	 -> L34
+L35:	
+loadI	2 => r60
+addI	rfp, 20 => r61
+store	r60 => r61
+L34:	
+halt	

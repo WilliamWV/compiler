@@ -16,3 +16,4 @@ addI	rfp, 0 => r10
 store	r9 => r10
 jumpI	 -> L4
 L3:	
+halt	
