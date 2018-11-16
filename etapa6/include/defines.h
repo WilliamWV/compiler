@@ -36,6 +36,7 @@
 #define ERR_WRONG_PAR_OUTPUT 51 //parâmetro não é literal string ou expressão
 #define ERR_WRONG_PAR_RETURN 52 //parâmetro não é expressão compatível com tipo do retorno
 
+#define MAIN_NOT_DEFINED 60
 
 #define HASH_SIZE 40009
 

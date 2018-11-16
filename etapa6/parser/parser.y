@@ -339,11 +339,25 @@ programa:
 	scopeOpenner componentes	{
 		$$ = $2; arvore = $$; 
 		parsingSucceded = TRUE;
+		int rfpAndRspInit = 0;
+		int rbssInit = 1024; //não sei que valor tem que ser aqui
+		ILOC_LIST* start = createILOCList();
+		Hash* mainContent = getSymbol("main");
+		if (mainContent != NULL){		
+			createOperation(start, LOADI, "loadI", (void*) &rfpAndRspInit, "rfp", NULL, ARG1_IMED);
+			createOperation(start, LOADI, "loadI", (void*) &rfpAndRspInit, "rsp", NULL, ARG1_IMED);
+			createOperation(start, LOADI, "loadI", (void*) &rbssInit, "rbss", NULL, ARG1_IMED);
+			createOperation(start, JUMPI, "jumpI", mainContent->label, NULL, NULL, 0);
+			
 
-		ILOC_LIST* halt = createILOCList();
-		createOperation(halt, HALT, "halt", NULL, NULL, NULL, 0);
-		$$->opList = concatILOC($$->opList, halt);
-
+			ILOC_LIST* halt = createILOCList();
+			createOperation(halt, HALT, "halt", NULL, NULL, NULL, 0);
+			$$->opList = concatILOC(start, $$->opList);
+			$$->opList = concatILOC($$->opList, halt);
+		}
+		else{
+			returnError = MAIN_NOT_DEFINED; nodeNotAdded = NULL; YYABORT;
+		}
 		closeTable(); // fecha escopo global
 	}
 ;
