@@ -1,0 +1,6 @@
+
+int fun(){}
+int main(){
+	fun = 2;
+}
+

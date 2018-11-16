@@ -1,0 +1,39 @@
+a int;
+b int;
+c int;
+
+int main(){
+	a = 2;
+	int x;
+	x = 3;
+	int y;
+	int z;
+	y = +8;
+	z = a;
+	b = y;
+	c = -10;
+	
+	if (a > b || c < y) then{
+		x = 0;
+	}
+	else{
+		x = 2;
+	};
+
+	int w;
+	w = 4;
+	while (z >= 0 && w < y) do {
+		z = z - 1;
+		y = y + 1;
+	};
+}
+/*
+	Ao final espera-se:
+	a = 2;
+	b = 8;
+	c = -10;
+	x = 0;
+	y = 11;
+	z = -1;
+	w = 4;
+*/

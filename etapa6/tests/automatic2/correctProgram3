@@ -1,0 +1,32 @@
+
+int add(int a, int b, int c){
+	return a+b+c;
+}
+
+int ret2(){
+	return 2;
+}
+
+vec [10] string;
+class pessoa [string nome : int idade];
+
+int main(){
+	ret2() %>% add(., 3, .);
+	string b <= "abcde";
+	string a <= b;
+	string c <= "abcdefgh";
+	b = "abcdefghijklmnopq";
+	a = c;
+
+	vec[2] = "abc";
+	vec[4] = "ab";
+	vec[6] = "abcd";
+	vec[1] = a;
+	pessoa will;
+	will$nome = "william";
+	will$idade = 20;
+	int idade;
+	idade = will$idade;
+	
+
+}

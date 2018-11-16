@@ -1,0 +1,13 @@
+int ident(int a, int b, int c){
+	//return a;
+}
+
+int main(){
+	ident(1, 1+1, 1);
+}
+
+Tá os questionários para sexta são os seguintes:
+
+1) Tarefa: entregue aqui o planejamento do seu MVP -> Não sei quem faz esse, mas se já está definido as coisas que fizemos na aula que ela mensiona estão comigo acho que vai ser necessário pra fazer
+2) Tarefa - Pesquisa de Mercado - Elaboração -> Precisa ser feito meio logo para dar tempo de aplicar até sexta
+3) Tarefa - Pesquisa de Mercado - Aplicação e análise -> Aplicação da esquisa da tarefa 2 

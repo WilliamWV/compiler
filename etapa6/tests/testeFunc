@@ -1,0 +1,7 @@
+
+int ident(int a, int b, int c, int d){
+	return a;
+}
+int main(){
+	ident(., ., ., .);
+}

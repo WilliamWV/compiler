@@ -1,0 +1,4 @@
+int main(){
+float zorzo <= 2;
+int teste <= zorzo;
+}

@@ -1,0 +1,12 @@
+class pessoa[int idade];
+var int;
+
+int func(int a, int b, float c){
+	
+}
+
+int main(){
+	int a;
+	output 'a';
+}
+
