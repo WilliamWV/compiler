@@ -202,6 +202,5 @@ void updateLocalVarSize(int newVarSize){
 	Hash* funcContent = getSymbol(currentFunc);
 	if(funcContent!=NULL){
 		funcContent->sizeOfLocalVars = funcContent->sizeOfLocalVars + newVarSize;
-		//printf("Tamanho das variáveis locais de %s = %d\n", currentFunc, funcContent->sizeOfLocalVars);
 	}	
 }

@@ -3,6 +3,7 @@
 #include "lexVal.h"
 #include "defines.h"
 #include "tree.h"
+#include "naming.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,9 +72,11 @@ typedef struct hashContent{
 	struct lexval* valor_lexico;  // valores associados ao yylval do símbolo
 	int offset;                   // deslocamento do endereço da variável em 
 	                              // relação ao registrador de referência
-	int sizeOfLocalVars;          // Usado apenas se o símbolo or uma função 
+	int sizeOfLocalVars;          // Usado apenas se o símbolo for uma função 
 	                              // para indicar o tamanho de memória que deve
                                   // ser reservado para as variáveis locais
+	char* label;                  // usado apenas se o símbolo for uma função
+	                              // para indicar a primeira instrução dela 
 
 }Hash;
 

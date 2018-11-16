@@ -239,7 +239,12 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 		localOffset+=tabelas->currentTable[hashIndex]->size;
 	}
 	tabelas->currentTable[hashIndex]->sizeOfLocalVars = 0;
-
+	if(isFunction == TRUE){
+		tabelas->currentTable[hashIndex]->label = getNewLabel();
+	}
+	else{		
+		tabelas->currentTable[hashIndex]->label = NULL;
+	}
 	return 0;
 }
 //adiciona um argumento a um símbolo
