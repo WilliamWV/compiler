@@ -491,7 +491,7 @@ componente:
 			
 		addArgsToSymbol($1->kids[kid]->token->value.str, currentArgs);
 		clearCurrentArgs();
-		$$->opList = $4->opList;
+		$$->opList = concatILOC($1->opList, $4->opList);
 		closeTable();
 		
 	}
@@ -664,6 +664,16 @@ funcName:
 		int addSymb = addSymbol($2, NATUREZA_IDENTIFICADOR, getType($1), NULL, 0, TRUE, 0);		
 		if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		saveFunc($2->value.str);	
+		Hash* funcContent = getSymbol($2->value.str);
+		if(funcContent!=NULL){
+			int labSize = strlen(funcContent->label);
+			char* lab = (char*) aloca(sizeof(char) * (labSize + 2));
+			strcpy(lab, funcContent->label);
+			lab[labSize] = ':';
+			lab[labSize+1] = '\0';
+			createOperation($$->opList, LAB, lab, NULL, NULL, NULL, 0);
+		
+		}
 	}
 	|TK_PR_STATIC tipo TK_IDENTIFICADOR{
 		$$ = criaNodo($1);
@@ -679,6 +689,16 @@ funcName:
 			if(addSymb != 0){ returnError = addSymb; nodeNotAdded = $$; YYABORT;}	
 		}
 		saveFunc($3->value.str);	
+		Hash* funcContent = getSymbol($3->value.str);
+		if(funcContent!=NULL){
+			int labSize = strlen(funcContent->label);
+			char* lab = (char*) aloca(sizeof(char) * (labSize + 2));
+			strcpy(lab, funcContent->label);
+			lab[labSize] = ':';
+			lab[labSize+1] = '\0';
+			createOperation($$->opList, LAB, lab, NULL, NULL, NULL, 0);
+		
+		}
 
 	}
 ;
