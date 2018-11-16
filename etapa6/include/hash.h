@@ -69,7 +69,11 @@ typedef struct hashContent{
 	int fieldsNum;                // quantidade de campos no tipo de usuário
 	UserTypeField** fields;       // campos e seus tipos, se for tipo de usuário
 	struct lexval* valor_lexico;  // valores associados ao yylval do símbolo
-	int offset;                   // deslocamento do endereço da variável em relação ao registrador de referência
+	int offset;                   // deslocamento do endereço da variável em 
+	                              // relação ao registrador de referência
+	int sizeOfLocalVars;          // Usado apenas se o símbolo or uma função 
+	                              // para indicar o tamanho de memória que deve
+                                  // ser reservado para as variáveis locais
 
 }Hash;
 
@@ -138,6 +142,9 @@ void updateStringSize(char* id, struct node* expression, int type, char* field);
 int currentScopeLevel();
 
 int scopeLevelOfID(char* id);
+
+int identifierSize(char* indentifier);
+
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -28,3 +28,5 @@ int verifyReturn(struct node* returnExpression);
 void saveFunc(char* symbol);
 
 int getCurrentFuncReturnType();
+
+void updateLocalVarSize(int newVarSize);

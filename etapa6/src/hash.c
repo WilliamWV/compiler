@@ -238,6 +238,7 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 		tabelas->currentTable[hashIndex]->offset = localOffset;
 		localOffset+=tabelas->currentTable[hashIndex]->size;
 	}
+	tabelas->currentTable[hashIndex]->sizeOfLocalVars = 0;
 
 	return 0;
 }
@@ -549,4 +550,13 @@ char* loadVarToRegister(ILOC_LIST* l, char* varName){
 	else return NULL; // nunca deve ocorrer pois esse erro deve ser percebido pela
 					  // análise semântica
 }
+
+int identifierSize(char* id){
+	Hash* idContent = getSymbol(id);
+	if(id != NULL){
+		return idContent->size;
+	}else return 0; //nunca deve ocorrer pois esse erro deve ser percebido pela 
+	                // análise semântica
+}
+
 
