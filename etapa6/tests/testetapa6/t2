@@ -6,8 +6,8 @@ int f(){
 
 }
 
-int g(){
-
+int g(int x, int y){
+	
 }
 
 int h(){
@@ -18,7 +18,6 @@ int main(){
 	a = 2;
 	b = 9;
 	c = -1;
-	a = a + 9 / 3 - 2 * c + b / 3 - 4; // no final a deve ter 6
-	h();
+	g(a, b);
 }
 

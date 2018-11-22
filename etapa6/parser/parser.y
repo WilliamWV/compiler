@@ -135,6 +135,7 @@ char* getIdFromNegOrPosId(struct node* negOrPosId){
 	return aux->token->value.str;
 }
 
+
 int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
 	if(s2->tokenType == SPEC_CHAR){
 			if(s2->value.c == '+' || s2->value.c == '%' || s2->value.c == '/' || s2->value.c == '*' || s2->value.c == '-' || s2->value.c == '^'){
@@ -1566,6 +1567,7 @@ continueOutput:
 ;
 funcCall:
 	TK_IDENTIFICADOR '(' argsCall ')'{
+		
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
@@ -1574,6 +1576,48 @@ funcCall:
 		if (isFunc != TRUE){ returnError = isFunc; nodeNotAdded = $$; YYABORT;}
 		int correctArgs = verifyArguments($1->value.str, $3);
 		if (correctArgs != TRUE){ returnError = correctArgs; nodeNotAdded = $$; YYABORT;}
+		// Na chamada da função deve antes se avaliar a expressão dos argumentos
+		$$->opList = $3->opList;
+		//Gerar prólogo
+		//1) Cálcular endereço de retorno com base no rpc
+		// O endereço de retorno vai ser igual ao pc atual somado com a quantidade 
+        // de instruções no prólogo que depende da quantidade de argumentos em argsCall
+		// O endereço de retorno é dado por: rpc + 8 +nOfArgs
+		// Uma vez que existem 8 instruções que sempre ocorrerão no prólogo e mais uma
+		// para empilhar cada argumento
+		Hash* funcContent = getSymbol($1->value.str);		
+		int funcArgs = funcContent->argsNum;
+		int prologueSize = 8 + funcArgs;
+		char* tempReg = getNewRegister();		
+		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
+		int zero = 0;
+		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &zero, ARG3_IMED);
+		//2) Salvar vínculo dinâmico: rsp e rfp atual
+		int quatro = 4;
+		createOperation($$->opList, STOREAI, "storeAI", "rsp", "rsp", (void*) &quatro, ARG3_IMED);
+		int oito = 8;
+		createOperation($$->opList, STOREAI, "storeAI", "rfp", "rsp", (void*) &oito, ARG3_IMED);
+		//3) Salvar vínculo estático: rfp e rsp de uma instância do pai estático, como existirão somente dois escopos pode armazenar zero
+		createOperation($$->opList, LOADI, "loadI", (void*) &zero, tempReg, NULL, ARG1_IMED);
+		int doze = 12;
+		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &doze, ARG3_IMED);
+		int dezesseis = 16;
+		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &dezesseis, ARG3_IMED);
+		//4) Empilha argumentos
+		/* estrutura de argsCall:
+		* Cabeça = NULL -> facilita verificação de excesso ou falta de argumentos
+		* kids[0], kids[2], kids[4], ..., kids[(argsNum - 1) * 2] -> argCall ->
+			contém expressão que representa o argumento
+		* kids[1], kids[3], kids[5], ..., kids[(argsNum-1)*2 - 1] -> vírgula
+	*/
+		for(int i = 0; i<funcArgs; i++){
+			int currentPos = i*4+20;			
+			createOperation($$->opList, STOREAI, "storeAI", $3->kids[i*2]->reg, "rsp", (void*) &currentPos, ARG3_IMED);
+		}
+		//5) Desvia para a função
+		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
+		
+
 	}
 	| TK_IDENTIFICADOR '(' ')' {
 		$$ = criaNodo($1); 
@@ -1583,17 +1627,36 @@ funcCall:
 		if (isFunc != TRUE){ returnError = isFunc; nodeNotAdded = $$; YYABORT;}
 		int correctArgs = verifyArguments($1->value.str, NULL);
 		if (correctArgs != TRUE){ returnError = correctArgs; nodeNotAdded = $$; YYABORT;}
+		
+		int prologueSize = 8;
+		char* tempReg = getNewRegister();		
+		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
+		int zero = 0;
+		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &zero, ARG3_IMED);
+		int quatro = 4;
+		createOperation($$->opList, STOREAI, "storeAI", "rsp", "rsp", (void*) &quatro, ARG3_IMED);
+		int oito = 8;
+		createOperation($$->opList, STOREAI, "storeAI", "rfp", "rsp", (void*) &oito, ARG3_IMED);
+		createOperation($$->opList, LOADI, "loadI", (void*) &zero, tempReg, NULL, ARG1_IMED);
+		int doze = 12;
+		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &doze, ARG3_IMED);
+		int dezesseis = 16;
+		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &dezesseis, ARG3_IMED);
+		Hash* funcContent = getSymbol($1->value.str);
+		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
 	}
 ;
 argsCall:
 	argCall					{
 		$$ = criaNodo(NULL);	//tem cabeça NULL para facilitar verificação dos argumentos
 		adicionaFilho($$, $1);
+		$$->opList = $1->opList;
 	} 
 	| argsCall ',' argCall {
 		$$ = $1; 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3);
+		$$->opList = concatILOC($1->opList, $3->opList);
 	}
 ;
 argCall:
