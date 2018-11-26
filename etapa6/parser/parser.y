@@ -1587,7 +1587,7 @@ funcCall:
 		// para empilhar cada argumento
 		Hash* funcContent = getSymbol($1->value.str);		
 		int funcArgs = funcContent->argsNum;
-		int prologueSize = 8 + funcArgs;
+		int prologueSize = 7 + funcArgs;
 		char* tempReg = getNewRegister();		
 		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
 		int zero = 0;
@@ -1601,8 +1601,6 @@ funcCall:
 		createOperation($$->opList, LOADI, "loadI", (void*) &zero, tempReg, NULL, ARG1_IMED);
 		int doze = 12;
 		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &doze, ARG3_IMED);
-		int dezesseis = 16;
-		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &dezesseis, ARG3_IMED);
 		//4) Empilha argumentos
 		/* estrutura de argsCall:
 		* Cabeça = NULL -> facilita verificação de excesso ou falta de argumentos
@@ -1611,7 +1609,7 @@ funcCall:
 		* kids[1], kids[3], kids[5], ..., kids[(argsNum-1)*2 - 1] -> vírgula
 	*/
 		for(int i = 0; i<funcArgs; i++){
-			int currentPos = i*4+20;			
+			int currentPos = i*4+16;			
 			createOperation($$->opList, STOREAI, "storeAI", $3->kids[i*2]->reg, "rsp", (void*) &currentPos, ARG3_IMED);
 		}
 		//5) Desvia para a função
@@ -1628,7 +1626,7 @@ funcCall:
 		int correctArgs = verifyArguments($1->value.str, NULL);
 		if (correctArgs != TRUE){ returnError = correctArgs; nodeNotAdded = $$; YYABORT;}
 		
-		int prologueSize = 8;
+		int prologueSize = 7;
 		char* tempReg = getNewRegister();		
 		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
 		int zero = 0;
@@ -1640,8 +1638,6 @@ funcCall:
 		createOperation($$->opList, LOADI, "loadI", (void*) &zero, tempReg, NULL, ARG1_IMED);
 		int doze = 12;
 		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &doze, ARG3_IMED);
-		int dezesseis = 16;
-		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &dezesseis, ARG3_IMED);
 		Hash* funcContent = getSymbol($1->value.str);
 		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
 	}
