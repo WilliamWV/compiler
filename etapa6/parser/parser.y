@@ -1614,7 +1614,7 @@ funcCall:
 		}
 		//5) Desvia para a função
 		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
-		
+		printf("TEST: localVarBegin = %d\n", localVarBegin($1->value.str));
 
 	}
 	| TK_IDENTIFICADOR '(' ')' {

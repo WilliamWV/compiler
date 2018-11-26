@@ -564,4 +564,18 @@ int identifierSize(char* id){
 	                // análise semântica
 }
 
+int localVarBegin(char* function){
+	Hash* func = getSymbol(function);
+	if(func->isFunction == TRUE){
+		// o valor de retorno é a soma de:
+		// 1) Endereço de retorno -> tamanho 4
+		// 2) rsp e rfp -> tamanho 8
+		// 3) vínculo estático -> tamanho 4
+		// 4) parâmetros : pela simplificação da etapa5 são todos inteiros portanto
+		//    tem tamanho 4 * quantidade de parâmetros
+		// 5) valor de retorno
+		return 4 + 8 + 4 + 4 * func->argsNum + 4;
+	}
+	else return 0;
+}
 

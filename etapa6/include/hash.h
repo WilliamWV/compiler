@@ -159,5 +159,8 @@ char* loadVarToRegister(ILOC_LIST* l, char* varName);
 	
 char* calculateAddressOfVar(ILOC_LIST* l, char* varName);
 	
+//Marca no RA o ponto onde começam as variáveis locais isso será somado com o RFP
+//e com o deslocamento tas variáveis locais para acessá-las
+int localVarBegin(char* function);
 
 #endif
