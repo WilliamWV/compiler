@@ -11,6 +11,8 @@ int main(){
 }*/
 
 int foo(int y){
+y = 2;
+return y;
 }
 int main(){
 	int x;

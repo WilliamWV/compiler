@@ -481,7 +481,6 @@ componente:
 		$$ = $1; 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, $4);
-		argsSize();
 		//funcName tem 2 formas possíveis:
 		// 1) head = tipoPrimitivo, kids[0] = nome da func
 		// 2) head = TK_PR_STATIC, kids[0] = tipo, kids[1] = nome DA FUNC		
@@ -496,28 +495,32 @@ componente:
 		Hash* funcContent = getSymbol($1->kids[0]->token->value.str);
 		int sizeLocalVars = funcContent->sizeOfLocalVars;
 		int sizeArgs = funcContent->argsSize;
+		int funcTypeSize = sizeOfType(getCurrentFuncReturnType(), 0);
+		int offset;
+		if(funcContent->hasReturn == TRUE)
+			offset = sizeLocalVars + funcTypeSize;
+		else offset = sizeLocalVars;
 		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
-			sizeLocalVars += sizeArgs; // espaco ocupado para guardar os parametros da funcao
-			sizeLocalVars += 12; // numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
+			offset += 16; // numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
 		}
 		createOperation($1->opList, I2I, "i2i", "rsp", "rfp", NULL, 0);
-		createOperation($1->opList, ADDI, "addI", "rsp", (void*) &(sizeLocalVars), "rsp", ARG2_IMED);
+		createOperation($1->opList, ADDI, "addI", "rsp", (void*) &offset, "rsp", ARG2_IMED);
 		int funcArgs = funcContent->argsNum;
 		for(int i = 0; i<funcArgs; i++){
-			int currentLoadPos = i*4 + 12; // posicao do argumento atual a partir de rfp+16; o 16 vem do numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
-			int currentStorePos = i*4 + 12 + sizeArgs; // posicao da variavel local que ira armazenar tal parametro eh a posicao acima somada ao espaco ocupado para armazenar todos os parametros passados a funcao		
+			int currentLoadPos = i*4 + 16; // posicao do argumento atual a partir de rfp+16; o 16 vem do numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
+			int currentStorePos = i*4 + 16 + sizeArgs + funcTypeSize; // posicao da variavel local que ira armazenar tal parametro eh a posicao acima somada ao espaco ocupado para armazenar todos os parametros passados a funcao		
 			char* tempReg = getNewRegister();
 			createOperation($1->opList, LOADAI, "loadAI", "rfp", (void*) &currentLoadPos, tempReg, ARG2_IMED);
 			createOperation($1->opList, STOREAI, "storeAI", tempReg, "rfp", (void*) &currentStorePos, ARG3_IMED);
 		}
-		$$->opList = concatILOC($1->opList, $4->opList);
+		$$->opList = concatILOC($1->opList, $4->opList); // apos carregar todos os parametros, concatena as operacoes da funcao em si
 		char* tempRegZero = getNewRegister();
 		int zero = 0;
 		char* tempRegQuatro = getNewRegister();
 		int quatro = 4;
 		char* tempRegOito = getNewRegister();
 		int oito = 8;
-		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
+		if(strcmp("main", $1->kids[0]->token->value.str) != 0){ // apos as operacoes da funcao em si, vem o epilogo (restaura valors necessarios e retorna fluxo ao chamador)
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &zero, tempRegZero, ARG2_IMED);
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &quatro, tempRegQuatro, ARG2_IMED);
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &oito, tempRegOito, ARG2_IMED);
@@ -744,6 +747,7 @@ funcArgs:
 		$$ = criaNodo($1);
 		adicionaFilho($$, $2);
 		adicionaFilho($$, criaNodo($3));
+		argsSize();
 	}
 ;
 //Bloco de comandos
@@ -1771,6 +1775,12 @@ return:
 		int verifRet = verifyReturn($3);
 		if (verifRet != TRUE){ returnError = verifRet; nodeNotAdded = $$; YYABORT;}
 		isReturn = FALSE;
+
+		Hash* funcContent = getSymbol(currentFunc);
+		funcContent->hasReturn = TRUE;	
+		int argsSize = funcContent->argsSize;
+		int offset = 16 + argsSize;
+		createOperation($$->opList, STOREAI, "storeAI", $3->reg, "rfp", (void*) &offset, ARG3_IMED);
 	}
 	
 ;
@@ -2167,6 +2177,7 @@ operands:
 		//geração de código		
 		if($$->type == INT){
 			$$->reg = loadVarToRegister($$->opList, $1->value.str);
+			printf("\n%s: %s\n", $1->value.str, $$->reg);
 		}
 
 	}

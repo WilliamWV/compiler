@@ -59,6 +59,7 @@ typedef struct hashContent{
                                   // (pois mesma string estará em symbol) e vai
                                   // ser o nome do tipo em 2
 	int isFunction;
+	int hasReturn;		//se for funcao, indica se ela possui um comando de return
 	int flags;                    // flags do tipo static e const
 	int size;                     // tamanho do símbolo derivado do tipo
 	int vecSize;				  // valor que será 0 se o símbolo não for um

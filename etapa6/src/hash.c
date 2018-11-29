@@ -211,6 +211,7 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 	tabelas->currentTable[hashIndex]->nature = nature;
 	tabelas->currentTable[hashIndex]->type = type;
 	tabelas->currentTable[hashIndex]->isFunction = isFunction;
+	tabelas->currentTable[hashIndex]->hasReturn = FALSE;
 	tabelas->currentTable[hashIndex]->flags = flags;
 	tabelas->currentTable[hashIndex]->size = sizeOfType(type, vecSize);
 	if (userType == NULL)
