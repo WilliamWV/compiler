@@ -482,7 +482,6 @@ componente:
 		$$ = $1; 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, $4);
-		argsSize();
 		//funcName tem 2 formas possíveis:
 		// 1) head = tipoPrimitivo, kids[0] = nome da func
 		// 2) head = TK_PR_STATIC, kids[0] = tipo, kids[1] = nome DA FUNC		
@@ -496,7 +495,6 @@ componente:
 
 		Hash* funcContent = getSymbol($1->kids[0]->token->value.str);
 		int sizeLocalVars = funcContent->sizeOfLocalVars;
-		printf("\n\nTAMANHO: %d\n\n", sizeLocalVars);
 		createOperation($1->opList, I2I, "i2i", "rsp", "rfp", NULL, 0);
 		createOperation($1->opList, ADDI, "addI", "rsp", (void*) &(sizeLocalVars), "rsp", ARG2_IMED);
 		int funcArgs = funcContent->argsNum;
@@ -1444,11 +1442,13 @@ assignment:
 		}
 		//printListOfOperations($3->opList);
 		//Geração de código 
+		printf("\noia\n\n");
 		if($3->reg!=NULL){
 			//Código de atribuição é o seguinte:
 			// 1) Calcular expressão
 			// 2) Cálcula endereço de variável 
 			// 3) Armazena conteúdo do registrador da expressão nesse endereço
+			printf("AQUI\n");
 			$$->opList = concatILOC($$->opList, $3->opList);
 			char* address = calculateAddressOfVar($$->opList, $1->value.str);
 			createOperation($$->opList, STORE, "store", $3->reg, address, NULL, 0);
@@ -1583,6 +1583,7 @@ continueOutput:
 ;
 funcCall:
 	TK_IDENTIFICADOR '(' argsCall ')'{
+		
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
@@ -1629,7 +1630,7 @@ funcCall:
 		}
 		//5) Atualiza rfp, atualiza rsp e desvia para a função
 		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
-		//printf("TEST: localVarBegin = %d\n", localVarBegin($1->value.str));
+		printf("TEST: localVarBegin = %d\n", localVarBegin($1->value.str));
 
 	}
 	| TK_IDENTIFICADOR '(' ')' {
@@ -2197,14 +2198,8 @@ operands:
 	| funcCall		{
 		$$ = $1;	
 		$$->type = identifierType($$->token->value.str);
-		$$->reg = getNewRegister();		
-		Hash* funcContent = getSymbol($1->token->value.str);		
-		int funcArgs = funcContent->argsNum;		
-		int currentPos;
-		for(int i = 0; i<funcArgs; i++){	
-			 currentPos = i*4+16;
-		}		
-		createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, $$->reg, ARG2_IMED);		
+		$$->reg = getNewRegister();
+		createOperation($$->opList, LOADAI, "loadAI", "rsp", , $$->reg, ARG2_IMED);		
 	}
 	//o tipo do pipe é o tipo da última função, que é sempre o último filho desse nodo
 	

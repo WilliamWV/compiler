@@ -148,7 +148,7 @@ int scopeLevelOfID(char* id);
 
 int identifierSize(char* indentifier);
 
-
+int sizeOfType(int type, int vecSize);
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Adiciona operações ILOC a lista "l" para carregar valor da variável      ///

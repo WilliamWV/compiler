@@ -1,0 +1,30 @@
+TEST: localVarBegin = 28
+loadI	0 => rfp
+loadI	0 => rsp
+loadI	0 => rbss
+jumpI	 -> L1
+L0:	
+L1:	
+loadI	3 => r0
+loadI	5 => r1
+addI	rpc, 9 => r2
+storeAI	r2 => rsp, 0
+storeAI	rsp => rsp, 4
+storeAI	rfp => rsp, 8
+loadI	0 => r2
+storeAI	r2 => rsp, 12
+storeAI	r0 => rsp, 16
+storeAI	r1 => rsp, 20
+jumpI	 -> L0
+loadI	3 => r0
+loadI	5 => r1
+addI	rpc, 9 => r2
+storeAI	r2 => rsp, 0
+storeAI	rsp => rsp, 4
+storeAI	rfp => rsp, 8
+loadI	0 => r2
+storeAI	r2 => rsp, 12
+storeAI	r0 => rsp, 16
+storeAI	r1 => rsp, 20
+jumpI	 -> L0
+halt	

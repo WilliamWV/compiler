@@ -1,0 +1,18 @@
+/*a int;
+b int;
+c int;
+
+int f(int x, int y){
+	int d;
+}
+
+int main(){
+	f(3, 5);
+}*/
+
+int foo(int y){
+}
+int main(){
+int x;
+x = foo(x);
+}

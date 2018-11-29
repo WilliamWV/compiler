@@ -29,4 +29,6 @@ void saveFunc(char* symbol);
 
 int getCurrentFuncReturnType();
 
+void argsSize();
+
 void updateLocalVarSize(int newVarSize);

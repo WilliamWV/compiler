@@ -197,6 +197,14 @@ int getCurrentFuncReturnType(){
 
 }
 
+void argsSize(){
+	Args *aux = currentArgs;
+	if(aux != NULL){
+		int newVarSize = sizeOfType(currentArgs->arg->argType, 0);
+		updateLocalVarSize(newVarSize);
+		aux = aux->next;
+	}
+}
 
 void updateLocalVarSize(int newVarSize){
 	Hash* funcContent = getSymbol(currentFunc);
