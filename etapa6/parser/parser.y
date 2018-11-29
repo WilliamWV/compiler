@@ -506,6 +506,20 @@ componente:
 			createOperation($1->opList, STOREAI, "storeAI", tempReg, "rfp", (void*) &currentStorePos, ARG3_IMED);
 		}
 		$$->opList = concatILOC($1->opList, $4->opList);
+		char* tempRegZero = getNewRegister();
+		int zero = 0;
+		char* tempRegQuatro = getNewRegister();
+		int quatro = 4;
+		char* tempRegOito = getNewRegister();
+		int oito = 8;
+		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
+			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &zero, tempRegZero, ARG2_IMED);
+			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &quatro, tempRegQuatro, ARG2_IMED);
+			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &oito, tempRegOito, ARG2_IMED);
+			createOperation($$->opList, I2I, "i2i", tempRegQuatro, "rsp", NULL, 0);
+			createOperation($$->opList, I2I, "i2i", tempRegOito, "rfp", NULL, 0);
+			createOperation($$->opList, JUMP, "jump", tempRegZero, NULL, NULL, 0);
+		}
 		closeTable();
 		
 	}
