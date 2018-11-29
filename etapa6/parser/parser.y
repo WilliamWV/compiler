@@ -341,8 +341,6 @@ programa:
 	scopeOpenner componentes	{
 		$$ = $2; arvore = $$; 		
 		parsingSucceded = TRUE;
-		for(int i = 0; i<$$->opList->operations;i++){
-		}
 		int rbssInit = 4 * (numberOfOperationsWithoutLabels($$->opList)+5); // o 5 vem do halt, dos 3 loadI e do jumpI abaixo
 		int rfpAndRspInit = rbssInit + globalVarsSize;
 		ILOC_LIST* start = createILOCList();
