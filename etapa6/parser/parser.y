@@ -350,7 +350,6 @@ programa:
 			createOperation(start, LOADI, "loadI", (void*) &rbssInit, "rbss", NULL, ARG1_IMED);
 			createOperation(start, JUMPI, "jumpI", mainContent->label, NULL, NULL, 0);
 			
-
 			ILOC_LIST* halt = createILOCList();
 			createOperation(halt, HALT, "halt", NULL, NULL, NULL, 0);
 			$$->opList = concatILOC(start, $$->opList);
@@ -496,7 +495,6 @@ componente:
 
 		Hash* funcContent = getSymbol($1->kids[0]->token->value.str);
 		int sizeLocalVars = funcContent->sizeOfLocalVars;
-		printf("\n\nTAMANHO: %d\n\n", sizeLocalVars);
 		createOperation($1->opList, I2I, "i2i", "rsp", "rfp", NULL, 0);
 		createOperation($1->opList, ADDI, "addI", "rsp", (void*) &(sizeLocalVars), "rsp", ARG2_IMED);
 		int funcArgs = funcContent->argsNum;
@@ -507,7 +505,6 @@ componente:
 			createOperation($1->opList, LOADAI, "loadAI", "rfp", (void*) &currentLoadPos, tempReg, ARG2_IMED);
 			createOperation($1->opList, STOREAI, "storeAI", tempReg, "rfp", (void*) &currentStorePos, ARG3_IMED);
 		}
-		$$->opList = concatILOC($1->opList, $4->opList);
 		$$->opList = concatILOC($1->opList, $4->opList);
 		closeTable();
 		
@@ -684,10 +681,11 @@ funcName:
 		Hash* funcContent = getSymbol($2->value.str);
 		if(funcContent!=NULL){
 			int labSize = strlen(funcContent->label);
-			char* lab = (char*) aloca(sizeof(char) * (labSize + 2));
-			strcpy(lab, funcContent->label);
-			lab[labSize] = ':';
-			lab[labSize+1] = '\0';
+			char* lab = (char*) aloca(sizeof(char) * (labSize + 3));
+			strcpy(lab+1, funcContent->label); // copia label a partir da segunda posicao da string...
+			lab[0] = '\n';			// pois a primeira posicao ira receber um '\n'
+			lab[labSize+1] = ':';
+			lab[labSize+2] = '\0';
 			createOperation($$->opList, LAB, lab, NULL, NULL, NULL, 0);
 		
 		}
@@ -709,10 +707,11 @@ funcName:
 		Hash* funcContent = getSymbol($3->value.str);
 		if(funcContent!=NULL){
 			int labSize = strlen(funcContent->label);
-			char* lab = (char*) aloca(sizeof(char) * (labSize + 2));
-			strcpy(lab, funcContent->label);
-			lab[labSize] = ':';
-			lab[labSize+1] = '\0';
+			char* lab = (char*) aloca(sizeof(char) * (labSize + 3));
+			strcpy(lab+1, funcContent->label);
+			lab[0] = 'Z';
+			lab[labSize+1] = ':';
+			lab[labSize+2] = '\0';
 			createOperation($$->opList, LAB, lab, NULL, NULL, NULL, 0);
 		
 		}

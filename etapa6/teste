@@ -13,6 +13,6 @@ int main(){
 int foo(int y){
 }
 int main(){
-int x;
-x = foo(x);
+	int x;
+	x = foo(x);
 }

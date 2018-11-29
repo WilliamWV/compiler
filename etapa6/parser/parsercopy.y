@@ -350,7 +350,6 @@ programa:
 			createOperation(start, LOADI, "loadI", (void*) &rbssInit, "rbss", NULL, ARG1_IMED);
 			createOperation(start, JUMPI, "jumpI", mainContent->label, NULL, NULL, 0);
 			
-
 			ILOC_LIST* halt = createILOCList();
 			createOperation(halt, HALT, "halt", NULL, NULL, NULL, 0);
 			$$->opList = concatILOC(start, $$->opList);
@@ -482,6 +481,7 @@ componente:
 		$$ = $1; 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, $4);
+		argsSize();
 		//funcName tem 2 formas possíveis:
 		// 1) head = tipoPrimitivo, kids[0] = nome da func
 		// 2) head = TK_PR_STATIC, kids[0] = tipo, kids[1] = nome DA FUNC		
@@ -505,7 +505,6 @@ componente:
 			createOperation($1->opList, LOADAI, "loadAI", "rfp", (void*) &currentLoadPos, tempReg, ARG2_IMED);
 			createOperation($1->opList, STOREAI, "storeAI", tempReg, "rfp", (void*) &currentStorePos, ARG3_IMED);
 		}
-		$$->opList = concatILOC($1->opList, $4->opList);
 		$$->opList = concatILOC($1->opList, $4->opList);
 		closeTable();
 		
@@ -682,10 +681,11 @@ funcName:
 		Hash* funcContent = getSymbol($2->value.str);
 		if(funcContent!=NULL){
 			int labSize = strlen(funcContent->label);
-			char* lab = (char*) aloca(sizeof(char) * (labSize + 2));
-			strcpy(lab, funcContent->label);
-			lab[labSize] = ':';
-			lab[labSize+1] = '\0';
+			char* lab = (char*) aloca(sizeof(char) * (labSize + 3));
+			strcpy(lab+1, funcContent->label); // copia label a partir da segunda posicao da string...
+			lab[0] = '\n';			// pois a primeira posicao ira receber um '\n'
+			lab[labSize+1] = ':';
+			lab[labSize+2] = '\0';
 			createOperation($$->opList, LAB, lab, NULL, NULL, NULL, 0);
 		
 		}
@@ -707,10 +707,11 @@ funcName:
 		Hash* funcContent = getSymbol($3->value.str);
 		if(funcContent!=NULL){
 			int labSize = strlen(funcContent->label);
-			char* lab = (char*) aloca(sizeof(char) * (labSize + 2));
-			strcpy(lab, funcContent->label);
-			lab[labSize] = ':';
-			lab[labSize+1] = '\0';
+			char* lab = (char*) aloca(sizeof(char) * (labSize + 3));
+			strcpy(lab+1, funcContent->label);
+			lab[0] = 'Z';
+			lab[labSize+1] = ':';
+			lab[labSize+2] = '\0';
 			createOperation($$->opList, LAB, lab, NULL, NULL, NULL, 0);
 		
 		}
@@ -1442,13 +1443,11 @@ assignment:
 		}
 		//printListOfOperations($3->opList);
 		//Geração de código 
-		printf("\noia\n\n");
 		if($3->reg!=NULL){
 			//Código de atribuição é o seguinte:
 			// 1) Calcular expressão
 			// 2) Cálcula endereço de variável 
 			// 3) Armazena conteúdo do registrador da expressão nesse endereço
-			printf("AQUI\n");
 			$$->opList = concatILOC($$->opList, $3->opList);
 			char* address = calculateAddressOfVar($$->opList, $1->value.str);
 			createOperation($$->opList, STORE, "store", $3->reg, address, NULL, 0);
@@ -1583,7 +1582,6 @@ continueOutput:
 ;
 funcCall:
 	TK_IDENTIFICADOR '(' argsCall ')'{
-		
 		$$ = criaNodo($1); 
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
@@ -1630,7 +1628,7 @@ funcCall:
 		}
 		//5) Atualiza rfp, atualiza rsp e desvia para a função
 		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
-		printf("TEST: localVarBegin = %d\n", localVarBegin($1->value.str));
+		//printf("TEST: localVarBegin = %d\n", localVarBegin($1->value.str));
 
 	}
 	| TK_IDENTIFICADOR '(' ')' {
@@ -2198,8 +2196,14 @@ operands:
 	| funcCall		{
 		$$ = $1;	
 		$$->type = identifierType($$->token->value.str);
-		$$->reg = getNewRegister();
-		createOperation($$->opList, LOADAI, "loadAI", "rsp", , $$->reg, ARG2_IMED);		
+		$$->reg = getNewRegister();		
+		Hash* funcContent = getSymbol($1->token->value.str);		
+		int funcArgs = funcContent->argsNum;		
+		int currentPos;
+		for(int i = 0; i<funcArgs; i++){	
+			 currentPos = i*4+16;
+		}		
+		createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, $$->reg, ARG2_IMED);		
 	}
 	//o tipo do pipe é o tipo da última função, que é sempre o último filho desse nodo
 	
