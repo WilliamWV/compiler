@@ -59,6 +59,7 @@ extern Node *danglingNodes;
 //necessários para casos especiais na verificação de expressões
 int isInput = FALSE;
 int isReturn = FALSE;
+int globalVarsSize = 0;
 
 //Retorna constante representando o tipo, o nodo da ast passado deve ser ou da
 //regra tipo, ou da regra tipoPrimitivo
@@ -338,10 +339,12 @@ int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
 
 programa: 
 	scopeOpenner componentes	{
-		$$ = $2; arvore = $$; 
+		$$ = $2; arvore = $$; 		
 		parsingSucceded = TRUE;
-		int rfpAndRspInit = 0;
-		int rbssInit = 0; //não sei que valor tem que ser aqui
+		for(int i = 0; i<$$->opList->operations;i++){
+		}
+		int rbssInit = 4 * (numberOfOperationsWithoutLabels($$->opList)+5); // o 5 vem do halt, dos 3 loadI e do jumpI abaixo
+		int rfpAndRspInit = rbssInit + globalVarsSize;
 		ILOC_LIST* start = createILOCList();
 		Hash* mainContent = getSymbol("main");
 		if (mainContent != NULL || mainContent->isFunction == FALSE){		
@@ -442,7 +445,8 @@ componente:
 			
 			if ($2->kidsNumber == 2){
 				//var global estática
-				int type = getType($2->kids[0]);				
+				int type = getType($2->kids[0]);
+				globalVarsSize += sizeOfType(type, 0);				
 				if (type == USER){
 					int isUsr = verifyUse($2->kids[0]->token->value.str, UTN);
 					if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}
@@ -463,6 +467,7 @@ componente:
 				
 			}else{
 				int type = getType($2);
+				globalVarsSize += sizeOfType(type, 0);	
 				if (type == USER){
 					int isUsr = verifyUse($2->token->value.str, UTN);
 					if (isUsr!=TRUE){ returnError = isUsr; nodeNotAdded = $$; YYABORT;}

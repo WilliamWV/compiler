@@ -284,3 +284,11 @@ void printLabels(Labels *list){
 	printf("\n");
 }
 
+int numberOfOperationsWithoutLabels(ILOC_LIST *opList){
+	int operations = 0;
+	for(int i = 0; i < opList->operations; i++){
+		if(opList->list[i]->opcode != LAB)
+			operations++;
+	}
+	return operations;
+}

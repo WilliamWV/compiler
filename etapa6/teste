@@ -9,7 +9,7 @@ int f(int x, int y){
 int main(){
 	f(3, 5);
 }*/
-
+w int;
 int foo(int y){
 y = 2;
 return y;

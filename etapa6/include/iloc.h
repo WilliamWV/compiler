@@ -94,4 +94,5 @@ void printArg(ILOC_ARG* arg);
 void patch(ILOC_LIST *listOp, char *newLabel, Labels *targetedLabels);
 void substituteLabels(char *newLabel, char *targetLabel, ILOC_OP *oper);
 void printLabels(Labels *list);
+int numberOfOperationsWithoutLabels(ILOC_LIST *oplist);
 #endif
