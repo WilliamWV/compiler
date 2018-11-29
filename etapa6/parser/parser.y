@@ -495,12 +495,17 @@ componente:
 
 		Hash* funcContent = getSymbol($1->kids[0]->token->value.str);
 		int sizeLocalVars = funcContent->sizeOfLocalVars;
+		int sizeArgs = funcContent->argsSize;
+		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
+			sizeLocalVars += sizeArgs; // espaco ocupado para guardar os parametros da funcao
+			sizeLocalVars += 12; // numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
+		}
 		createOperation($1->opList, I2I, "i2i", "rsp", "rfp", NULL, 0);
 		createOperation($1->opList, ADDI, "addI", "rsp", (void*) &(sizeLocalVars), "rsp", ARG2_IMED);
 		int funcArgs = funcContent->argsNum;
 		for(int i = 0; i<funcArgs; i++){
-			int currentLoadPos = i*4+12;
-			int currentStorePos = i*4+12+4*funcArgs;			
+			int currentLoadPos = i*4 + 12; // posicao do argumento atual a partir de rfp+16; o 16 vem do numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
+			int currentStorePos = i*4 + 12 + sizeArgs; // posicao da variavel local que ira armazenar tal parametro eh a posicao acima somada ao espaco ocupado para armazenar todos os parametros passados a funcao		
 			char* tempReg = getNewRegister();
 			createOperation($1->opList, LOADAI, "loadAI", "rfp", (void*) &currentLoadPos, tempReg, ARG2_IMED);
 			createOperation($1->opList, STOREAI, "storeAI", tempReg, "rfp", (void*) &currentStorePos, ARG3_IMED);
@@ -1640,7 +1645,7 @@ funcCall:
 			int currentPos = i*4+16;			
 			createOperation($$->opList, STOREAI, "storeAI", $3->kids[i*2]->reg, "rsp", (void*) &currentPos, ARG3_IMED);
 		}
-		//5) Atualiza rfp, atualiza rsp e desvia para a função
+		//5) Desvia para a função
 		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
 		//printf("TEST: localVarBegin = %d\n", localVarBegin($1->value.str));
 

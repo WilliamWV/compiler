@@ -223,6 +223,7 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 	}
 	tabelas->currentTable[hashIndex]->vecSize = vecSize;
 	tabelas->currentTable[hashIndex]->argsNum = 0;
+	tabelas->currentTable[hashIndex]->argsSize = 0;
 	tabelas->currentTable[hashIndex]->fieldsNum = 0;
 	tabelas->currentTable[hashIndex]->args = (FuncArg**)malloc(sizeof(FuncArg*));
 	tabelas->currentTable[hashIndex]->fields = (UserTypeField**)malloc(sizeof(UserTypeField*));

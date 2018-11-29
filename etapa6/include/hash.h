@@ -67,6 +67,7 @@ typedef struct hashContent{
                                   // diferenciar de um vetor com 1 elemento
 	int argsNum;	              // quantidade de argumentos na função
 	FuncArg** args;               // argumentos e seus tipos, se for função
+	int argsSize;			// tamanho ocupado pelos argumentos
 	int fieldsNum;                // quantidade de campos no tipo de usuário
 	UserTypeField** fields;       // campos e seus tipos, se for tipo de usuário
 	struct lexval* valor_lexico;  // valores associados ao yylval do símbolo

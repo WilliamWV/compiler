@@ -210,5 +210,6 @@ void updateLocalVarSize(int newVarSize){
 	Hash* funcContent = getSymbol(currentFunc);
 	if(funcContent!=NULL){
 		funcContent->sizeOfLocalVars = funcContent->sizeOfLocalVars + newVarSize;
+		funcContent->argsSize = funcContent->argsSize + newVarSize;
 	}	
 }
