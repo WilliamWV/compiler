@@ -214,6 +214,7 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 	tabelas->currentTable[hashIndex]->type = type;
 	tabelas->currentTable[hashIndex]->isFunction = isFunction;
 	tabelas->currentTable[hashIndex]->hasReturn = FALSE;
+	tabelas->currentTable[hashIndex]->hasReturnOutsideOfIf = FALSE;
 	tabelas->currentTable[hashIndex]->flags = flags;
 	tabelas->currentTable[hashIndex]->size = sizeOfType(type, vecSize);
 	if (userType == NULL)
@@ -229,7 +230,9 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 	tabelas->currentTable[hashIndex]->argsSize = 0;
 	tabelas->currentTable[hashIndex]->fieldsNum = 0;
 	tabelas->currentTable[hashIndex]->args = (FuncArg**)malloc(sizeof(FuncArg*));
-	tabelas->currentTable[hashIndex]->registers = (Registers*)malloc(sizeof(FuncArg));
+	tabelas->currentTable[hashIndex]->registers = (Registers*)aloca(sizeof(FuncArg));
+	tabelas->currentTable[hashIndex]->registers->registers = (char**)aloca(sizeof(FuncArg*));
+	tabelas->currentTable[hashIndex]->registers->numberOfRegs = 0;
 	tabelas->currentTable[hashIndex]->fields = (UserTypeField**)malloc(sizeof(UserTypeField*));
 	tabelas->currentTable[hashIndex]->valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	*(tabelas->currentTable[hashIndex]->valor_lexico) = *(valor_lexico);

@@ -59,6 +59,8 @@ extern Node *danglingNodes;
 //necessários para casos especiais na verificação de expressões
 int isInput = FALSE;
 int isReturn = FALSE;
+int insideIf = FALSE;
+int nestedIfs = 0;
 int globalVarsSize = 0;
 
 //Retorna constante representando o tipo, o nodo da ast passado deve ser ou da
@@ -275,6 +277,7 @@ int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
 %type <ast> idThatCanBeFuncType
 %type <ast> idThatCanBeFuncName
 %type <ast> ifThenElse
+%type <ast> ifHelper
 //%type <ast> infiniteQuestionMarks
 %type <ast> input
 %type <ast> list
@@ -340,8 +343,8 @@ int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
 programa: 
 	scopeOpenner componentes	{
 		$$ = $2; arvore = $$; 	
-		printFunctionRegs("main");
-		printFunctionRegs("factorial");	
+		//printFunctionRegs("main");
+		//printFunctionRegs("factorial");	
 		parsingSucceded = TRUE;
 		int rbssInit = 4 * (numberOfOperationsWithoutLabels($$->opList)+5); // o 5 vem do halt, dos 3 loadI e do jumpI abaixo
 		int rfpAndRspInit = rbssInit + globalVarsSize;
@@ -522,7 +525,26 @@ componente:
 			createOperation($1->opList, LOADAI, "loadAI", "rfp", (void*) &currentLoadPos, tempReg, ARG2_IMED);
 			createOperation($1->opList, STOREAI, "storeAI", tempReg, "rfp", (void*) &currentStorePos, ARG3_IMED);
 		}
+
 		$$->opList = concatILOC($1->opList, $4->opList); // apos carregar todos os parametros, concatena as operacoes da funcao em si
+
+		//caso a funcao nao possua return ou ele esta dentro de um if, devemos faze-la voltar `a chamadora mesmo assim
+		if(funcContent->hasReturnOutsideOfIf == FALSE){
+			char* tempRegZero = getNewRegister();
+			int zero = 0;
+			char* tempRegQuatro = getNewRegister();
+			int quatro = 4;
+			char* tempRegOito = getNewRegister();
+			int oito = 8;
+			if(strcmp("main", currentFunc) != 0){ // apos as operacoes da funcao em si, vem o epilogo (restaura valors necessarios e retorna fluxo ao chamador)
+				createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &zero, tempRegZero, ARG2_IMED);
+				createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &quatro, tempRegQuatro, ARG2_IMED);
+				createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &oito, tempRegOito, ARG2_IMED);
+				createOperation($$->opList, I2I, "i2i", tempRegQuatro, "rsp", NULL, 0);
+				createOperation($$->opList, I2I, "i2i", tempRegOito, "rfp", NULL, 0);
+				createOperation($$->opList, JUMP, "jump", tempRegZero, NULL, NULL, 0);
+			}
+		}
 		
 		closeTable();
 		
@@ -806,9 +828,13 @@ comandosSemVirgula: //comandos que são permitidos dentro das listas do for
 	| blocoComandos			{$$ = $1;}
 ;
 
+ifHelper:
+	TK_PR_IF { $$ = criaNodo($1); insideIf = TRUE; nestedIfs++;};
+;
+
 ifThenElse:
-	TK_PR_IF '(' expression ')' TK_PR_THEN blocoComandos optElse {
-		$$ = criaNodo($1); 
+	ifHelper '(' expression ')' TK_PR_THEN blocoComandos optElse {
+		$$ = $1;
 		adicionaFilho($$, criaNodo($2)); 
 		adicionaFilho($$, $3); 
 		adicionaFilho($$, criaNodo($4)); 
@@ -857,6 +883,9 @@ ifThenElse:
 		$$->opList = concatILOC($$->opList, tempF);
 		$$->opList = concatILOC($$->opList, $7->opList);		
 		$$->opList = concatILOC($$->opList, tempAfterF);
+		nestedIfs--;
+		if(nestedIfs == 0)
+			insideIf = FALSE;
 	}
 ;
 optElse:
@@ -1774,6 +1803,11 @@ return:
 		isReturn = FALSE;
 
 		Hash* funcContent = getSymbol(currentFunc);
+		//if(insideIf == FALSE)
+		//	printf("%s: TRUE\n", currentFunc);
+		//else printf("%s: FALSE\n", currentFunc);
+		if(insideIf == FALSE)
+			funcContent->hasReturnOutsideOfIf = TRUE;
 		funcContent->hasReturn = TRUE;	
 		int argsSize = funcContent->argsSize;
 		int offset = 16 + argsSize;		

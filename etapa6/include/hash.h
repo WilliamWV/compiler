@@ -81,6 +81,7 @@ typedef struct hashContent{
 	                              // para indicar a primeira instrução dela 	
 	int localOffset;               // usado se o símbolo é uma função
 	Registers *registers;
+	int hasReturnOutsideOfIf;
 }Hash;
 
 ////////////////////////////////////////////////////////////////////////////////

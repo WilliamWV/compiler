@@ -1,0 +1,61 @@
+Registradores de main: r20  r21  r22  r23  r24  r25  
+Registradores de factorial: Funcao nao existe.
+loadI	208 => rfp
+loadI	208 => rsp
+loadI	208 => rbss
+jumpI	 -> L6
+
+L0:	
+i2i	rsp => rfp
+addI	rsp, 36 => rsp
+loadI	0 => r0
+loadI	1 => r1
+cmp_EQ	r0, r1 -> r2
+cbr		r2 -> L3, L5
+L3:	
+loadI	2 => r3
+storeAI	r3 => rfp, 16
+loadAI	rfp, 0 => r4
+loadAI	rfp, 4 => r5
+loadAI	rfp, 8 => r6
+i2i	r5 => rsp
+i2i	r6 => rfp
+jump	 -> r4
+jumpI	 -> L4
+L5:	
+L4:	
+loadI	0 => r7
+addI	rfp, 20 => r8
+store	r7 => r8
+loadI	0 => r9
+addI	rfp, 24 => r10
+store	r9 => r10
+loadI	0 => r11
+addI	rfp, 28 => r12
+store	r11 => r12
+loadI	0 => r13
+addI	rfp, 32 => r14
+store	r13 => r14
+loadI	0 => r15
+addI	rfp, 36 => r16
+store	r15 => r16
+loadAI	rfp, 0 => r17
+loadAI	rfp, 4 => r18
+loadAI	rfp, 8 => r19
+i2i	r18 => rsp
+i2i	r19 => rfp
+jump	 -> r17
+
+L6:	
+i2i	rsp => rfp
+addI	rsp, 4 => rsp
+addI	rpc, 7 => r20
+storeAI	r20 => rsp, 0
+storeAI	rsp => rsp, 4
+storeAI	rfp => rsp, 8
+loadI	0 => r20
+storeAI	r20 => rsp, 12
+jumpI	 -> L0
+addI	rfp, 0 => r22
+store	r21 => r22
+halt	
