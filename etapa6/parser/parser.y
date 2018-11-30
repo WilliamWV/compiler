@@ -1819,7 +1819,7 @@ return:
 			char* tempRegQuatro = getNewRegister();
 			int quatro = 4;
 			char* tempRegOito = getNewRegister();
-			printf("teste: %s\n", tempRegOito);
+			//printf("teste: %s\n", tempRegOito);
 			int oito = 8;
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &zero, tempRegZero, ARG2_IMED);
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &quatro, tempRegQuatro, ARG2_IMED);
@@ -2273,8 +2273,8 @@ operands:
 		$$ = $1;	
 		$$->type = identifierType($$->token->value.str);
 		Hash* funcContent = getSymbol($1->token->value.str);
-		if(funcContent->hasReturn){
-			$$->reg = getNewRegister();				
+		$$->reg = getNewRegister();	
+		if(funcContent->hasReturn){			
 			int funcArgs = funcContent->argsNum;		
 			int currentPos = 0;			
 			for(int i = 0; i<funcArgs; i++){	

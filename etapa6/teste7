@@ -1,0 +1,3 @@
+// registrador nao inicializado
+loadI 300 => r3
+store r3 -> r27 // guarda em mem(300) o valor do reg nao inicializado r27

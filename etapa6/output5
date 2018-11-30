@@ -1,4 +1,3 @@
-
 loadI	244 => rfp
 loadI	244 => rsp
 loadI	244 => rbss
@@ -8,7 +7,7 @@ L0:
 i2i	rsp => rfp
 addI	rsp, 40 => rsp
 loadI	0 => r0
-loadI	1 => r1
+loadI	0 => r1
 cmp_EQ	r0, r1 -> r2
 cbr		r2 -> L3, L5
 L3:	
