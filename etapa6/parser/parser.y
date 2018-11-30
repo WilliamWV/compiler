@@ -2238,11 +2238,11 @@ operands:
 		Hash* funcContent = getSymbol($1->token->value.str);
 		if(funcContent->hasReturn){		
 			int funcArgs = funcContent->argsNum;		
-			int currentPos;
+			int currentPos = 0;			
 			for(int i = 0; i<funcArgs; i++){	
-				 currentPos = i*4+16;
+				 currentPos = i*4;
 			}
-			currentPos += funcContent->argsSize;
+			currentPos = currentPos + 16 + funcContent->argsSize;
 			createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, $$->reg, ARG2_IMED);
 		}	
 	}
