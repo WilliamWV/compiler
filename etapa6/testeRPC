@@ -1,0 +1,7 @@
+L0:
+loadI 7 => r0
+loadI 15 => r1
+store r1 => rbss
+store r1 => rbss
+store r1 => rbss
+//jumpI -> L0

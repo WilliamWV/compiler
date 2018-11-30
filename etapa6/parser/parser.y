@@ -499,9 +499,9 @@ componente:
 		int sizeLocalVars = funcContent->sizeOfLocalVars;
 		int sizeArgs = funcContent->argsSize;
 		int funcTypeSize = sizeOfType(getCurrentFuncReturnType(), 0);
-		int offset;
+		int offset; // offset em relacao ao rsp atual
 		if(funcContent->hasReturn == TRUE)
-			offset = sizeLocalVars + funcTypeSize;
+			offset = sizeArgs + sizeLocalVars + funcTypeSize; // tamanho ocupado para salvar os parametros + tamanho das variaveis locais + tamanho do tipo de retorno
 		else offset = sizeLocalVars;
 		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
 			offset += 16; // numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
@@ -511,7 +511,7 @@ componente:
 		int funcArgs = funcContent->argsNum;
 		for(int i = 0; i<funcArgs; i++){
 			int currentLoadPos = i*4 + 16; // posicao do argumento atual a partir de rfp+16; o 16 vem do numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
-			int currentStorePos = i*4 + 16 + sizeArgs + funcTypeSize; // posicao da variavel local que ira armazenar tal parametro eh a posicao acima somada ao espaco ocupado para armazenar todos os parametros passados a funcao		
+			int currentStorePos = i*4 + 16 + sizeArgs + funcTypeSize; // posicao da variavel local que ira armazenar tal parametro eh a posicao acima somada ao espaco ocupado para armazenar todos os parametros passados a funcao e ao espaco reservado para valor retornado		
 			char* tempReg = getNewRegister();
 			createOperation($1->opList, LOADAI, "loadAI", "rfp", (void*) &currentLoadPos, tempReg, ARG2_IMED);
 			createOperation($1->opList, STOREAI, "storeAI", tempReg, "rfp", (void*) &currentStorePos, ARG3_IMED);
@@ -1782,7 +1782,8 @@ return:
 		Hash* funcContent = getSymbol(currentFunc);
 		funcContent->hasReturn = TRUE;	
 		int argsSize = funcContent->argsSize;
-		int offset = 16 + argsSize;
+		int offset = 16 + argsSize;		
+		$$->opList = concatILOC($$->opList, $3->opList);
 		createOperation($$->opList, STOREAI, "storeAI", $3->reg, "rfp", (void*) &offset, ARG3_IMED);
 	}
 	
@@ -2180,7 +2181,6 @@ operands:
 		//geração de código		
 		if($$->type == INT){
 			$$->reg = loadVarToRegister($$->opList, $1->value.str);
-			printf("\n%s: %s\n", $1->value.str, $$->reg);
 		}
 
 	}
@@ -2230,13 +2230,16 @@ operands:
 		$$ = $1;	
 		$$->type = identifierType($$->token->value.str);
 		$$->reg = getNewRegister();		
-		Hash* funcContent = getSymbol($1->token->value.str);		
-		int funcArgs = funcContent->argsNum;		
-		int currentPos;
-		for(int i = 0; i<funcArgs; i++){	
-			 currentPos = i*4+16;
-		}		
-		createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, $$->reg, ARG2_IMED);		
+		Hash* funcContent = getSymbol($1->token->value.str);
+		if(funcContent->hasReturn){		
+			int funcArgs = funcContent->argsNum;		
+			int currentPos;
+			for(int i = 0; i<funcArgs; i++){	
+				 currentPos = i*4+16;
+			}
+			currentPos += funcContent->argsSize;
+			createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, $$->reg, ARG2_IMED);
+		}	
 	}
 	//o tipo do pipe é o tipo da última função, que é sempre o último filho desse nodo
 	
