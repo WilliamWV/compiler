@@ -7,14 +7,16 @@ int f(){
 }
 
 int g(int x, int y){
-	
+	int a;
+	int b;
 }
 
 int h(){
-
+	int c;
 }
 
 int main(){
+	int d;
 	a = 2;
 	b = 9;
 	c = -1;

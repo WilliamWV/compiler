@@ -4,7 +4,9 @@
 
 HashStack* tabelas = NULL;
 
-int localOffset = 0;
+extern char *currentFunc;
+
+//int localOffset = 0;
 int globalOffset = 0;
 
 
@@ -237,15 +239,28 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 		
 	}
 	else{ // variável loval
-		tabelas->currentTable[hashIndex]->offset = localOffset;
-		localOffset+=tabelas->currentTable[hashIndex]->size;
+		Hash* func = getSymbol(currentFunc);
+		tabelas->currentTable[hashIndex]->offset = func->localOffset;
+		func->localOffset+=tabelas->currentTable[hashIndex]->size;
+		printf("\n\nOffset da variável %s = %d\n", tabelas->currentTable[hashIndex]->symbol, tabelas->currentTable[hashIndex]->offset);
 	}
 	tabelas->currentTable[hashIndex]->sizeOfLocalVars = 0;
 	if(isFunction == TRUE){
 		tabelas->currentTable[hashIndex]->label = getNewLabel();
+		// o valor de retorno é a soma de:
+		// 1) Endereço de retorno -> tamanho 4
+		// 2) rsp e rfp -> tamanho 8
+		// 3) vínculo estático -> tamanho 4
+		// 4) valor de retorno -> tamanho 4
+		if (strcmp(tabelas->currentTable[hashIndex]->symbol, "main") == 0){
+			tabelas->currentTable[hashIndex]->localOffset = 0;
+		}else{
+			tabelas->currentTable[hashIndex]->localOffset = 4 + 8 + 4 + 4;
+		}
 	}
 	else{		
 		tabelas->currentTable[hashIndex]->label = NULL;
+		tabelas->currentTable[hashIndex]->localOffset = 0;
 	}
 	return 0;
 }
@@ -262,6 +277,7 @@ void addFuncArg(char* symbol, FuncArg* arg)
 			symbolContent->argsNum * sizeof(FuncArg*)
 		);
 		symbolContent->args[symbolContent->argsNum - 1] = arg;
+		symbolContent->localOffset = symbolContent->localOffset + 4;
 
 	}
 }

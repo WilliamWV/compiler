@@ -78,8 +78,8 @@ typedef struct hashContent{
 	                              // para indicar o tamanho de memória que deve
                                   // ser reservado para as variáveis locais
 	char* label;                  // usado apenas se o símbolo for uma função
-	                              // para indicar a primeira instrução dela 
-
+	                              // para indicar a primeira instrução dela 	
+	int localOffset;               // usado se o símbolo é uma função
 }Hash;
 
 ////////////////////////////////////////////////////////////////////////////////
