@@ -493,7 +493,7 @@ componente:
 		}
 			
 		//addArgsToSymbol($1->kids[kid]->token->value.str, currentArgs);
-		//clearCurrentArgs();		
+		clearCurrentArgs();		
 
 		Hash* funcContent = getSymbol($1->kids[0]->token->value.str);
 		int sizeLocalVars = funcContent->sizeOfLocalVars;
@@ -756,8 +756,6 @@ funcArgs:
 		adicionaFilho($$, criaNodo($3));
 		argsSize();
 		addArgsToSymbol(currentFunc, currentArgs);
-		clearCurrentArgs();		
-
 	}
 ;
 //Bloco de comandos
