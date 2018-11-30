@@ -1,0 +1,23 @@
+// caso em que existe return, mas ele nao eh chamado... precisamos voltar a main
+int corre(){
+	int a;
+	int b;
+	int c;
+	int d;
+	int e;
+	if(0 == 1) then{
+		return 2;};
+	a = 0;
+	b = 0;
+	c = 0;
+	d = 0;
+	e = 0;
+}
+
+int lixo(){
+}
+
+int main(){
+	int teste;
+	teste = corre();
+}

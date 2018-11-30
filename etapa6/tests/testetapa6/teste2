@@ -1,0 +1,9 @@
+int f(){
+	return 73;
+}
+int main(){
+	int y;
+	int p;
+	y = f();
+	p = y*7;
+}

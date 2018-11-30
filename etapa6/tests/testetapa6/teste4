@@ -1,0 +1,12 @@
+//nao existe return, precisamos voltar a main
+int corre(){
+}
+
+int lixo(){
+}
+
+int main(){
+	int teste;
+	corre();
+	teste = 4;
+}

@@ -1,0 +1,21 @@
+/*a int;
+b int;
+c int;
+
+int f(int x, int y){
+	int d;
+}
+
+int main(){
+	f(3, 5);
+}*/
+w int;
+int foo(int y){
+y = y;
+return y;
+}
+int main(){
+	int x;
+	x = foo(2);
+	w = x;
+}

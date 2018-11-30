@@ -1,0 +1,28 @@
+//recursao
+
+/*int fatorial(int n){
+	if(n == 1)then{
+		return 1;
+	};
+	int aux;
+	aux = fatorial(n-1);
+	return n*aux;
+}
+
+int main(){
+	int x;
+	x = fatorial(2);
+}*/
+f int;
+int factorial(int n){
+	if (n==1)then{return 1;};
+	int aux;
+	aux = factorial(n-1);
+	return n*aux;
+}
+
+int main(){
+	int p;
+	p = factorial(5);
+	f = p;
+}
