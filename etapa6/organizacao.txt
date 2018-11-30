@@ -1,0 +1,15 @@
+Organização dos arquivos:
+	Pasta include: contém os headers usados, esses headers contém a definição das estruturas de dados usadas pelo compilador
+	Pasta parser: contém o arquivo parser.y com as ações semânticas que geram o código
+	Pasta src: contém arquivos .c que implementam as funções declaradas nos arquivos correspondentes na pasta include
+	Pasta scanner: possui o scanner em Flex
+	Pasta tests: testes usados para o desenvolvimento
+
+Arquivos mais importantes:
+	* defines.h : contém definição de constantes usadas pelo compilador como valores de erro, opcodes de instruções, etc.
+	* hash.h/hash.c : contém a tabela de símbolos bem como uma ampla gama de funções associadas a ela que não somente cooperam para o funcionamento da hash mas também executam códigos importantes para geração do código como determinação do nível de escopo de um identificador, carregamento de uma variável para um registrador específico (gerando código ILOC) e cálculo de endereço de uma dada variável.
+	* iloc.h/iloc.c : contém definição de estruturas importantes para a geração de código que variam desde criação de instruções até remendos para curto-circuito
+	* naming.h/naming.c : contém a definição de funções para obtenção de novos registradores ou labels além de definir a estrutura Registers que armazena os temporários usados por uma dada função para que possam ser salvos e recuperados do registro de ativação
+	* parser.y: arquivo que acabou sendo o principal do código do compilador, executa a geração do código em uma passagem chamando funções definidas nos outros arquivos para criar tanto as operações para fluxo de controle e cálculo de expressões (etapa5) como para realizar a sequência de chamada e a sequência de retorno de uma função (etapa6)
+
+
