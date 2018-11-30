@@ -343,8 +343,8 @@ int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
 programa: 
 	scopeOpenner componentes	{
 		$$ = $2; arvore = $$; 	
-		//printFunctionRegs("main");
-		//printFunctionRegs("factorial");	
+		printFunctionRegs("main");
+		printFunctionRegs("factorial");	
 		parsingSucceded = TRUE;
 		int rbssInit = 4 * (numberOfOperationsWithoutLabels($$->opList)+5); // o 5 vem do halt, dos 3 loadI e do jumpI abaixo
 		int rfpAndRspInit = rbssInit + globalVarsSize;
@@ -530,13 +530,13 @@ componente:
 
 		//caso a funcao nao possua return ou ele esta dentro de um if, devemos faze-la voltar `a chamadora mesmo assim
 		if(funcContent->hasReturnOutsideOfIf == FALSE){
-			char* tempRegZero = getNewRegister();
-			int zero = 0;
-			char* tempRegQuatro = getNewRegister();
-			int quatro = 4;
-			char* tempRegOito = getNewRegister();
-			int oito = 8;
 			if(strcmp("main", currentFunc) != 0){ // apos as operacoes da funcao em si, vem o epilogo (restaura valors necessarios e retorna fluxo ao chamador)
+				char* tempRegZero = getNewRegister();
+				int zero = 0;
+				char* tempRegQuatro = getNewRegister();
+				int quatro = 4;
+				char* tempRegOito = getNewRegister();
+				int oito = 8;
 				createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &zero, tempRegZero, ARG2_IMED);
 				createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &quatro, tempRegQuatro, ARG2_IMED);
 				createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &oito, tempRegOito, ARG2_IMED);
@@ -1813,13 +1813,14 @@ return:
 		int offset = 16 + argsSize;		
 		$$->opList = concatILOC($$->opList, $3->opList);
 		createOperation($$->opList, STOREAI, "storeAI", $3->reg, "rfp", (void*) &offset, ARG3_IMED);
-		char* tempRegZero = getNewRegister();
-		int zero = 0;
-		char* tempRegQuatro = getNewRegister();
-		int quatro = 4;
-		char* tempRegOito = getNewRegister();
-		int oito = 8;
 		if(strcmp("main", currentFunc) != 0){ // apos as operacoes da funcao em si, vem o epilogo (restaura valors necessarios e retorna fluxo ao chamador)
+			char* tempRegZero = getNewRegister();
+			int zero = 0;
+			char* tempRegQuatro = getNewRegister();
+			int quatro = 4;
+			char* tempRegOito = getNewRegister();
+			printf("teste: %s\n", tempRegOito);
+			int oito = 8;
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &zero, tempRegZero, ARG2_IMED);
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &quatro, tempRegQuatro, ARG2_IMED);
 			createOperation($$->opList, LOADAI, "loadAI", "rfp", (void*) &oito, tempRegOito, ARG2_IMED);
@@ -2271,9 +2272,9 @@ operands:
 	| funcCall		{
 		$$ = $1;	
 		$$->type = identifierType($$->token->value.str);
-		$$->reg = getNewRegister();		
 		Hash* funcContent = getSymbol($1->token->value.str);
-		if(funcContent->hasReturn){		
+		if(funcContent->hasReturn){
+			$$->reg = getNewRegister();				
 			int funcArgs = funcContent->argsNum;		
 			int currentPos = 0;			
 			for(int i = 0; i<funcArgs; i++){	

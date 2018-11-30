@@ -16,5 +16,5 @@ return y;
 }
 int main(){
 	int x;
-	x = foo(x);
+	x = foo(2);
 }
