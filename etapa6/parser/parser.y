@@ -504,12 +504,13 @@ componente:
 		int sizeLocalVars = funcContent->sizeOfLocalVars;
 		int sizeArgs = funcContent->argsSize;
 		int funcTypeSize = sizeOfType(getCurrentFuncReturnType(), 0);
+		int sizeOfTemp = funcContent->registers->numberOfRegs * 4;
 		int offset; // offset em relacao ao rsp atual
 
 		//se a funcao possui return, devemos deixar espaco para o valor retornado
 		if(funcContent->hasReturn == TRUE)
-			offset = sizeArgs + sizeLocalVars + funcTypeSize; // tamanho ocupado para salvar os parametros + tamanho das variaveis locais + tamanho do tipo de retorno
-		else offset = sizeArgs + sizeLocalVars;
+			offset = sizeArgs + sizeLocalVars + funcTypeSize + sizeOfTemp; // tamanho ocupado para salvar os parametros + tamanho das variaveis locais + tamanho do tipo de retorno
+		else offset = sizeArgs + sizeLocalVars + sizeOfTemp;
 
 		//alem disso, se a funcao nao for a main, tambem devemos deixar espaco para o seu prologo (end retorno, VE, VD)
 		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
@@ -1648,9 +1649,11 @@ funcCall:
 		// O endereço de retorno é dado por: rpc + 8 +nOfArgs
 		// Uma vez que existem 8 instruções que sempre ocorrerão no prólogo e mais uma
 		// para empilhar cada argumento
-		Hash* funcContent = getSymbol($1->value.str);		
+		Hash* funcContent = getSymbol($1->value.str);
+		Hash* currentF = getSymbol(currentFunc);
+
 		int funcArgs = funcContent->argsNum;
-		int prologueSize = 7 + funcArgs;
+		int prologueSize = 7 + funcArgs + currentF->registers->numberOfRegs;
 		char* tempReg = getNewRegister();		
 		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
 		int zero = 0;
@@ -1671,13 +1674,27 @@ funcCall:
 			contém expressão que representa o argumento
 		* kids[1], kids[3], kids[5], ..., kids[(argsNum-1)*2 - 1] -> vírgula
 	*/	
+		
 		for(int i = 0; i<funcArgs; i++){
 			int currentPos = i*4+16;			
 			createOperation($$->opList, STOREAI, "storeAI", $3->kids[i*2]->reg, "rsp", (void*) &currentPos, ARG3_IMED);
 		}
+		//empilha valores temporários empilha no RA atual, precisa fazer deslocamento negativo
+		// em relação a rsp
+		for(int i = 0; i<currentF->registers->numberOfRegs; i++){
+			int currentPos = -4*(i+1);
+			createOperation($$->opList, STOREAI, "storeAI", currentF->registers->registers[i], "rsp", (void*) &currentPos, ARG3_IMED);
+		}
+		
+				
 		//5) Desvia para a função
 		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
 		//printf("TEST: localVarBegin = %d\n", localVarBegin($1->value.str));
+		//6) Desempilha temporários
+		for(int i = 0; i<currentF->registers->numberOfRegs; i++){
+			int currentPos = -4*(i+1);
+			createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, currentF->registers->registers[i], ARG2_IMED);
+		}
 
 	}
 	| TK_IDENTIFICADOR '(' ')' {
@@ -1689,7 +1706,8 @@ funcCall:
 		int correctArgs = verifyArguments($1->value.str, NULL);
 		if (correctArgs != TRUE){ returnError = correctArgs; nodeNotAdded = $$; YYABORT;}
 		
-		int prologueSize = 7;
+		Hash* currentF = getSymbol(currentFunc);
+		int prologueSize = 7 + currentF->registers->numberOfRegs;
 		char* tempReg = getNewRegister();		
 		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
 		int zero = 0;
@@ -1702,7 +1720,20 @@ funcCall:
 		int doze = 12;
 		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &doze, ARG3_IMED);
 		Hash* funcContent = getSymbol($1->value.str);
+		
+		//empilha valores temporários empilha no RA atual, precisa fazer deslocamento negativo
+		// em relação a rsp
+		for(int i = 0; i<currentF->registers->numberOfRegs; i++){
+			int currentPos = -4*(i+1);
+			createOperation($$->opList, STOREAI, "storeAI", currentF->registers->registers[i], "rsp", (void*) &currentPos, ARG3_IMED);
+		}
+
 		createOperation($$->opList, JUMPI, "jumpI", funcContent->label, NULL, NULL, 0);
+
+		for(int i = 0; i<currentF->registers->numberOfRegs; i++){
+			int currentPos = -4*(i+1);
+			createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, currentF->registers->registers[i], ARG2_IMED);
+		}
 	}
 ;
 argsCall:
