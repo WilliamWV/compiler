@@ -1,3 +1,4 @@
+//nao existe return, precisamos voltar a main
 int corre(){
 }
 
