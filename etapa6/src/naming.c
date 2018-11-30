@@ -11,9 +11,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../include/naming.h"
+#include "../include/functionArgs.h"
 
 int currentRegister = 0;
 int currentLabel = 0;
+extern char *currentFunc;
 
 //Retorna a quantidade de digitos que um valor inteiro possui
 //poderia ser feito com funções logaritmicas, mas para manter a simplicidade
@@ -42,6 +44,7 @@ char* getNewRegister(){
 		temp /= 10;
 	}
 	reg[digits + 1] = '\0';
+	addNewRegister(reg, currentFunc);
 	currentRegister++;
 	return reg;
 }
@@ -59,4 +62,13 @@ char* getNewLabel(){
 	lab[digits + 1] = '\0';
 	currentLabel++;
 	return lab;
+}
+
+void addNewRegister(char *reg, char *funcName){
+	Hash* funcContent = getSymbol(funcName);
+	if(funcContent != NULL){
+		funcContent->registers->numberOfRegs = funcContent->registers->numberOfRegs + 1;
+		funcContent->registers->registers = (char**)realoca(funcContent->registers->registers, funcContent->registers->numberOfRegs * sizeof(char*));
+		funcContent->registers->registers[funcContent->registers->numberOfRegs - 1] = reg;
+	}
 }

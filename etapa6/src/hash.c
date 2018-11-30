@@ -229,6 +229,7 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 	tabelas->currentTable[hashIndex]->argsSize = 0;
 	tabelas->currentTable[hashIndex]->fieldsNum = 0;
 	tabelas->currentTable[hashIndex]->args = (FuncArg**)malloc(sizeof(FuncArg*));
+	tabelas->currentTable[hashIndex]->registers = (Registers*)malloc(sizeof(FuncArg));
 	tabelas->currentTable[hashIndex]->fields = (UserTypeField**)malloc(sizeof(UserTypeField*));
 	tabelas->currentTable[hashIndex]->valor_lexico = (struct lexval*) malloc(sizeof(struct lexval));
 	*(tabelas->currentTable[hashIndex]->valor_lexico) = *(valor_lexico);

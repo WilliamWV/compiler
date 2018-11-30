@@ -2,7 +2,6 @@
 #define ILOC 2
 #include "lexVal.h" //útil para union Value
 #include "everybodyHateLeaks.h"
-#include "naming.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Possui definições de estruturas para operações ILOC bem como da lista    ///

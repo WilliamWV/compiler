@@ -80,6 +80,7 @@ typedef struct hashContent{
 	char* label;                  // usado apenas se o símbolo for uma função
 	                              // para indicar a primeira instrução dela 	
 	int localOffset;               // usado se o símbolo é uma função
+	Registers *registers;
 }Hash;
 
 ////////////////////////////////////////////////////////////////////////////////

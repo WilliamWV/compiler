@@ -11,7 +11,7 @@ int main(){
 }*/
 w int;
 int foo(int y){
-y = 2;
+y = y;
 return y;
 }
 int main(){
