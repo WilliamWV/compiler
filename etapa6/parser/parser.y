@@ -500,9 +500,13 @@ componente:
 		int sizeArgs = funcContent->argsSize;
 		int funcTypeSize = sizeOfType(getCurrentFuncReturnType(), 0);
 		int offset; // offset em relacao ao rsp atual
+
+		//se a funcao possui return, devemos deixar espaco para o valor retornado
 		if(funcContent->hasReturn == TRUE)
 			offset = sizeArgs + sizeLocalVars + funcTypeSize; // tamanho ocupado para salvar os parametros + tamanho das variaveis locais + tamanho do tipo de retorno
-		else offset = sizeLocalVars;
+		else offset = sizeArgs + sizeLocalVars;
+
+		//alem disso, se a funcao nao for a main, tambem devemos deixar espaco para o seu prologo (end retorno, VE, VD)
 		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
 			offset += 16; // numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
 		}

@@ -199,10 +199,14 @@ int getCurrentFuncReturnType(){
 
 void argsSize(){
 	Args *aux = currentArgs;
-	if(aux != NULL){
-		int newVarSize = sizeOfType(currentArgs->arg->argType, 0);
-		updateLocalVarSize(newVarSize);
-		aux = aux->next;
+	Hash* funcContent = getSymbol(currentFunc);
+	if(funcContent!=NULL){
+		if(aux != NULL){
+			int newVarSize = sizeOfType(currentArgs->arg->argType, 0);
+			updateLocalVarSize(newVarSize);
+			funcContent->argsSize = funcContent->argsSize + newVarSize;
+			aux = aux->next;			
+		}
 	}
 }
 
@@ -210,6 +214,5 @@ void updateLocalVarSize(int newVarSize){
 	Hash* funcContent = getSymbol(currentFunc);
 	if(funcContent!=NULL){
 		funcContent->sizeOfLocalVars = funcContent->sizeOfLocalVars + newVarSize;
-		funcContent->argsSize = funcContent->argsSize + newVarSize;
 	}	
 }
