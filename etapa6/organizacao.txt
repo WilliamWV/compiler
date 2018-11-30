@@ -11,5 +11,4 @@ Arquivos mais importantes:
 	* iloc.h/iloc.c : contém definição de estruturas importantes para a geração de código que variam desde criação de instruções até remendos para curto-circuito
 	* naming.h/naming.c : contém a definição de funções para obtenção de novos registradores ou labels além de definir a estrutura Registers que armazena os temporários usados por uma dada função para que possam ser salvos e recuperados do registro de ativação
 	* parser.y: arquivo que acabou sendo o principal do código do compilador, executa a geração do código em uma passagem chamando funções definidas nos outros arquivos para criar tanto as operações para fluxo de controle e cálculo de expressões (etapa5) como para realizar a sequência de chamada e a sequência de retorno de uma função (etapa6)
-
-
+	* tree.h/tree.c : contem toda a logica de criacao e destruicao de nodos da AST de forma a evitar leaks;
