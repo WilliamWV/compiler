@@ -1653,8 +1653,11 @@ funcCall:
 		Hash* currentF = getSymbol(currentFunc);
 
 		int funcArgs = funcContent->argsNum;
-		int prologueSize = 7 + funcArgs + currentF->registers->numberOfRegs;
-		char* tempReg = getNewRegister();		
+		
+		char* tempReg = getNewRegister();	
+		int prologueSize = 7 + funcArgs + currentF->registers->numberOfRegs;	
+		//printf("Number of %s regs = %d\nNumber of arguments of the called func %d\n", currentFunc, currentF->registers->numberOfRegs, funcArgs);
+		//printf("Value added to rpc = %d\n", prologueSize);
 		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
 		int zero = 0;
 		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &zero, ARG3_IMED);
@@ -1707,8 +1710,11 @@ funcCall:
 		if (correctArgs != TRUE){ returnError = correctArgs; nodeNotAdded = $$; YYABORT;}
 		
 		Hash* currentF = getSymbol(currentFunc);
+		char* tempReg = getNewRegister();	
 		int prologueSize = 7 + currentF->registers->numberOfRegs;
-		char* tempReg = getNewRegister();		
+				
+		//printf("Number of %s regs = %d", currentFunc, currentF->registers->numberOfRegs);
+			
 		createOperation($$->opList, ADDI, "addI", "rpc", (void*) &prologueSize, tempReg, ARG2_IMED);
 		int zero = 0;
 		createOperation($$->opList, STOREAI, "storeAI", tempReg, "rsp", (void*) &zero, ARG3_IMED);

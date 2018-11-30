@@ -1,0 +1,39 @@
+loadI	140 => rfp
+loadI	140 => rsp
+loadI	140 => rbss
+jumpI	 -> L1
+
+L0:	
+i2i	rsp => rfp
+addI	rsp, 36 => rsp
+loadI	73 => r0
+storeAI	r0 => rfp, 16
+loadAI	rfp, 0 => r1
+loadAI	rfp, 4 => r2
+loadAI	rfp, 8 => r3
+i2i	r2 => rsp
+i2i	r3 => rfp
+jump	 -> r1
+
+L1:	
+i2i	rsp => rfp
+addI	rsp, 40 => rsp
+addI	rpc, 8 => r4
+storeAI	r4 => rsp, 0
+storeAI	rsp => rsp, 4
+storeAI	rfp => rsp, 8
+loadI	0 => r4
+storeAI	r4 => rsp, 12
+storeAI	r4 => rsp, -4
+jumpI	 -> L0
+loadAI	rsp, -4 => r4
+loadAI	rsp, 16 => r5
+addI	rfp, 0 => r6
+store	r5 => r6
+addI	rfp, 0 => r7
+load	r7 => r8
+loadI	7 => r9
+mult	r8, r9 => r10
+addI	rfp, 4 => r11
+store	r10 => r11
+halt	

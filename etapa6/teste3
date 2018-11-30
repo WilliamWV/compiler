@@ -13,7 +13,7 @@ int main(){
 	int x;
 	x = fatorial(2);
 }*/
-
+f int;
 int factorial(int n){
 	if (n==1)then{return 1;};
 	int aux;
@@ -23,5 +23,6 @@ int factorial(int n){
 
 int main(){
 	int p;
-	p = factorial(3);
+	p = factorial(5);
+	f = p;
 }
