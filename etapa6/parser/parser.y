@@ -339,7 +339,9 @@ int expressionCoercion(Node *ss, Node *s1, struct lexval *s2, Node *s3){
 
 programa: 
 	scopeOpenner componentes	{
-		$$ = $2; arvore = $$; 		
+		$$ = $2; arvore = $$; 	
+		printFunctionRegs("main");
+		printFunctionRegs("factorial");	
 		parsingSucceded = TRUE;
 		int rbssInit = 4 * (numberOfOperationsWithoutLabels($$->opList)+5); // o 5 vem do halt, dos 3 loadI e do jumpI abaixo
 		int rfpAndRspInit = rbssInit + globalVarsSize;

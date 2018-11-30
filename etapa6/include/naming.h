@@ -11,5 +11,6 @@ typedef struct listOfRegisters{
 char* getNewRegister();
 char* getNewLabel();
 void addNewRegister(char *reg, char *funcName);
+void printFunctionRegs(char *funcName);
 
 #endif

@@ -72,3 +72,14 @@ void addNewRegister(char *reg, char *funcName){
 		funcContent->registers->registers[funcContent->registers->numberOfRegs - 1] = reg;
 	}
 }
+
+void printFunctionRegs(char *funcName){
+	Hash* funcContent = getSymbol(funcName);
+	printf("Registradores de %s: ", funcName);
+	if(funcContent != NULL){
+		for(int i = 0; i < funcContent->registers->numberOfRegs; i++)
+		printf("%s  ", funcContent->registers->registers[i]);
+	}
+	else printf("Funcao nao existe.");
+	printf("\n");
+}
