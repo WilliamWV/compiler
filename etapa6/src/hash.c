@@ -242,7 +242,6 @@ int addSymbol(struct lexval* valor_lexico, int nature, int type, char* userType,
 		Hash* func = getSymbol(currentFunc);
 		tabelas->currentTable[hashIndex]->offset = func->localOffset;
 		func->localOffset+=tabelas->currentTable[hashIndex]->size;
-		printf("\n\nOffset da variável %s = %d\n", tabelas->currentTable[hashIndex]->symbol, tabelas->currentTable[hashIndex]->offset);
 	}
 	tabelas->currentTable[hashIndex]->sizeOfLocalVars = 0;
 	if(isFunction == TRUE){
@@ -278,7 +277,17 @@ void addFuncArg(char* symbol, FuncArg* arg)
 		);
 		symbolContent->args[symbolContent->argsNum - 1] = arg;
 		symbolContent->localOffset = symbolContent->localOffset + 4;
-
+		int currentArgOffset;
+		
+		if (symbolContent->argsNum >= 1){
+			Hash* arg = getSymbol(symbolContent->args[0]->argName);
+			currentArgOffset = arg->offset;	
+		}		
+		for (int i = 0; i <symbolContent->argsNum; i++){
+			Hash* arg = getSymbol(symbolContent->args[i]->argName);
+			arg->offset = currentArgOffset+4;
+			currentArgOffset = arg->offset;
+		}
 	}
 }
 //adiciona um campo tipo de usuário a um símbolo
