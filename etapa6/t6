@@ -1,13 +1,13 @@
-loadI	396 => rfp
-loadI	396 => rsp
-loadI	392 => rbss
+loadI	376 => rfp
+loadI	376 => rsp
+loadI	376 => rbss
 jumpI	 -> L6
 
 L0:	
 i2i	rsp => rfp
-addI	rsp, 124 => rsp
-loadAI	rfp, 16 => r23
-storeAI	r23 => rfp, 24
+addI	rsp, 108 => rsp
+loadAI	rfp, 16 => r20
+storeAI	r20 => rfp, 24
 addI	rfp, 24 => r0
 load	r0 => r1
 loadI	1 => r2
@@ -27,15 +27,17 @@ L5:
 L4:	
 addI	rfp, 24 => r8
 load	r8 => r9
-loadI	1 => r10
-sub		r9, r10 => r11
-addI	rpc, 21 => r12
-storeAI	r12 => rsp, 0
+addI	rfp, 24 => r10
+load	r10 => r11
+loadI	1 => r12
+sub		r11, r12 => r13
+addI	rpc, 23 => r14
+storeAI	r14 => rsp, 0
 storeAI	rsp => rsp, 4
 storeAI	rfp => rsp, 8
-loadI	0 => r12
-storeAI	r12 => rsp, 12
-storeAI	r11 => rsp, 16
+loadI	0 => r14
+storeAI	r14 => rsp, 12
+storeAI	r13 => rsp, 16
 storeAI	r0 => rsp, -4
 storeAI	r1 => rsp, -8
 storeAI	r2 => rsp, -12
@@ -49,6 +51,8 @@ storeAI	r9 => rsp, -40
 storeAI	r10 => rsp, -44
 storeAI	r11 => rsp, -48
 storeAI	r12 => rsp, -52
+storeAI	r13 => rsp, -56
+storeAI	r14 => rsp, -60
 jumpI	 -> L0
 loadAI	rsp, -4 => r0
 loadAI	rsp, -8 => r1
@@ -63,43 +67,35 @@ loadAI	rsp, -40 => r9
 loadAI	rsp, -44 => r10
 loadAI	rsp, -48 => r11
 loadAI	rsp, -52 => r12
-loadAI	rsp, 20 => r13
-addI	rfp, 28 => r14
-store	r13 => r14
-addI	rfp, 24 => r15
-load	r15 => r16
-addI	rfp, 28 => r17
-load	r17 => r18
-mult	r16, r18 => r19
-storeAI	r19 => rfp, 20
-loadAI	rfp, 0 => r20
-loadAI	rfp, 4 => r21
-loadAI	rfp, 8 => r22
-i2i	r21 => rsp
-i2i	r22 => rfp
-jump	 -> r20
+loadAI	rsp, -56 => r13
+loadAI	rsp, -60 => r14
+loadAI	rsp, 20 => r15
+mult	r9, r15 => r16
+storeAI	r16 => rfp, 20
+loadAI	rfp, 0 => r17
+loadAI	rfp, 4 => r18
+loadAI	rfp, 8 => r19
+i2i	r18 => rsp
+i2i	r19 => rfp
+jump	 -> r17
 
 L6:	
 i2i	rfp => rsp
-addI	rsp, 32 => rsp
-loadI	5 => r24
-addI	rpc, 10 => r25
-storeAI	r25 => rsp, 0
+addI	rsp, 20 => rsp
+loadI	5 => r21
+addI	rpc, 10 => r22
+storeAI	r22 => rsp, 0
 storeAI	rsp => rsp, 4
 storeAI	rfp => rsp, 8
-loadI	0 => r25
-storeAI	r25 => rsp, 12
-storeAI	r24 => rsp, 16
-storeAI	r24 => rsp, -4
-storeAI	r25 => rsp, -8
+loadI	0 => r22
+storeAI	r22 => rsp, 12
+storeAI	r21 => rsp, 16
+storeAI	r21 => rsp, -4
+storeAI	r22 => rsp, -8
 jumpI	 -> L0
-loadAI	rsp, -4 => r24
-loadAI	rsp, -8 => r25
-loadAI	rsp, 20 => r26
-addI	rfp, 0 => r27
-store	r26 => r27
-addI	rfp, 0 => r28
-load	r28 => r29
-addI	rbss, 0 => r30
-store	r29 => r30
+loadAI	rsp, -4 => r21
+loadAI	rsp, -8 => r22
+loadAI	rsp, 20 => r23
+addI	rfp, 0 => r24
+store	r23 => r24
 halt	

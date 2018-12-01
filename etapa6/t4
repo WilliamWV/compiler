@@ -24,7 +24,7 @@ i2i	r5 => rfp
 jump	 -> r3
 
 L2:	
-i2i	rsp => rfp
+i2i	rfp => rsp
 addI	rsp, 16 => rsp
 addI	rpc, 8 => r6
 storeAI	r6 => rsp, 0

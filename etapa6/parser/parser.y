@@ -516,7 +516,10 @@ componente:
 		if(strcmp("main", $1->kids[0]->token->value.str) != 0){
 			offset += 16; // numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
 		}
-		createOperation($1->opList, I2I, "i2i", "rsp", "rfp", NULL, 0);
+		//createOperation($1->opList, I2I, "i2i", "rsp", "rfp", NULL, 0);
+		if(strcmp("main", $1->kids[0]->token->value.str) == 0)
+			createOperation($1->opList, I2I, "i2i", "rfp", "rsp", NULL, 0);
+		else createOperation($1->opList, I2I, "i2i", "rsp", "rfp", NULL, 0);
 		createOperation($1->opList, ADDI, "addI", "rsp", (void*) &offset, "rsp", ARG2_IMED);
 		int funcArgs = funcContent->argsNum;
 		for(int i = 0; i<funcArgs; i++){

@@ -23,7 +23,7 @@ i2i	r7 => rfp
 jump	 -> r5
 
 L1:	
-i2i	rsp => rfp
+i2i	rfp => rsp
 addI	rsp, 32 => rsp
 loadI	2 => r9
 addI	rpc, 10 => r10

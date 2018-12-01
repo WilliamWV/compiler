@@ -55,7 +55,7 @@ i2i	r22 => rfp
 jump	 -> r20
 
 L7:	
-i2i	rsp => rfp
+i2i	rfp => rsp
 addI	rsp, 16 => rsp
 addI	rpc, 8 => r23
 storeAI	r23 => rsp, 0
