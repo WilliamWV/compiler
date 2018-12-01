@@ -524,6 +524,7 @@ componente:
 		int funcArgs = funcContent->argsNum;
 		for(int i = 0; i<funcArgs; i++){
 			int currentLoadPos = i*4 + 16; // posicao do argumento atual a partir de rfp+16; o 16 vem do numero de bytes ocupados para guardar end retorno, VE, VD (ocupa 8 bytes devido a rsp e rfp)
+			//printf("size args : %d; functypesize: %d\n", sizeArgs, funcTypeSize);
 			int currentStorePos = i*4 + 16 + sizeArgs + funcTypeSize; // posicao da variavel local que ira armazenar tal parametro eh a posicao acima somada ao espaco ocupado para armazenar todos os parametros passados a funcao e ao espaco reservado para valor retornado		
 			char* tempReg = getNewRegister();
 			createOperation($1->opList, LOADAI, "loadAI", "rfp", (void*) &currentLoadPos, tempReg, ARG2_IMED);
@@ -769,8 +770,9 @@ funcArgs:
 		$$ = criaNodo($1);
 		adicionaFilho($$, $2);
 		adicionaFilho($$, criaNodo($3));
-		argsSize();
+		argsSize();		
 		addArgsToSymbol(currentFunc, currentArgs);
+		
 	}
 ;
 //Bloco de comandos
@@ -2317,9 +2319,10 @@ operands:
 		if(funcContent->hasReturn){			
 			int funcArgs = funcContent->argsNum;		
 			int currentPos = 0;			
-			for(int i = 0; i<funcArgs; i++){	
-				 currentPos = i*4;
-			}
+			//for(int i = 0; i<funcArgs; i++){	
+			//	 currentPos = i*4;
+			//}
+			//printf("Currentpos = %d + 16 + %d", currentPos, funcContent->argsSize);
 			currentPos = currentPos + 16 + funcContent->argsSize;
 			createOperation($$->opList, LOADAI, "loadAI", "rsp", (void*) &currentPos, $$->reg, ARG2_IMED);
 		}	

@@ -1,0 +1,15 @@
+/* 98 in bss address */
+y int;
+
+int f()
+{
+  int x;
+  x = 98;
+  return x;
+}
+
+int main()
+{
+  y = f();
+  return 0;
+}

@@ -1,0 +1,15 @@
+K int;
+
+int gis(int a)
+{
+   int ret;
+   if (a == 0) then { return 1; };
+   ret = a + gis(a-1);
+   return ret;
+}
+
+int main()
+{
+  K = gis(3);
+  return 0;
+}

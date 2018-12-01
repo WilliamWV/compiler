@@ -201,7 +201,7 @@ void argsSize(){
 	Args *aux = currentArgs;
 	Hash* funcContent = getSymbol(currentFunc);
 	if(funcContent!=NULL){
-		if(aux != NULL){
+		while(aux != NULL){
 			int newVarSize = sizeOfType(currentArgs->arg->argType, 0);
 			updateLocalVarSize(newVarSize);
 			funcContent->argsSize = funcContent->argsSize + newVarSize;
